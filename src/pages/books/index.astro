@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Main from "@/layouts/Main.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import { SITE } from "@/config";
+
+const all = await getCollection("books", ({ data }) => !data.draft);
+const books = all.sort(
+  (a, b) =>
+    new Date(b.data.modDatetime ?? b.data.pubDatetime).getTime() -
+    new Date(a.data.modDatetime ?? a.data.pubDatetime).getTime()
+);
+---
+
+<Layout title={`책 | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="책" pageDesc="읽은 책에 대한 노트">
+    <ul>
+      {books.map(entry => <Card {...entry} />)}
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

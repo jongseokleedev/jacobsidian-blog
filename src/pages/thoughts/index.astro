@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Main from "@/layouts/Main.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { SITE } from "@/config";
+
+const all = await getCollection(
+  "posts",
+  ({ data }) => data.category === "thought"
+);
+const posts = getSortedPosts(all);
+---
+
+<Layout title={`생각 | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="생각" pageDesc="일상에서 일어나는 단상들">
+    <ul>
+      {posts.map(entry => <Card {...entry} />)}
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

@@ -2,16 +2,18 @@ import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 import { SITE } from "@/config";
 
-export const BLOG_PATH = "src/data/blog";
+export const POSTS_PATH = "src/data/posts";
+export const BOOKS_PATH = "src/data/books";
 
-const blog = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.md", base: `./${BLOG_PATH}` }),
+const posts = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: `./${POSTS_PATH}` }),
   schema: ({ image }) =>
     z.object({
       author: z.string().default(SITE.author),
       pubDatetime: z.date(),
       modDatetime: z.date().optional().nullable(),
       title: z.string(),
+      category: z.enum(["thought", "writing", "it"]),
       featured: z.boolean().optional(),
       draft: z.boolean().optional(),
       tags: z.array(z.string()).default(["others"]),
@@ -23,4 +25,22 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog };
+const books = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: `./${BOOKS_PATH}` }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      author: z.string(),
+      pubDatetime: z.date(),
+      modDatetime: z.date().optional().nullable(),
+      description: z.string().default(""),
+      tags: z.array(z.string()).default(["book"]),
+      ogImage: image().or(z.string()).optional(),
+      draft: z.boolean().optional(),
+      canonicalURL: z.string().optional(),
+      hideEditPost: z.boolean().optional(),
+      timezone: z.string().optional(),
+    }),
+});
+
+export const collections = { posts, books };
