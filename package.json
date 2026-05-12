@@ -6,8 +6,12 @@
     "dev": "astro dev",
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
     "preview": "astro preview",
-    "sync": "astro sync",
+    "astro:sync": "astro sync",
     "astro": "astro",
+    "sync": "tsx scripts/sync.ts",
+    "sync:apply": "tsx scripts/sync.ts --apply",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "lint": "eslint ."
@@ -19,6 +23,8 @@
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
     "dayjs": "^1.11.19",
+    "fast-glob": "^3.3.3",
+    "gray-matter": "^4.0.3",
     "lodash.kebabcase": "^4.1.1",
     "remark-collapse": "^0.1.2",
     "remark-toc": "^9.0.0",
@@ -33,6 +39,7 @@
     "@shikijs/transformers": "^3.20.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/lodash.kebabcase": "^4.1.9",
+    "@types/node": "^25.7.0",
     "@typescript-eslint/parser": "^8.51.0",
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.5.0",
@@ -41,7 +48,9 @@
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.51.0"
+    "typescript-eslint": "^8.51.0",
+    "vitest": "^4.1.6"
   }
 }
