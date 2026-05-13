@@ -2,7 +2,6 @@
 import IconX from "@/assets/icons/IconX.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
-import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LinkButton from "./LinkButton.astro";
@@ -72,59 +71,30 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a
-            href="/thoughts"
-            class:list={{ "active-nav": isActive("/thoughts") }}
-          >
-            생각
+          <a href="/thoughts" class:list={{ "active-nav": isActive("/thoughts") }}>
+            Thoughts
           </a>
         </li>
         <li class="col-span-2">
-          <a
-            href="/writing"
-            class:list={{ "active-nav": isActive("/writing") }}
-          >
-            글쓰기
+          <a href="/writing" class:list={{ "active-nav": isActive("/writing") }}>
+            Writing
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/it" class:list={{ "active-nav": isActive("/it") }}> IT </a>
+          <a href="/tech" class:list={{ "active-nav": isActive("/tech") }}>
+            Tech
+          </a>
         </li>
         <li class="col-span-2">
           <a href="/books" class:list={{ "active-nav": isActive("/books") }}>
-            책
-          </a>
-        </li>
-        <li class="col-span-2">
-          <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
-            태그
+            Books
           </a>
         </li>
         <li class="col-span-2">
           <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
-            소개
+            About
           </a>
         </li>
-        {
-          SITE.showArchives && (
-            <li class="col-span-2">
-              <LinkButton
-                href="/archives"
-                class:list={[
-                  "focus-outline flex justify-center p-3 sm:p-1",
-                  {
-                    "active-nav [&>svg]:stroke-accent": isActive("/archives"),
-                  },
-                ]}
-                title="Archives"
-                aria-label="archives"
-              >
-                <IconArchive class="hidden sm:inline-block" />
-                <span class="sm:sr-only">Archives</span>
-              </LinkButton>
-            </li>
-          )
-        }
         <li class="col-span-1 flex items-center justify-center">
           <LinkButton
             href="/search"

@@ -63,7 +63,8 @@ html[data-theme="dark"] {
 }
 
 .active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-8;
+  @apply underline decoration-2 underline-offset-4;
+  text-decoration-color: var(--accent);
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
