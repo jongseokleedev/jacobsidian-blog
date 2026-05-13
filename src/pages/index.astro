@@ -3,95 +3,77 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
 import LinkButton from "@/components/LinkButton.astro";
-import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import { SITE } from "@/config";
-import { SOCIALS } from "@/constants";
 
 const posts = await getCollection("posts");
-
 const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const recentPosts = sortedPosts.filter(({ data }) => !data.draft);
+
+const categoryLabel = (category: string) => {
+  if (category === "thought") return "Thoughts";
+  if (category === "tech") return "Tech";
+  if (category === "writing") return "Writing";
+  return category;
+};
+
+const categoryPath = (category: string) => {
+  if (category === "thought") return "thoughts";
+  if (category === "tech") return "tech";
+  if (category === "writing") return "writing";
+  return category;
+};
 ---
 
 <Layout>
   <Header />
-  <main id="main-content" data-layout="index" class="app-layout">
-    <section id="hero" class:list={["pt-8 pb-6", "border-b border-border"]}>
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        안녕하세요
-      </h1>
-      <a
-        target="_blank"
-        href="/rss.xml"
-        class="inline-block"
-        aria-label="rss feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="scale-125 stroke-accent stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-
-      <p>Obsidian vault에서 발행한 글, 책 노트, 개발 기록을 모은 공간입니다.</p>
-      {
-        // only display if at least one social link is enabled
-        SOCIALS.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">Social Links:</div>
-            <Socials />
-          </div>
-        )
-      }
+  <main id="main-content" data-layout="index" class="app-layout pt-12 pb-16">
+    <!-- Hero: minimal -->
+    <section class="pb-10 border-b border-border">
+      <h1 class="text-2xl font-semibold tracking-tight mb-1">Jacob Lee</h1>
+      <p class="text-sm text-foreground/60">글, 소설, 개발 기록.</p>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-b border-border": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">Featured</h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <!-- Recent posts list -->
+    {recentPosts.length > 0 && (
+      <section class="pt-8">
+        <ul class="divide-y divide-border">
+          {recentPosts.slice(0, SITE.postPerIndex).map(({ data, id }) => (
+            <li>
+              <a
+                href={`/${categoryPath(data.category)}/${id}`}
+                class="group flex items-baseline justify-between py-4 gap-4 transition-colors duration-150 hover:text-accent"
+              >
+                <span class="flex items-baseline gap-3 min-w-0">
+                  <span class="text-xs text-foreground/40 shrink-0 tabular-nums">
+                    {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
+                  </span>
+                  <span class="font-medium truncate transition-transform duration-150 group-hover:translate-x-1">
+                    {data.title}
+                  </span>
+                </span>
+                <span class="text-xs text-foreground/40 shrink-0">
+                  {categoryLabel(data.category)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">Recent Posts</h2>
-          <ul>
-            {recentPosts.map(
-              (data, index) =>
-                index < SITE.postPerIndex && <Card variant="h3" {...data} />
-            )}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href="/archives/">
-        모든 글
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
+        <div class="mt-8 text-center">
+          <LinkButton href="/archives/">
+            모든 글
+            <IconArrowRight class="inline-block rtl:-rotate-180" />
+          </LinkButton>
+        </div>
+      </section>
+    )}
   </main>
   <Footer />
 </Layout>
