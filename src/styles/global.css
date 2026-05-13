@@ -21,7 +21,8 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
-  --font-app: var(--font-google-sans-code);
+  --font-app: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
