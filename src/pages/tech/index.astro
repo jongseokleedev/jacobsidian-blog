@@ -25,8 +25,7 @@ const posts = getSortedPosts(all);
             <li>
               <a
                 href={`/tech/${id}`}
-                class="group grid py-4 gap-x-4 transition-colors duration-150 hover:text-accent"
-                style="grid-template-columns: 6.5rem 1fr;"
+                class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
               >
                 <span class="text-xs text-foreground/40 tabular-nums self-center">
                   {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {

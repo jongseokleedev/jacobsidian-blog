@@ -91,7 +91,7 @@ const nextPost =
   >
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+      class="inline-block text-2xl font-bold text-foreground tracking-tight sm:text-3xl"
     >
       {title}
     </h1>
@@ -141,7 +141,7 @@ const nextPost =
           >
             <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
             <div>
-              <span>Previous Post</span>
+              <span>이전 글</span>
               <div class="text-sm text-accent/85">{prevPost.data.title}</div>
             </div>
           </a>
@@ -154,7 +154,7 @@ const nextPost =
             class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
           >
             <div>
-              <span>Next Post</span>
+              <span>다음 글</span>
               <div class="text-sm text-accent/85">{nextPost.data.title}</div>
             </div>
             <IconChevronRight class="inline-block flex-none rtl:rotate-180" />

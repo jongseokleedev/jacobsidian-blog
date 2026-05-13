@@ -44,8 +44,7 @@ const categoryPath = (category: string) => {
             <li>
               <a
                 href={`/${categoryPath(data.category)}/${id}`}
-                class="group grid py-4 gap-x-4 transition-colors duration-150 hover:text-accent"
-                style="grid-template-columns: 6.5rem 1fr 5rem;"
+                class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
               >
                 <span class="text-xs text-foreground/40 tabular-nums self-center">
                   {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
