@@ -5,14 +5,21 @@ import { getPath } from "@/utils/getPath";
 type Props = CollectionEntry<"books">;
 
 const entry = Astro.props;
-const { data } = entry;
+const { data, body } = entry;
 const { title, author, ogImage } = data;
 const href = getPath(entry as CollectionEntry<"books">);
-const imgSrc = ogImage
-  ? typeof ogImage === "string"
-    ? ogImage
-    : (ogImage as { src: string }).src
-  : null;
+
+// Try ogImage first, then extract first http image URL from body
+const imgSrc = (() => {
+  if (ogImage) {
+    return typeof ogImage === "string" ? ogImage : (ogImage as { src: string }).src;
+  }
+  if (body) {
+    const match = body.match(/!\[.*?\]\((https?:\/\/[^)]+)\)/);
+    if (match) return match[1];
+  }
+  return null;
+})();
 ---
 
 <li>

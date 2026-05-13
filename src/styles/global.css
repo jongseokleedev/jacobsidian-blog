@@ -77,6 +77,24 @@ html[data-theme="dark"] {
   }
 }
 
+/* Sequential page transitions: fade-out completes before fade-in starts */
+::view-transition-old(root) {
+  animation: 180ms ease-out both fade-out;
+}
+::view-transition-new(root) {
+  animation: 180ms ease-in 180ms both fade-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @utility max-w-app {
   max-width: 680px;
 }
