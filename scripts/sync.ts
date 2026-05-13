@@ -61,7 +61,7 @@ function createImageResolver(
         copyFileSync(srcPath, path.join(imagesDest, name));
       }
     }
-    return `${PUBLIC_IMAGE_URL}/${name}`;
+    return `${PUBLIC_IMAGE_URL}/${encodeURIComponent(name)}`;
   };
 }
 
