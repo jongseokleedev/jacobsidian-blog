@@ -33,7 +33,7 @@ const categoryPath = (category: string) => {
     <!-- Hero: minimal -->
     <section class="pb-10 border-b border-border">
       <h1 class="text-2xl font-semibold tracking-tight mb-1">Jacob Lee</h1>
-      <p class="text-sm text-foreground/60">글, 소설, 개발 기록.</p>
+      <p class="text-sm text-foreground/60">글과 개발, 기록 저장소.</p>
     </section>
 
     <!-- Recent posts list -->
@@ -44,21 +44,20 @@ const categoryPath = (category: string) => {
             <li>
               <a
                 href={`/${categoryPath(data.category)}/${id}`}
-                class="group flex items-baseline justify-between py-4 gap-4 transition-colors duration-150 hover:text-accent"
+                class="group grid py-4 gap-x-4 transition-colors duration-150 hover:text-accent"
+                style="grid-template-columns: 6.5rem 1fr 5rem;"
               >
-                <span class="flex items-baseline gap-3 min-w-0">
-                  <span class="text-xs text-foreground/40 shrink-0 tabular-nums">
-                    {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
-                  </span>
-                  <span class="font-medium truncate transition-transform duration-150 group-hover:translate-x-1">
-                    {data.title}
-                  </span>
+                <span class="text-xs text-foreground/40 tabular-nums self-center">
+                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
                 </span>
-                <span class="text-xs text-foreground/40 shrink-0">
+                <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                  {data.title}
+                </span>
+                <span class="text-xs text-foreground/40 self-center">
                   {categoryLabel(data.category)}
                 </span>
               </a>
