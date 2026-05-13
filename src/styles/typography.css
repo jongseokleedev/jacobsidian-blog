@@ -11,10 +11,11 @@
     h4,
     th {
       @apply mb-3 text-foreground;
+      letter-spacing: -0.02em;
     }
 
     h3 {
-      @apply italic;
+      font-style: normal;
     }
 
     p,
@@ -25,6 +26,10 @@
     table,
     code {
       @apply text-foreground;
+    }
+
+    p {
+      margin-bottom: 1.5em;
     }
 
     a {
