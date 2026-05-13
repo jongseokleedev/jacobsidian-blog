@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>jacobsidian — Header Mockup</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f8f7;
+    --fg: #1a1918;
+    --accent: #3d5a99;
+    --muted: #e8e6e3;
+    --border: #d4d0cb;
+    --fg60: rgba(26,25,24,0.6);
+    --fg30: rgba(26,25,24,0.3);
+  }
+
+  body {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+    background: #edecea;
+    color: var(--fg);
+    padding: 40px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg60);
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  .frame {
+    background: var(--bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ─── Shared header shell ─── */
+  header {
+    width: 100%;
+    background: var(--bg);
+  }
+  .inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ─── Page body preview ─── */
+  .page-body {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 48px;
+  }
+  .page-body h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .page-body p  { font-size: 14px; color: var(--fg60); }
+  .post-list { margin-top: 28px; border-top: 1px solid var(--border); }
+  .post-item {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .post-item .date { font-size: 12px; color: var(--fg30); white-space: nowrap; }
+  .post-item .title { font-weight: 500; color: var(--fg); }
+  .post-item .cat { font-size: 11px; color: var(--fg30); white-space: nowrap; }
+
+  /* ══════════════════════════════════════════
+     OPTION A — 로고 왼쪽, 구분선으로 nav 분리
+  ══════════════════════════════════════════ */
+  .a-wrap { border-bottom: 1px solid var(--border); }
+  .a-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 52px;
+  }
+  .a-logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    text-decoration: none;
+    padding-right: 20px;
+    border-right: 1px solid var(--border);
+    margin-right: 20px;
+    white-space: nowrap;
+  }
+  .a-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+  .a-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg60);
+    text-decoration: none;
+    transition: color 150ms;
+  }
+  .a-links a:hover, .a-links a.active { color: var(--fg); }
+  .a-links a.active {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+  }
+  .a-right { margin-left: auto; display: flex; gap: 8px; }
+  .a-right button {
+    border: none; background: none; cursor: pointer;
+    color: var(--fg60); font-size: 13px; padding: 4px 6px; border-radius: 4px;
+  }
+  .a-right button:hover { color: var(--fg); }
+
+  /* ══════════════════════════════════════════
+     OPTION B — 로고 위, nav 아래 (2줄)
+  ══════════════════════════════════════════ */
+  .b-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .b-logo {
+    font-size: 18px; font-weight: 700; letter-spacing: -0.03em;
+    color: var(--fg); text-decoration: none;
+  }
+  .b-icons { display: flex; gap: 8px; }
+  .b-icons button {
+    border: none; background: none; cursor: pointer;
+    color: var(--fg60); font-size: 13px; padding: 4px 6px;
+  }
+  .b-bottom {
+    display: flex; gap: 24px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .b-bottom a {
+    font-size: 13px; font-weight: 500;
+    color: var(--fg60); text-decoration: none;
+    padding-bottom: 2px;
+  }
+  .b-bottom a.active {
+    color: var(--fg);
+    border-bottom: 2px solid var(--accent);
+  }
+  .b-bottom a:hover { color: var(--fg); }
+
+  /* ══════════════════════════════════════════
+     OPTION C — 로고 크게, nav 오른쪽 정렬 + 배경 없음
+  ══════════════════════════════════════════ */
+  .c-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .c-logo {
+    font-size: 20px; font-weight: 800; letter-spacing: -0.04em;
+    color: var(--fg); text-decoration: none;
+  }
+  .c-logo span { color: var(--accent); }
+  .c-right { display: flex; align-items: center; gap: 24px; }
+  .c-links { display: flex; gap: 20px; list-style: none; }
+  .c-links a {
+    font-size: 13px; font-weight: 500;
+    color: var(--fg60); text-decoration: none;
+    transition: color 150ms;
+    position: relative;
+  }
+  .c-links a::after {
+    content: ""; position: absolute; bottom: -2px; left: 0;
+    width: 100%; height: 1.5px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 180ms ease;
+  }
+  .c-links a:hover { color: var(--fg); }
+  .c-links a:hover::after, .c-links a.active::after { transform: scaleX(1); }
+  .c-links a.active { color: var(--fg); }
+  .c-icons { display: flex; gap: 8px; }
+  .c-icons button {
+    border: none; background: none; cursor: pointer;
+    color: var(--fg60); font-size: 13px; padding: 4px;
+  }
+
+  /* ══════════════════════════════════════════
+     OPTION D — 좌 로고+설명, 우 nav (비대칭)
+  ══════════════════════════════════════════ */
+  .d-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .d-brand { display: flex; flex-direction: column; gap: 1px; }
+  .d-logo { font-size: 16px; font-weight: 700; letter-spacing: -0.03em; color: var(--fg); text-decoration: none; }
+  .d-desc { font-size: 11px; color: var(--fg30); letter-spacing: 0.01em; }
+  .d-right { display: flex; align-items: center; gap: 20px; }
+  .d-links { display: flex; gap: 18px; list-style: none; }
+  .d-links a {
+    font-size: 13px; font-weight: 500;
+    color: var(--fg60); text-decoration: none;
+  }
+  .d-links a.active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .d-links a:hover { color: var(--fg); }
+  .d-icons { display: flex; gap: 6px; }
+  .d-icons button {
+    border: none; background: none; cursor: pointer;
+    color: var(--fg60); font-size: 13px; padding: 4px;
+  }
+
+  /* ══════════════════════════════════════════
+     Dark mode toggle for all
+  ══════════════════════════════════════════ */
+  .dark-toggle {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--fg); color: var(--bg);
+    border: none; border-radius: 999px;
+    padding: 8px 16px; font-size: 13px; cursor: pointer;
+    font-family: inherit; font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Dark overrides */
+  body.dark {
+    background: #0e0e0e;
+    --bg: #141414; --fg: #e8e6e3; --accent: #7aa2d4;
+    --muted: #242424; --border: #2e2e2e;
+    --fg60: rgba(232,230,227,0.6); --fg30: rgba(232,230,227,0.3);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Option A ── -->
+<div>
+  <div class="label">Option A — 구분선으로 로고와 nav 분리</div>
+  <div class="frame">
+    <header>
+      <div class="inner">
+        <div class="a-wrap">
+          <nav class="a-nav">
+            <a href="#" class="a-logo">jacobsidian</a>
+            <ul class="a-links">
+              <li><a href="#" class="active">Thoughts</a></li>
+              <li><a href="#">Writing</a></li>
+              <li><a href="#">Tech</a></li>
+              <li><a href="#">Books</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+            <div class="a-right">
+              <button>🔍</button>
+              <button>◐</button>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <div class="page-body">
+      <h1>Jacob Lee</h1>
+      <p>글, 소설, 개발 기록.</p>
+      <ul class="post-list">
+        <li class="post-item"><span class="date">2026.05.10</span><span class="title">어떤 에세이 제목</span><span class="cat">Thoughts</span></li>
+        <li class="post-item"><span class="date">2026.04.28</span><span class="title">개발 관련 글 제목</span><span class="cat">Tech</span></li>
+        <li class="post-item"><span class="date">2026.04.15</span><span class="title">소설 첫 챕터</span><span class="cat">Writing</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── Option B ── -->
+<div>
+  <div class="label">Option B — 로고 위 / nav 아래 (2줄 헤더)</div>
+  <div class="frame">
+    <header>
+      <div class="inner">
+        <div class="b-top">
+          <a href="#" class="b-logo">jacobsidian</a>
+          <div class="b-icons">
+            <button>🔍</button>
+            <button>◐</button>
+          </div>
+        </div>
+        <nav class="b-bottom">
+          <a href="#" class="active">Thoughts</a>
+          <a href="#">Writing</a>
+          <a href="#">Tech</a>
+          <a href="#">Books</a>
+          <a href="#">About</a>
+        </nav>
+      </div>
+    </header>
+    <div class="page-body">
+      <h1>Jacob Lee</h1>
+      <p>글, 소설, 개발 기록.</p>
+      <ul class="post-list">
+        <li class="post-item"><span class="date">2026.05.10</span><span class="title">어떤 에세이 제목</span><span class="cat">Thoughts</span></li>
+        <li class="post-item"><span class="date">2026.04.28</span><span class="title">개발 관련 글 제목</span><span class="cat">Tech</span></li>
+        <li class="post-item"><span class="date">2026.04.15</span><span class="title">소설 첫 챕터</span><span class="cat">Writing</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── Option C ── -->
+<div>
+  <div class="label">Option C — 로고 크게 + nav 오른쪽 (언더라인 애니메이션)</div>
+  <div class="frame">
+    <header>
+      <div class="inner">
+        <nav class="c-nav">
+          <a href="#" class="c-logo">jacob<span>sidian</span></a>
+          <div class="c-right">
+            <ul class="c-links">
+              <li><a href="#" class="active">Thoughts</a></li>
+              <li><a href="#">Writing</a></li>
+              <li><a href="#">Tech</a></li>
+              <li><a href="#">Books</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+            <div class="c-icons">
+              <button>🔍</button>
+              <button>◐</button>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <div class="page-body">
+      <h1>Jacob Lee</h1>
+      <p>글, 소설, 개발 기록.</p>
+      <ul class="post-list">
+        <li class="post-item"><span class="date">2026.05.10</span><span class="title">어떤 에세이 제목</span><span class="cat">Thoughts</span></li>
+        <li class="post-item"><span class="date">2026.04.28</span><span class="title">개발 관련 글 제목</span><span class="cat">Tech</span></li>
+        <li class="post-item"><span class="date">2026.04.15</span><span class="title">소설 첫 챕터</span><span class="cat">Writing</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── Option D ── -->
+<div>
+  <div class="label">Option D — 로고+한줄설명 왼쪽 / nav 오른쪽</div>
+  <div class="frame">
+    <header>
+      <div class="inner">
+        <nav class="d-nav">
+          <div class="d-brand">
+            <a href="#" class="d-logo">jacobsidian</a>
+            <span class="d-desc">글, 소설, 개발 기록</span>
+          </div>
+          <div class="d-right">
+            <ul class="d-links">
+              <li><a href="#" class="active">Thoughts</a></li>
+              <li><a href="#">Writing</a></li>
+              <li><a href="#">Tech</a></li>
+              <li><a href="#">Books</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+            <div class="d-icons">
+              <button>🔍</button>
+              <button>◐</button>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <div class="page-body">
+      <h1>Jacob Lee</h1>
+      <p>글, 소설, 개발 기록.</p>
+      <ul class="post-list">
+        <li class="post-item"><span class="date">2026.05.10</span><span class="title">어떤 에세이 제목</span><span class="cat">Thoughts</span></li>
+        <li class="post-item"><span class="date">2026.04.28</span><span class="title">개발 관련 글 제목</span><span class="cat">Tech</span></li>
+        <li class="post-item"><span class="date">2026.04.15</span><span class="title">소설 첫 챕터</span><span class="cat">Writing</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<button class="dark-toggle" onclick="document.body.classList.toggle('dark')">라이트 / 다크</button>
+
+</body>
+</html>
