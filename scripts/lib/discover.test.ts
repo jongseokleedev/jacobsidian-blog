@@ -11,7 +11,7 @@ describe("discoverPosts", () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
       thought: "posts/thought",
       writing: "posts/writing",
-      it: "posts/it",
+      tech: "posts/tech",
     });
 
     const titles = posts.map(p => p.frontmatter.title).sort();
@@ -21,11 +21,11 @@ describe("discoverPosts", () => {
   it("attaches category and absolute file path", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
       thought: "posts/thought",
-      it: "posts/it",
+      tech: "posts/tech",
     });
 
     const it = posts.find(p => p.frontmatter.title === "발행된 IT 글");
-    expect(it?.category).toBe("it");
+    expect(it?.category).toBe("tech");
     expect(it?.absolutePath).toContain("published-post.md");
 
     const thought = posts.find(p => p.frontmatter.title === "생각 글");
@@ -34,14 +34,14 @@ describe("discoverPosts", () => {
 
   it("excludes posts without status: published", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
-      it: "posts/it",
+      tech: "posts/tech",
     });
     expect(posts.map(p => p.frontmatter.title)).not.toContain("초안 IT 글");
   });
 
   it("skips sources that don't exist", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
-      it: "posts/it",
+      tech: "posts/tech",
       writing: "posts/does-not-exist",
     });
     expect(posts).toHaveLength(1);

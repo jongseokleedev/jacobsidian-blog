@@ -68,7 +68,7 @@ describe("normalizePostFrontmatter", () => {
         published_at: "2026-05-10",
         created: "2026-05-01",
       },
-      "it"
+      "tech"
     );
     expect(out.pubDatetime).toBe("2026-05-10T00:00:00.000Z");
   });
@@ -90,10 +90,10 @@ describe("normalizePostFrontmatter", () => {
         description: "desc",
         tags: ["x", "y"],
       },
-      "it"
+      "tech"
     );
     expect(out.title).toBe("Hello");
-    expect(out.category).toBe("it");
+    expect(out.category).toBe("tech");
     expect(out.description).toBe("desc");
     expect(out.tags).toEqual(["x", "y"]);
   });
@@ -106,7 +106,7 @@ describe("normalizePostFrontmatter", () => {
         published_at: "2026-05-10",
         created: "2026-05-01",
       },
-      "it"
+      "tech"
     );
     expect(out).not.toHaveProperty("status");
     expect(out).not.toHaveProperty("published_at");
@@ -116,7 +116,7 @@ describe("normalizePostFrontmatter", () => {
   it("provides default description when missing", () => {
     const out = normalizePostFrontmatter(
       { title: "T", status: "published", published_at: "2026-05-10" },
-      "it"
+      "tech"
     );
     expect(typeof out.description).toBe("string");
   });
