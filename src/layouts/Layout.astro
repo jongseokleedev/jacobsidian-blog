@@ -135,6 +135,16 @@ const structuredData = {
       )
     }
 
+    {
+      import.meta.env.PROD && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "55ba7c26586c409aae5d3ef33ef9de9e"}'
+        />
+      )
+    }
+
     <ClientRouter />
 
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
