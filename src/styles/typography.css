@@ -68,6 +68,7 @@
 
     code {
       @apply rounded bg-muted/75 p-1 wrap-break-word text-foreground before:content-none after:content-none;
+      font-family: var(--font-mono);
     }
 
     .astro-code code {
