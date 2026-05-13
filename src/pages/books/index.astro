@@ -1,10 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Main from "@/layouts/Main.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
+import BookCard from "@/components/BookCard.astro";
 import { SITE } from "@/config";
 
 const all = await getCollection("books", ({ data }) => !data.draft);
@@ -15,12 +14,14 @@ const books = all.sort(
 );
 ---
 
-<Layout title={`책 | ${SITE.title}`}>
+<Layout title={`Books | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="책" pageDesc="읽은 책에 대한 노트">
-    <ul>
-      {books.map(entry => <Card {...entry} />)}
+  <main id="main-content" class="app-layout pt-12 pb-16">
+    <h1 class="text-2xl font-semibold tracking-tight mb-1">Books</h1>
+    <p class="text-sm text-foreground/60 mb-8">읽은 책에 대한 노트</p>
+    <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      {books.map(entry => <BookCard {...entry} />)}
     </ul>
-  </Main>
+  </main>
   <Footer />
 </Layout>
