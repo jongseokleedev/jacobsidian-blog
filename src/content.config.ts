@@ -10,8 +10,8 @@ const posts = defineCollection({
   schema: ({ image }) =>
     z.object({
       author: z.string().default(SITE.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional().nullable(),
+      pubDatetime: z.coerce.date(),
+      modDatetime: z.coerce.date().optional().nullable(),
       title: z.string(),
       category: z.enum(["thought", "writing", "it"]),
       featured: z.boolean().optional(),
@@ -31,8 +31,8 @@ const books = defineCollection({
     z.object({
       title: z.string(),
       author: z.string(),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional().nullable(),
+      pubDatetime: z.coerce.date(),
+      modDatetime: z.coerce.date().optional().nullable(),
       description: z.string().default(""),
       tags: z.array(z.string()).default(["book"]),
       ogImage: image().or(z.string()).optional(),
