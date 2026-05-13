@@ -7,7 +7,7 @@ import { slugifyStr } from "@/utils/slugify";
 export async function getStaticPaths() {
   const posts = await getCollection(
     "posts",
-    ({ data }) => data.category === "it" && !data.draft
+    ({ data }) => data.category === "tech" && !data.draft
   );
   return posts.map(post => ({
     params: { slug: slugifyStr(post.id.split("/").pop() ?? post.id) },
@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 type Props = { post: CollectionEntry<"posts"> };
 const { post } = Astro.props;
 
-const all = await getCollection("posts", ({ data }) => data.category === "it");
+const all = await getCollection("posts", ({ data }) => data.category === "tech");
 const sortedPosts = getSortedPosts(all);
 ---
 

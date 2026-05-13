@@ -13,7 +13,7 @@ const posts = defineCollection({
       pubDatetime: z.coerce.date(),
       modDatetime: z.coerce.date().optional().nullable(),
       title: z.string(),
-      category: z.enum(["thought", "writing", "it"]),
+      category: z.enum(["thought", "writing", "tech"]),
       featured: z.boolean().optional(),
       draft: z.boolean().optional(),
       tags: z.array(z.string()).default(["others"]),

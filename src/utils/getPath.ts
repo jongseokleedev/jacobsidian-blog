@@ -4,7 +4,7 @@ import { slugifyStr } from "./slugify";
 const CATEGORY_TO_SEGMENT = {
   thought: "thoughts",
   writing: "writing",
-  it: "it",
+  tech: "tech",
 } as const;
 
 type Entry = CollectionEntry<"posts"> | CollectionEntry<"books">;

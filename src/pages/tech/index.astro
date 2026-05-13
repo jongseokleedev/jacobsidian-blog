@@ -8,13 +8,13 @@ import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { SITE } from "@/config";
 
-const all = await getCollection("posts", ({ data }) => data.category === "it");
+const all = await getCollection("posts", ({ data }) => data.category === "tech");
 const posts = getSortedPosts(all);
 ---
 
-<Layout title={`IT | ${SITE.title}`}>
+<Layout title={`Tech | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="IT" pageDesc="개발과 기술에 대한 글">
+  <Main pageTitle="Tech" pageDesc="개발과 기술에 대한 글">
     <ul>
       {posts.map(entry => <Card {...entry} />)}
     </ul>
