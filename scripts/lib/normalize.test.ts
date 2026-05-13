@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   normalizeBookFrontmatter,
   normalizePostFrontmatter,
+  pickSlug,
   slugify,
 } from "./normalize";
 
@@ -24,6 +25,37 @@ describe("slugify", () => {
 
   it("trims leading/trailing separators", () => {
     expect(slugify("--hello--")).toBe("hello");
+  });
+
+  it("strips punctuation", () => {
+    expect(slugify("AI 시대, 우리는?")).toBe("ai-시대-우리는");
+    expect(slugify("Hello, World!")).toBe("hello-world");
+  });
+});
+
+describe("pickSlug", () => {
+  it("derives slug from frontmatter title", () => {
+    expect(pickSlug({}, "/v/Untitled.md", "AI 시대의 협업")).toBe(
+      "ai-시대의-협업"
+    );
+  });
+
+  it("falls back to filename when title is 'Untitled'", () => {
+    expect(pickSlug({}, "/v/my-post.md", "Untitled")).toBe("my-post");
+  });
+
+  it("falls back to filename when title is empty", () => {
+    expect(pickSlug({}, "/v/fallback.md", "")).toBe("fallback");
+  });
+
+  it("respects explicit slug override", () => {
+    expect(pickSlug({ slug: "Custom Slug" }, "/v/x.md", "Title")).toBe(
+      "custom-slug"
+    );
+  });
+
+  it("ignores blank slug override", () => {
+    expect(pickSlug({ slug: "  " }, "/v/x.md", "Title")).toBe("title");
   });
 });
 

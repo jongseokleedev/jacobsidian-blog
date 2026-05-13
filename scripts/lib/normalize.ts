@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { PostCategory } from "../config";
 
 export function slugify(input: string): string {
@@ -5,9 +6,25 @@ export function slugify(input: string): string {
     .replace(/\.md$/i, "")
     .toLowerCase()
     .trim()
+    .replace(/[,.!?;:'"`()\[\]{}<>/\\|*&^%$#@~]/g, "")
     .replace(/[\s_]+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+export function pickSlug(
+  vaultFrontmatter: Record<string, unknown>,
+  absolutePath: string,
+  title: string
+): string {
+  const explicit = vaultFrontmatter.slug;
+  if (typeof explicit === "string" && explicit.trim()) return slugify(explicit);
+
+  const fromTitle = slugify(title);
+  const fromFile = slugify(path.basename(absolutePath, ".md"));
+
+  if (fromTitle && fromTitle !== "untitled") return fromTitle;
+  return fromFile;
 }
 
 function toIsoDate(value: unknown): string | undefined {

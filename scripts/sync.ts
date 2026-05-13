@@ -10,7 +10,7 @@ import { discoverBooks, discoverPosts } from "./lib/discover";
 import {
   normalizeBookFrontmatter,
   normalizePostFrontmatter,
-  slugify,
+  pickSlug,
 } from "./lib/normalize";
 import { cleanOrphans, writeContent } from "./lib/write";
 
@@ -40,12 +40,9 @@ async function run(options: SyncOptions) {
 
   const postSlugs = new Set<string>();
   for (const post of posts) {
-    const baseName =
-      path.basename(post.absolutePath, ".md") || path.basename(post.absolutePath);
-    const slug = slugify(baseName);
-    postSlugs.add(slug);
-
     const frontmatter = normalizePostFrontmatter(post.frontmatter, post.category);
+    const slug = pickSlug(post.frontmatter, post.absolutePath, frontmatter.title);
+    postSlugs.add(slug);
     await writeContent({
       destDir: postsDest,
       slug,
@@ -60,12 +57,9 @@ async function run(options: SyncOptions) {
 
   const bookSlugs = new Set<string>();
   for (const book of books) {
-    const baseName =
-      path.basename(book.absolutePath, ".md") || path.basename(book.absolutePath);
-    const slug = slugify(baseName);
-    bookSlugs.add(slug);
-
     const frontmatter = normalizeBookFrontmatter(book.frontmatter);
+    const slug = pickSlug(book.frontmatter, book.absolutePath, frontmatter.title);
+    bookSlugs.add(slug);
     await writeContent({
       destDir: booksDest,
       slug,
