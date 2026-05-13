@@ -1,5 +1,5 @@
 export const SITE = {
-  website: "https://jacobsidian.pages.dev/",
+  website: "https://jacobsidian.com/",
   author: "Jacob Lee",
   profile: "",
   desc: "jacobsidian — 글, 책 노트, 개발 기록",
