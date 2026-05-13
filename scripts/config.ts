@@ -11,7 +11,7 @@ const PUBLIC_BASE = "020.Area/022.Writing/022-1.Public";
 export const POST_SOURCES = {
   thought: path.join(PUBLIC_BASE, "022-1-1.생각"),
   writing: path.join(PUBLIC_BASE, "022-1-2.글쓰기"),
-  it: path.join(PUBLIC_BASE, "022-1-3.IT"),
+  tech: path.join(PUBLIC_BASE, "022-1-3.IT"),
 } as const;
 
 export const BOOKS_SOURCE = path.join(PUBLIC_BASE, "022-1-4.책");

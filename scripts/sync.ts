@@ -33,7 +33,7 @@ const PROJECT_ROOT = path.resolve(__dirname, "..");
 const CATEGORY_TO_SEGMENT: Record<PostCategory, string> = {
   thought: "thoughts",
   writing: "writing",
-  it: "it",
+  tech: "tech",
 };
 
 interface SyncOptions {
