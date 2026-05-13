@@ -16,9 +16,14 @@ export const POST_SOURCES = {
 
 export const BOOKS_SOURCE = path.join(PUBLIC_BASE, "022-1-4.책");
 
+export const ATTACHMENTS_SOURCE = "040.Archive/044.Attachments";
+
 export const CONTENT_DEST = {
   posts: "src/data/posts",
   books: "src/data/books",
+  images: "public/images",
 } as const;
+
+export const PUBLIC_IMAGE_URL = "/images";
 
 export type PostCategory = keyof typeof POST_SOURCES;
