@@ -1,26 +1,51 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Main from "@/layouts/Main.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { SITE } from "@/config";
 
-const all = await getCollection(
-  "posts",
-  ({ data }) => data.category === "thought"
-);
+const all = await getCollection("posts", ({ data }) => data.category === "thought" && !data.draft);
 const posts = getSortedPosts(all);
 ---
 
-<Layout title={`생각 | ${SITE.title}`}>
+<Layout title={`Thoughts | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="생각" pageDesc="일상에서 일어나는 단상들">
-    <ul>
-      {posts.map(entry => <Card {...entry} />)}
-    </ul>
-  </Main>
+  <main id="main-content" class="app-layout pt-12 pb-16">
+    <section class="pb-10 border-b border-border">
+      <h1 class="text-2xl font-semibold tracking-tight mb-1">Thoughts</h1>
+      <p class="text-sm text-foreground/60">일상에서 일어나는 단상들</p>
+    </section>
+
+    {posts.length > 0 ? (
+      <section class="pt-8">
+        <ul class="divide-y divide-border">
+          {posts.map(({ data, id }) => (
+            <li>
+              <a
+                href={`/thoughts/${id}`}
+                class="group grid py-4 gap-x-4 transition-colors duration-150 hover:text-accent"
+                style="grid-template-columns: 6.5rem 1fr;"
+              >
+                <span class="text-xs text-foreground/40 tabular-nums self-center">
+                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </span>
+                <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                  {data.title}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : (
+      <p class="pt-12 text-sm text-foreground/40 text-center">아직 글이 없습니다.</p>
+    )}
+  </main>
   <Footer />
 </Layout>
