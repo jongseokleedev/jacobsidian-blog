@@ -12,6 +12,7 @@ import {
   normalizePostFrontmatter,
   pickSlug,
 } from "./lib/normalize";
+import { stripObsidianBlocks } from "./lib/transform";
 import { cleanOrphans, writeContent } from "./lib/write";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -47,7 +48,7 @@ async function run(options: SyncOptions) {
       destDir: postsDest,
       slug,
       frontmatter,
-      body: post.body,
+      body: stripObsidianBlocks(post.body),
       dryRun,
     });
     console.log(
@@ -64,7 +65,7 @@ async function run(options: SyncOptions) {
       destDir: booksDest,
       slug,
       frontmatter,
-      body: book.body,
+      body: stripObsidianBlocks(book.body),
       dryRun,
     });
     console.log(
