@@ -16,7 +16,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   class="relative overflow-hidden bg-background"
 >
   <canvas style="width: 100%; height: 100%;"></canvas>
-  <div class="graph-tooltip pointer-events-none absolute hidden text-xs text-foreground/70"></div>
   <!-- Node preview popup -->
   <div class="graph-preview pointer-events-none absolute hidden rounded-lg border border-border bg-background/95 backdrop-blur-sm px-3 py-2 shadow-lg max-w-[200px]">
     <div class="graph-preview-title text-sm font-medium text-foreground truncate"></div>
@@ -60,7 +59,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     const canvas = containerEl.querySelector("canvas");
-    const tooltip = containerEl.querySelector(".graph-tooltip");
     const preview = containerEl.querySelector(".graph-preview");
     const previewTitle = containerEl.querySelector(".graph-preview-title");
     const previewMeta = containerEl.querySelector(".graph-preview-meta");
@@ -293,12 +291,28 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         if (alpha <= 0.01) continue;
 
         const r = nodeRadius(n);
-        const fontSize = isHovered ? 11 : 9;
-        ctx.font = `${isHovered ? "500 " : ""}${fontSize}px sans-serif`;
-        const label = n.title?.length > 20 ? n.title.slice(0, 19) + "…" : n.title;
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = isHovered ? fg : fg + "aa";
-        ctx.fillText(label, n.x, n.y + r + fontSize + 2);
+
+        if (isHovered) {
+          // Large label with connection count beneath
+          const fontSize = 13;
+          ctx.font = `600 ${fontSize}px sans-serif`;
+          const label = n.title?.length > 28 ? n.title.slice(0, 27) + "…" : n.title;
+          ctx.fillStyle = fg;
+          ctx.fillText(label, n.x, n.y + r + fontSize + 3);
+
+          const connections = degree.get(n.id) ?? 0;
+          ctx.font = `10px sans-serif`;
+          ctx.fillStyle = fg + "66";
+          ctx.fillText(`${connections} connection${connections !== 1 ? "s" : ""}`, n.x, n.y + r + fontSize + 17);
+        } else {
+          const fontSize = 9;
+          ctx.font = `${fontSize}px sans-serif`;
+          const label = n.title?.length > 20 ? n.title.slice(0, 19) + "…" : n.title;
+          ctx.fillStyle = fg + "aa";
+          ctx.fillText(label, n.x, n.y + r + fontSize + 2);
+        }
+
         ctx.globalAlpha = 1;
       }
 
@@ -413,33 +427,18 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       }
     });
 
-    // Hover — show tooltip with connection count
+    // Hover
     canvas.addEventListener("mousemove", event => {
       const t = currentTransform;
       const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
       const changed = found?.id !== hoveredNode?.id;
       hoveredNode = found;
       if (changed) draw();
-
-      if (found) {
-        const connections = degree.get(found.id) ?? 0;
-        const connLabel = found.type === "tag"
-          ? `tag · ${connections} posts`
-          : `${connections} connection${connections !== 1 ? "s" : ""}`;
-        tooltip.textContent = `${found.title}  —  ${connLabel}`;
-        tooltip.style.left = `${event.offsetX + 12}px`;
-        tooltip.style.top = `${event.offsetY - 4}px`;
-        tooltip.classList.remove("hidden");
-        canvas.style.cursor = found.url ? "pointer" : "default";
-      } else {
-        tooltip.classList.add("hidden");
-        canvas.style.cursor = "default";
-      }
+      canvas.style.cursor = found?.url ? "pointer" : "default";
     });
 
     canvas.addEventListener("mouseleave", () => {
       hoveredNode = null;
-      tooltip.classList.add("hidden");
       draw();
     });
 
