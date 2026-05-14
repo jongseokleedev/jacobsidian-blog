@@ -40,6 +40,8 @@ const {
 
 const { Content } = await render(post);
 
+const readingTime = Math.max(1, Math.ceil((post.body ?? "").split(/\s+/).length / 200));
+
 let ogImageUrl: string | undefined;
 
 // Determine OG image source
@@ -97,6 +99,8 @@ const nextPost =
     </h1>
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      <span aria-hidden="true" class="text-foreground/30">·</span>
+      <span class="text-sm opacity-80">{readingTime} min read</span>
       <span
         aria-hidden="true"
         class:list={[
