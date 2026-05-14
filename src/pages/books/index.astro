@@ -18,7 +18,7 @@ const books = all.sort(
   <Header />
   <main id="main-content" class="app-layout pt-12 pb-16">
     <h1 class="text-2xl font-semibold tracking-tight mb-1">Books</h1>
-    <p class="text-sm text-foreground/60 mb-8">읽은 책에 대한 노트</p>
+    <p class="text-sm text-foreground/60 mb-8">읽은 책들, 남은 생각들</p>
     <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
       {books.map(entry => <BookCard {...entry} />)}
     </ul>

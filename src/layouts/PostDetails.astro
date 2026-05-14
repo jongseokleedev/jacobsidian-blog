@@ -145,9 +145,8 @@ const nextPost =
       </button>
     </div>
 
-    <hr class="my-6 border-dashed" />
-
     <!-- Previous/Next Post Buttons -->
+    {(prevPost || nextPost) && <hr class="my-6 border-dashed" />}
     <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {
         prevPost && (
