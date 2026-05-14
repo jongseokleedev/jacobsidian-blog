@@ -98,6 +98,9 @@ const nextPost =
     {post.collection === "books" && (
       <p class="mt-1 text-base text-foreground/50">{author}</p>
     )}
+    {description && (
+      <p class="mt-2 text-base text-foreground/60 leading-relaxed">{description}</p>
+    )}
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
       <span aria-hidden="true" class="text-foreground/30">·</span>
@@ -210,7 +213,7 @@ const nextPost =
     // Create the main container div
     const progressContainer = document.createElement("div");
     progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+      "progress-container fixed top-0 z-20 h-0.5 w-full";
 
     // Create the progress bar div
     const progressBar = document.createElement("div");
