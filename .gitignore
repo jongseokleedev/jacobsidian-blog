@@ -29,4 +29,5 @@ public/pagefind
 # session artifacts
 .playwright-mcp/
 .serena/
-*.pngcandidates/
+*.png
+candidates/
