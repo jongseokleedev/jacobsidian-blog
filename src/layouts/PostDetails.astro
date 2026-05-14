@@ -122,6 +122,8 @@ const nextPost =
       <Content />
     </article>
 
+    <BackToTopButton />
+
     <div class="mt-12">
       <div class="rounded-lg border border-border overflow-hidden">
         <div class="flex items-center justify-between px-4 py-2.5 border-b border-border bg-background">
@@ -178,8 +180,6 @@ const nextPost =
           .map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
       </ul>
     )}
-
-    <BackToTopButton />
 
     <div class="my-6 flex justify-end">
       <button
