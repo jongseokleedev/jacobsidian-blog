@@ -1,11 +1,21 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
 import GraphCanvas from "@/components/GraphCanvas.astro";
+import { SITE } from "@/config";
 ---
 
-<Layout title="Graph" description="노트 간 연결 그래프">
-  <main id="main-content" class="app-layout py-8">
-    <h1 class="mb-6 text-2xl font-bold">Graph</h1>
-    <GraphCanvas height={600} />
+<Layout title={`Graph | ${SITE.title}`} description="노트 간 연결 그래프">
+  <Header />
+  <main id="main-content" class="app-layout pt-12 pb-16">
+    <section class="pb-10 border-b border-border">
+      <h1 class="text-2xl font-semibold tracking-tight mb-1">Graph</h1>
+      <p class="text-sm text-foreground/60">노트 간 연결 지도</p>
+    </section>
+    <section class="pt-8">
+      <GraphCanvas height={600} />
+    </section>
   </main>
+  <Footer />
 </Layout>
