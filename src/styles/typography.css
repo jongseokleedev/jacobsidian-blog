@@ -11,6 +11,10 @@
     /* Mobile-first font size: 17px on small screens, 16px on larger */
     font-size: 17px;
     line-height: 1.85;
+    letter-spacing: 0.015em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 
     @media (min-width: 640px) {
       font-size: 16px;
@@ -94,7 +98,20 @@
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-s-2 border-s-accent/60 wrap-break-word;
+      font-style: italic;
+      opacity: 0.85;
+      padding-left: 1.25em;
+      margin-top: 1.75em;
+      margin-bottom: 1.75em;
+
+      p {
+        margin-bottom: 0.75em;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
     }
 
     details {
