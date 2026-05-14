@@ -140,7 +140,15 @@ const filters = [
             </li>
           ))}
         </ul>
-        <div id="scroll-sentinel" class="h-4"></div>
+
+        <div id="load-more-wrap" class="hidden mt-6 text-center">
+          <button
+            id="load-more-btn"
+            class="text-sm text-foreground/50 hover:text-accent transition-colors border border-border rounded-full px-5 py-2 hover:border-accent"
+          >
+            Load more
+          </button>
+        </div>
       </section>
     )}
   </main>
@@ -160,22 +168,38 @@ const filters = [
 
 <script>
   function initArchives() {
-    const sentinel = document.getElementById("scroll-sentinel");
     const items = document.querySelectorAll<HTMLElement>("#post-list li[data-index]");
     const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
-    if (!sentinel || !items.length) return;
+    const loadMoreWrap = document.getElementById("load-more-wrap");
+    const loadMoreBtn = document.getElementById("load-more-btn");
+    if (!items.length) return;
 
+    const PAGE = 10;
     let activeFilter = "all";
-    let shown = 10;
+    let shown = PAGE;
+
+    function filteredItems() {
+      return [...items].filter(el =>
+        activeFilter === "all" || el.dataset.category === activeFilter
+      );
+    }
+
+    function updateLoadMore() {
+      const hasMore = filteredItems().length > shown;
+      loadMoreWrap?.classList.toggle("hidden", !hasMore);
+    }
+
+    function showItems() {
+      const all = filteredItems();
+      items.forEach(el => el.classList.add("hidden"));
+      all.slice(0, shown).forEach(el => el.classList.remove("hidden"));
+      updateLoadMore();
+    }
 
     function applyFilter(key: string) {
       activeFilter = key;
-      shown = 10;
-      items.forEach(el => {
-        const idx = Number(el.dataset.index);
-        const match = key === "all" || el.dataset.category === key;
-        el.classList.toggle("hidden", !match || idx >= shown);
-      });
+      shown = PAGE;
+      showItems();
       buttons.forEach(btn => {
         const isActive = btn.dataset.filter === key;
         btn.classList.toggle("border-accent", isActive);
@@ -189,24 +213,11 @@ const filters = [
       btn.addEventListener("click", () => applyFilter(btn.dataset.filter ?? "all"))
     );
 
-    const observer = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) return;
-      const next = shown + 10;
-      items.forEach(el => {
-        const idx = Number(el.dataset.index);
-        const match = activeFilter === "all" || el.dataset.category === activeFilter;
-        if (match && idx >= shown && idx < next) el.classList.remove("hidden");
-      });
-      shown = next;
-      const remaining = [...items].filter(el => {
-        const idx = Number(el.dataset.index);
-        const match = activeFilter === "all" || el.dataset.category === activeFilter;
-        return match && idx >= shown;
-      });
-      if (!remaining.length) observer.disconnect();
-    }, { rootMargin: "100px" });
+    loadMoreBtn?.addEventListener("click", () => {
+      shown += PAGE;
+      showItems();
+    });
 
-    observer.observe(sentinel);
     applyFilter("all");
   }
 
