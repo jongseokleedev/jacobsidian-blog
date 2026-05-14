@@ -16,12 +16,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   class="relative overflow-hidden bg-background"
 >
   <canvas style="width: 100%; height: 100%;"></canvas>
-  <!-- Node preview popup -->
-  <div class="graph-preview pointer-events-none absolute hidden rounded-lg border border-border bg-background/95 backdrop-blur-sm px-3 py-2 shadow-lg max-w-[200px]">
-    <div class="graph-preview-title text-sm font-medium text-foreground truncate"></div>
-    <div class="graph-preview-meta text-xs text-foreground/40 mt-0.5"></div>
-    <div class="text-xs text-accent mt-1">클릭하여 이동 →</div>
-  </div>
   <!-- Zoom-to-fit button -->
   <button
     class="fit-btn absolute bottom-3 right-3 size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
@@ -59,9 +53,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     const canvas = containerEl.querySelector("canvas");
-    const preview = containerEl.querySelector(".graph-preview");
-    const previewTitle = containerEl.querySelector(".graph-preview-title");
-    const previewMeta = containerEl.querySelector(".graph-preview-meta");
     const fitBtn = containerEl.querySelector(".fit-btn");
     const rect = containerEl.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -128,7 +119,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     let hoveredNode = null;
     let pinnedNodes = new Set();
-    let previewNode = null;
     let currentTransform = d3.zoomIdentity;
 
     // Hover animation state
@@ -494,51 +484,10 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       startAnim();
     });
 
-    // Click: first click shows preview, second click navigates
     canvas.addEventListener("click", event => {
       const t = currentTransform;
-      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
-
-      if (!found?.url) {
-        previewNode = null;
-        preview.classList.add("hidden");
-        return;
-      }
-
-      if (previewNode?.id === found.id) {
-        // Second click — navigate
-        window.location.href = found.url;
-        return;
-      }
-
-      // First click — show preview
-      previewNode = found;
-      previewTitle.textContent = found.title;
-      previewMeta.textContent = found.pubDatetime
-        ? new Date(found.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
-        : found.category ?? "";
-
-      // Position preview, keep within canvas bounds
-      const pw = 200, ph = 80;
-      let px = event.offsetX + 16;
-      let py = event.offsetY - ph / 2;
-      if (px + pw > rect.width) px = event.offsetX - pw - 16;
-      if (py < 0) py = 4;
-      if (py + ph > rect.height) py = rect.height - ph - 4;
-
-      preview.style.left = `${px}px`;
-      preview.style.top = `${py}px`;
-      preview.classList.remove("hidden");
-    });
-
-    // Hide preview when clicking outside a node
-    canvas.addEventListener("mousedown", event => {
-      const t = currentTransform;
-      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
-      if (!found) {
-        previewNode = null;
-        preview.classList.add("hidden");
-      }
+      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20);
+      if (found?.url) window.location.href = found.url;
     });
 
     const themeObserver = new MutationObserver(draw);
