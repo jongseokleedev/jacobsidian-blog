@@ -16,6 +16,10 @@ export function stripObsidianBlocks(markdown: string): string {
     .replace(/^\n+/, "");
 }
 
+export function stripLeadingH1(markdown: string): string {
+  return markdown.replace(/^#[ \t]+.+(\r?\n|$)/, "").replace(/^\n+/, "");
+}
+
 function slugifyAnchor(section: string): string {
   return section
     .toLowerCase()

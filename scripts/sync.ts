@@ -18,6 +18,7 @@ import {
 } from "./lib/normalize";
 import { buildLinkMap, type LinkEntry } from "./lib/linkMap";
 import {
+  stripLeadingH1,
   stripObsidianBlocks,
   transformImageEmbeds,
   transformTransclusions,
@@ -144,6 +145,7 @@ async function run(options: SyncOptions) {
 
   function applyTransforms(body: string): string {
     let out = body;
+    out = stripLeadingH1(out);
     out = transformTransclusions(out, noteBodyResolver);
     out = transformWikilinks(out, linkMap);
     out = transformImageEmbeds(out, imageResolver);
