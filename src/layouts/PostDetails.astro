@@ -6,7 +6,6 @@ import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
 import Datetime from "@/components/Datetime.astro";
 import EditPost from "@/components/EditPost.astro";
-import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import Giscus from "@/components/Giscus.astro";
@@ -124,13 +123,28 @@ const nextPost =
 
     <EditPost class="sm:hidden" {hideEditPost} {post} />
 
-    <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
-    </ul>
+    {tags.filter(t => t !== "post" && t !== "book" && t !== "others").length > 0 && (
+      <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+        {tags
+          .filter(t => t !== "post" && t !== "book" && t !== "others")
+          .map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+    )}
 
     <BackToTopButton />
 
-    <ShareLinks />
+    <div class="my-6 flex justify-end">
+      <button
+        id="share-btn"
+        class="flex items-center gap-2 text-sm text-foreground/60 hover:text-accent transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        <span>Share</span>
+      </button>
+    </div>
 
     <hr class="my-6 border-dashed" />
 
@@ -168,6 +182,28 @@ const nextPost =
   </main>
   <Footer />
 </Layout>
+
+<script>
+  function initShareButton() {
+    const btn = document.getElementById("share-btn");
+    if (!btn) return;
+    btn.addEventListener("click", async () => {
+      if (navigator.share) {
+        await navigator.share({ title: document.title, url: location.href });
+      } else {
+        await navigator.clipboard.writeText(location.href);
+        const label = btn.querySelector("span") as HTMLElement | null;
+        if (label) {
+          const orig = label.textContent;
+          label.textContent = "Copied!";
+          setTimeout(() => { label.textContent = orig; }, 1500);
+        }
+      }
+    });
+  }
+  initShareButton();
+  document.addEventListener("astro:after-swap", initShareButton);
+</script>
 
 <script is:inline data-astro-rerun>
   /** Create a progress indicator
