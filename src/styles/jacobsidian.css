@@ -24,6 +24,14 @@
   --jsd-redraw-duration: 0.85s;
   --jsd-redraw-stagger: 0.25s;
   --jsd-redraw-easing: cubic-bezier(.2, .7, .2, 1);
+
+  /* Wordmark caret (blinking cursor at end of wordmark on hover).
+     Begins after the symbol redraw completes — total redraw = duration + stagger*2. */
+  --jsd-caret-delay: calc(var(--jsd-redraw-duration) + var(--jsd-redraw-stagger) * 2);
+  --jsd-caret-duration: 1.4s;
+  --jsd-caret-width: 0.08em;
+  --jsd-caret-height: 0.85em;
+  --jsd-caret-gap: 0.18em; /* breathing room between wordmark and caret */
 }
 
 /* ── Lockup ──────────────────────────────────────────────────── */
@@ -52,41 +60,90 @@
 
 /* ── Wordmark ────────────────────────────────────────────────── */
 .jsd-wm {
-  font-family: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   font-size: 1em;
   letter-spacing: var(--jsd-tracking);
   line-height: 1;
   white-space: nowrap;
+  position: relative;
+  padding-right: calc(var(--jsd-caret-width) + var(--jsd-caret-gap));
 }
 .jsd-wm .t { font-weight: var(--jsd-thin-weight); opacity: var(--jsd-thin-opacity); }
 .jsd-wm .b { font-weight: var(--jsd-bold-weight); }
 
-/* ── Hover redraw ────────────────────────────────────────────── */
-/* On pointer hover or keyboard focus the three edges draw themselves
-   in sequence (~250ms apart), each easing in with a snappy beat.
-   At rest the edges sit fully drawn. */
+/* Caret — sits at the trailing edge of the wordmark, hidden at rest. */
+.jsd-wm::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: var(--jsd-caret-width);
+  height: var(--jsd-caret-height);
+  background: currentColor;
+  transform: translateY(-50%) scaleY(0);
+  transform-origin: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Hover sequence ──────────────────────────────────────────────
+   Two-part motion, chained:
+   1) Symbol redraw — 3 edges drawn in sequence (~250ms apart) over
+      ~1.35s total. At rest the edges sit fully drawn.
+   2) Caret blink — a typing cursor flashes at the trailing edge of
+      the wordmark, like the symbol just finished "writing" the name.
+   The intent is a single "this is live, this is being authored" beat —
+   the brand's only motion accent.
+   ────────────────────────────────────────────────────────────────── */
+
+/* 1 — Symbol redraw */
 .jsd-mark .edge {
   stroke-dasharray: 30;
   stroke-dashoffset: 0;
 }
 .jsd-logo:hover .jsd-mark .edge,
-.jsd-logo:focus-visible .jsd-mark .edge {
+.jsd-logo:focus-visible .jsd-mark .edge,
+.jsd-logo--autoplay .jsd-mark .edge {
   animation: jsd-redraw var(--jsd-redraw-duration) var(--jsd-redraw-easing) both;
 }
 .jsd-logo:hover .jsd-mark .edge.e2,
-.jsd-logo:focus-visible .jsd-mark .edge.e2 { animation-delay: var(--jsd-redraw-stagger); }
+.jsd-logo:focus-visible .jsd-mark .edge.e2,
+.jsd-logo--autoplay .jsd-mark .edge.e2 { animation-delay: var(--jsd-redraw-stagger); }
 .jsd-logo:hover .jsd-mark .edge.e3,
-.jsd-logo:focus-visible .jsd-mark .edge.e3 { animation-delay: calc(var(--jsd-redraw-stagger) * 2); }
+.jsd-logo:focus-visible .jsd-mark .edge.e3,
+.jsd-logo--autoplay .jsd-mark .edge.e3 { animation-delay: calc(var(--jsd-redraw-stagger) * 2); }
 
 @keyframes jsd-redraw {
   0%   { stroke-dashoffset: 30; }
   100% { stroke-dashoffset: 0; }
 }
 
+/* 2 — Caret blink (chains off the end of the redraw) */
+.jsd-logo:hover .jsd-wm::after,
+.jsd-logo:focus-visible .jsd-wm::after,
+.jsd-logo--autoplay .jsd-wm::after {
+  animation: jsd-caret var(--jsd-caret-duration) steps(1) both;
+  animation-delay: var(--jsd-caret-delay);
+}
+
+@keyframes jsd-caret {
+  0%, 100% { opacity: 0; transform: translateY(-50%) scaleY(0); }
+  5%       { opacity: 1; transform: translateY(-50%) scaleY(1); }
+  20%      { opacity: 0; transform: translateY(-50%) scaleY(1); }
+  35%      { opacity: 1; transform: translateY(-50%) scaleY(1); }
+  50%      { opacity: 0; transform: translateY(-50%) scaleY(1); }
+  65%      { opacity: 1; transform: translateY(-50%) scaleY(1); }
+  80%      { opacity: 0; transform: translateY(-50%) scaleY(1); }
+}
+
 /* Respect user accessibility preference. */
 @media (prefers-reduced-motion: reduce) {
   .jsd-logo:hover .jsd-mark .edge,
-  .jsd-logo:focus-visible .jsd-mark .edge {
+  .jsd-logo:focus-visible .jsd-mark .edge,
+  .jsd-logo--autoplay .jsd-mark .edge,
+  .jsd-logo:hover .jsd-wm::after,
+  .jsd-logo:focus-visible .jsd-wm::after,
+  .jsd-logo--autoplay .jsd-wm::after {
     animation: none;
   }
 }

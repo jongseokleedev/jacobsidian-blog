@@ -41,3 +41,18 @@ const Tag = href ? "a" : "span";
     <span class="t">jac</span><span class="b">ob</span><span class="t">sidian</span>
   </span>
 </Tag>
+
+<script>
+  if (window.matchMedia("(hover: none)").matches) {
+    const logo = document.querySelector<HTMLElement>(".jsd-logo");
+    if (logo) {
+      const PERIOD = 9000;
+      const DURATION = 3200;
+      const play = () => {
+        logo.classList.add("jsd-logo--autoplay");
+        setTimeout(() => logo.classList.remove("jsd-logo--autoplay"), DURATION);
+      };
+      setTimeout(() => { play(); setInterval(play, PERIOD); }, 4000);
+    }
+  }
+</script>
