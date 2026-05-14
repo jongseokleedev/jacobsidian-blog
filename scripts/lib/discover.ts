@@ -28,9 +28,26 @@ async function exists(p: string): Promise<boolean> {
   }
 }
 
+// Obsidian meta-bind sometimes prepends a new frontmatter block instead of
+// updating the existing one, resulting in two consecutive --- blocks.
+// Parse both and merge so no fields are lost (second block wins on conflict).
 async function readMarkdown(absolutePath: string) {
   const raw = await fs.readFile(absolutePath, "utf8");
-  const { data, content } = matter(raw);
+  const trimmed = raw.trimStart();
+
+  const doubleRe = /^---\r?\n([\s\S]*?)\r?\n---\r?\n[\r\n]+(---\r?\n[\s\S]*)/;
+  const doubleMatch = trimmed.match(doubleRe);
+
+  if (doubleMatch) {
+    const first = matter("---\n" + doubleMatch[1] + "\n---");
+    const second = matter(doubleMatch[2]);
+    return {
+      frontmatter: { ...first.data, ...second.data } as Record<string, unknown>,
+      body: second.content,
+    };
+  }
+
+  const { data, content } = matter(trimmed);
   return { frontmatter: data as Record<string, unknown>, body: content };
 }
 
@@ -55,7 +72,9 @@ export async function discoverPosts(
 
     for (const absolutePath of files) {
       const { frontmatter, body } = await readMarkdown(absolutePath);
-      if (frontmatter.status !== "published") continue;
+      const isPublished =
+        frontmatter.status === "published" || frontmatter.published === true;
+      if (!isPublished) continue;
 
       results.push({
         category,
