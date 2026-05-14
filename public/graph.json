@@ -1,0 +1,137 @@
+{
+  "nodes": [
+    {
+      "id": "20260513-1350",
+      "title": "AI 시대, 우리 팀은 왜 피그마 없이 일하기로 했나",
+      "url": "/tech/20260513-1350",
+      "type": "post",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20260513-2148",
+      "title": "엄마 풀",
+      "url": "/writing/20260513-2148",
+      "type": "post",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20260513-1439",
+      "title": "쓸만한 인간",
+      "url": "/books/20260513-1439",
+      "type": "book",
+      "tags": [
+        "book",
+        "에세이"
+      ]
+    },
+    {
+      "id": "20260514-1544",
+      "title": "모두 인공지능 백신 맞았는데 아무도 똑똑해지지 않았다",
+      "url": "/books/20260514-1544",
+      "type": "book",
+      "tags": []
+    },
+    {
+      "id": "20260514-1547",
+      "title": "알라딘",
+      "url": "/books/20260514-1547",
+      "type": "book",
+      "tags": []
+    },
+    {
+      "id": "20260514-1548",
+      "title": "일의 감각",
+      "url": "/books/20260514-1548",
+      "type": "book",
+      "tags": [
+        "book"
+      ]
+    },
+    {
+      "id": "20260514-1549",
+      "title": "실패를 통과하는 일",
+      "url": "/books/20260514-1549",
+      "type": "book",
+      "tags": [
+        "book",
+        "자기계발",
+        "커리어",
+        "창업",
+        "에세이"
+      ]
+    },
+    {
+      "id": "tag:post",
+      "title": "post",
+      "url": "/tags/post",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:book",
+      "title": "book",
+      "url": "/tags/book",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:에세이",
+      "title": "에세이",
+      "url": "/tags/에세이",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:자기계발",
+      "title": "자기계발",
+      "url": "/tags/자기계발",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:커리어",
+      "title": "커리어",
+      "url": "/tags/커리어",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:창업",
+      "title": "창업",
+      "url": "/tags/창업",
+      "type": "tag",
+      "tags": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "20260513-1350",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1439",
+      "target": "20260514-1548",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1439",
+      "target": "20260514-1549",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1548",
+      "target": "20260514-1549",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1439",
+      "target": "20260514-1549",
+      "type": "tag"
+    }
+  ]
+}

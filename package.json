@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "tsx scripts/generateGraph.ts",
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
+    "graph": "tsx scripts/generateGraph.ts",
     "preview": "astro preview",
     "astro:sync": "astro sync",
     "astro": "astro",
