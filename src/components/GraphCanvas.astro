@@ -131,13 +131,18 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     let previewNode = null;
     let currentTransform = d3.zoomIdentity;
 
-    // Hover label animation
-    const hoverProgress = new Map(); // nodeId → 0..1
+    // Hover animation state
+    const hoverProgress = new Map(); // nodeId → 0..1  (label scale)
+    let dimProgress = 0;             // 0..1  (global dim strength)
+    let lastHop1 = null;
+    let lastHop2 = null;
     let animFrameId = null;
 
     function animateTick() {
       let needsRedraw = false;
-      const speed = 0.12;
+      const speed = 0.14;
+
+      // Per-node label progress
       for (const n of nodesCopy) {
         const isHovered = hoveredNode?.id === n.id;
         const cur = hoverProgress.get(n.id) ?? 0;
@@ -149,6 +154,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           hoverProgress.set(n.id, target);
         }
       }
+
+      // Global dim progress
+      const dimTarget = hoveredNode ? 1 : 0;
+      if (Math.abs(dimProgress - dimTarget) > 0.005) {
+        dimProgress += (dimTarget - dimProgress) * speed;
+        needsRedraw = true;
+      } else if (dimProgress !== dimTarget) {
+        dimProgress = dimTarget;
+      }
+
       if (needsRedraw) {
         draw();
         animFrameId = requestAnimationFrame(animateTick);
@@ -158,6 +173,10 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     function startAnim() {
+      if (hoveredNode) {
+        lastHop1 = getHopSets(hoveredNode).hop1;
+        lastHop2 = getHopSets(hoveredNode).hop2;
+      }
       if (!animFrameId) animFrameId = requestAnimationFrame(animateTick);
     }
 
@@ -211,13 +230,18 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
       drawDotGrid(fg);
 
-      const { hop1, hop2 } = hoveredNode ? getHopSets(hoveredNode) : { hop1: null, hop2: null };
+      // Use last known hop sets during fade-out so dim stays stable
+      const activeHop1 = hoveredNode ? getHopSets(hoveredNode).hop1 : lastHop1;
+      const activeHop2 = hoveredNode ? getHopSets(hoveredNode).hop2 : lastHop2;
+      const hop1 = dimProgress > 0.01 ? activeHop1 : null;
+      const hop2 = dimProgress > 0.01 ? activeHop2 : null;
+      const d = dimProgress;
 
       function nodeOpacity(id) {
-        if (!hop1) return 1;
-        if (hop1.has(id)) return 1;
-        if (hop2.has(id)) return 0.45;
-        return 0.1;
+        if (d < 0.01) return 1;
+        if (hop1?.has(id)) return 1;
+        if (hop2?.has(id)) return 1 - d * 0.55;   // lerp → 0.45
+        return 1 - d * 0.9;                         // lerp → 0.1
       }
 
       // Edges
@@ -226,9 +250,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         const sid = e.source?.id ?? e.source;
         const tid = e.target?.id ?? e.target;
         const isActive = !hop1 || (hop1.has(sid) && hop1.has(tid));
-        const opacity = hop1
-          ? (isActive ? 1 : (hop2?.has(sid) || hop2?.has(tid) ? 0.2 : 0.05))
-          : 1;
+        const baseOpacity = isActive ? 1 : (hop2?.has(sid) || hop2?.has(tid) ? 0.2 : 0.05);
+        const opacity = d < 0.01 ? 1 : isActive ? 1 : 1 - d * (1 - baseOpacity);
 
         ctx.globalAlpha = opacity;
         ctx.beginPath();
