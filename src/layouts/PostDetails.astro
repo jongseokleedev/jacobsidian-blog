@@ -127,13 +127,15 @@ const nextPost =
         </button>
       </div>
     </div>
-    <article
-      id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
-    >
-      <Content />
+    <div class="relative">
+      <article
+        id="article"
+        class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      >
+        <Content />
+      </article>
       <BackToTopButton />
-    </article>
+    </div>
 
     <div class="mt-12">
       <div class="rounded-lg border border-border overflow-hidden">
