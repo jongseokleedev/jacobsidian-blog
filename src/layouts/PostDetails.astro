@@ -114,6 +114,18 @@ const nextPost =
         ]}>|</span
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+      <div class="ml-auto">
+        <button
+          id="share-btn"
+          class="flex items-center gap-1.5 text-sm text-foreground/40 hover:text-accent transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          <span>Share</span>
+        </button>
+      </div>
     </div>
     <article
       id="article"
@@ -179,19 +191,6 @@ const nextPost =
           .map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
       </ul>
     )}
-
-    <div class="my-6 flex justify-end">
-      <button
-        id="share-btn"
-        class="flex items-center gap-2 text-sm text-foreground/60 hover:text-accent transition-colors"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-        </svg>
-        <span>Share</span>
-      </button>
-    </div>
 
     <!-- Previous/Next Post Buttons -->
     {(prevPost || nextPost) && <hr class="my-6 border-dashed" />}
