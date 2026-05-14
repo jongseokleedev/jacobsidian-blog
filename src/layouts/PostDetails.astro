@@ -97,6 +97,9 @@ const nextPost =
     >
       {title}
     </h1>
+    {post.collection === "books" && (
+      <p class="mt-1 text-base text-foreground/50">{author}</p>
+    )}
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
       <span aria-hidden="true" class="text-foreground/30">·</span>
