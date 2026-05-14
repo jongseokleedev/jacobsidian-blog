@@ -1,77 +1,77 @@
 # jacobsidian-blog
 
-Jacob의 개인 블로그 — Astro + Obsidian 연동 기반의 정적 사이트입니다.
+Jacob's personal blog — a static site built with Astro and synced with an Obsidian vault.
 
-## 스택
+## Stack
 
-- **Astro** v5 — 정적 사이트 생성
-- **Tailwind CSS** v4 — 스타일링
-- **Pagefind** — 정적 사이트 검색
-- **Vitest** — 단위 테스트 (sync 스크립트)
-- **pnpm** — 패키지 매니저
+- **Astro** v5 — static site generation
+- **Tailwind CSS** v4 — styling
+- **Pagefind** — static site search
+- **Vitest** — unit tests (sync scripts)
+- **pnpm** — package manager
 
-## 시작하기
+## Getting Started
 
 ```bash
 pnpm install
 pnpm run dev        # http://localhost:4321
 ```
 
-## 주요 명령어
+## Commands
 
-| 명령어 | 설명 |
-|--------|------|
-| `pnpm run dev` | 개발 서버 시작 |
-| `pnpm run build` | 프로덕션 빌드 (`dist/`) |
-| `pnpm run preview` | 빌드 결과 미리보기 |
-| `pnpm run lint` | ESLint 검사 |
-| `pnpm run format` | Prettier 포맷 |
-| `pnpm run test` | 단위 테스트 실행 |
-| `pnpm run sync` | Obsidian 볼트 동기화 (dry-run) |
-| `pnpm run sync:apply` | Obsidian 볼트 동기화 적용 |
+| Command | Description |
+|---------|-------------|
+| `pnpm run dev` | Start dev server |
+| `pnpm run build` | Production build (`dist/`) |
+| `pnpm run preview` | Preview production build |
+| `pnpm run lint` | ESLint check |
+| `pnpm run format` | Prettier format |
+| `pnpm run test` | Run unit tests |
+| `pnpm run sync` | Obsidian vault sync (dry-run) |
+| `pnpm run sync:apply` | Obsidian vault sync + apply |
 
-## 콘텐츠 작성
+## Writing Content
 
-포스트는 `src/data/posts/`, 북노트는 `src/data/books/`에 Markdown으로 작성합니다.
+Posts go in `src/data/posts/`, book notes in `src/data/books/`, as Markdown files.
 
-필수 frontmatter:
+Required frontmatter:
 
 ```yaml
 ---
-title: '제목'
+title: 'Post Title'
 category: tech          # thought | writing | tech
 pubDatetime: '2026-05-13T00:00:00.000Z'
-description: '한 줄 요약'
+description: 'Brief summary'
 ---
 ```
 
-## 프로젝트 구조
+## Project Structure
 
 ```
 src/
-├── components/     # .astro 컴포넌트
+├── components/     # .astro components
 ├── data/
-│   ├── posts/      # 블로그 포스트 (.md)
-│   └── books/      # 북노트 (.md)
-├── layouts/        # 페이지 레이아웃
-├── pages/          # 파일 기반 라우팅
-├── scripts/        # Obsidian 동기화 스크립트
+│   ├── posts/      # blog posts (.md)
+│   └── books/      # book notes (.md)
+├── layouts/        # page layouts
+├── pages/          # file-based routing
+├── scripts/        # Obsidian sync script
 ├── styles/         # global.css, typography.css
-├── utils/          # 공통 헬퍼 함수
-├── config.ts       # 사이트 설정 (제목, 저자 등)
-└── content.config.ts  # 콘텐츠 컬렉션 스키마
+├── utils/          # shared helper functions
+├── config.ts       # site config (title, author, etc.)
+└── content.config.ts  # content collection schema
 ```
 
-## Obsidian 연동
+## Obsidian Sync
 
-`scripts/sync.ts`를 통해 Obsidian 볼트에서 콘텐츠를 가져옵니다.
+Content is imported from an Obsidian vault via `scripts/sync.ts`.
 
 ```bash
-pnpm run sync        # 변경사항 확인 (dry-run)
-pnpm run sync:apply  # 실제 적용
-pnpm run vault:push  # 동기화 + 커밋 + 푸시
+pnpm run sync        # preview changes (dry-run)
+pnpm run sync:apply  # apply changes
+pnpm run vault:push  # sync + commit + push
 ```
 
-## 라이선스
+## License
 
 MIT
