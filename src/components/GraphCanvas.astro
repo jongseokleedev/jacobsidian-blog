@@ -100,6 +100,19 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       return CATEGORY_COLORS[n.category] ?? "#aaaaaa";
     }
 
+    let hoveredNode = null;
+
+    function getNeighborIds(node) {
+      const ids = new Set([node.id]);
+      for (const e of edgesCopy) {
+        const sid = e.source?.id ?? e.source;
+        const tid = e.target?.id ?? e.target;
+        if (sid === node.id) ids.add(tid);
+        if (tid === node.id) ids.add(sid);
+      }
+      return ids;
+    }
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
@@ -111,59 +124,80 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const accent = getVar("--accent") || "#f97316";
       const muted = getVar("--muted") || "#555";
 
+      const neighborIds = hoveredNode ? getNeighborIds(hoveredNode) : null;
+      const dimAlpha = "22";   // dimmed opacity for unrelated elements
+      const activeAlpha = "cc"; // edge opacity when active
+
       // Edges
       for (const e of edgesCopy) {
         if (!e.source.x) continue;
+        const sid = e.source?.id ?? e.source;
+        const tid = e.target?.id ?? e.target;
+        const isActive = !neighborIds || (neighborIds.has(sid) && neighborIds.has(tid));
+
         ctx.beginPath();
         ctx.moveTo(e.source.x, e.source.y);
         ctx.lineTo(e.target.x, e.target.y);
         if (e.type === "tag") {
           ctx.setLineDash([3, 4]);
-          ctx.strokeStyle = muted + "44";
+          ctx.strokeStyle = isActive ? muted + "66" : muted + dimAlpha;
           ctx.lineWidth = 0.8;
         } else {
           ctx.setLineDash([]);
-          ctx.strokeStyle = fg + "44";
-          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = isActive ? fg + activeAlpha : fg + dimAlpha;
+          ctx.lineWidth = isActive ? 1.5 : 0.8;
         }
         ctx.stroke();
         ctx.setLineDash([]);
       }
 
-      // Nodes — Obsidian-style flat circles
+      // Nodes
       for (const n of nodesCopy) {
         if (n.x == null) continue;
         const isFocused = n.id === focusId;
-        const r = isFocused ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
-        const color = isFocused ? accent : nodeColor(n);
+        const isHovered = hoveredNode?.id === n.id;
+        const isNeighbor = neighborIds ? neighborIds.has(n.id) : true;
+        const r = (isFocused || isHovered) ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
+        const baseColor = isFocused ? accent : nodeColor(n);
 
-        // Focused node: soft outer ring
-        if (isFocused) {
+        // Outer ring for hovered node
+        if (isHovered) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+          ctx.fillStyle = baseColor + "33";
+          ctx.fill();
+        } else if (isFocused) {
           ctx.beginPath();
           ctx.arc(n.x, n.y, r + 4, 0, Math.PI * 2);
           ctx.fillStyle = accent + "33";
           ctx.fill();
         }
 
-        // Flat filled circle
+        ctx.globalAlpha = neighborIds && !isNeighbor ? 0.12 : 1;
         ctx.beginPath();
         ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.fillStyle = baseColor;
         ctx.fill();
+        ctx.globalAlpha = 1;
       }
 
-      // Labels — only when zoomed in enough
-      if (currentTransform.k > 1.4) {
-        const fontSize = Math.max(9, 11 / currentTransform.k);
-        ctx.font = `${fontSize}px sans-serif`;
-        ctx.textAlign = "center";
-        for (const n of nodesCopy) {
-          if (n.x == null || n.type === "tag") continue;
-          const r = nodeRadius(n);
-          const label = n.title?.length > 18 ? n.title.slice(0, 17) + "…" : n.title;
-          ctx.fillStyle = fg + "cc";
-          ctx.fillText(label, n.x, n.y + r + fontSize + 1);
-        }
+      // Labels — hovered node always, others only when zoomed in enough
+      ctx.textAlign = "center";
+      for (const n of nodesCopy) {
+        if (n.x == null || n.type === "tag") continue;
+        const isHovered = hoveredNode?.id === n.id;
+        const isNeighbor = neighborIds ? neighborIds.has(n.id) : false;
+        const showLabel = isHovered || isNeighbor || (!hoveredNode && currentTransform.k > 1.4);
+        if (!showLabel) continue;
+
+        const r = nodeRadius(n);
+        const fontSize = isHovered ? 11 : Math.max(9, 11 / currentTransform.k);
+        ctx.font = `${isHovered ? "500 " : ""}${fontSize}px sans-serif`;
+        const label = n.title?.length > 20 ? n.title.slice(0, 19) + "…" : n.title;
+        ctx.globalAlpha = neighborIds && !isNeighbor ? 0.12 : 1;
+        ctx.fillStyle = isHovered ? fg : fg + "99";
+        ctx.fillText(label, n.x, n.y + r + fontSize + 2);
+        ctx.globalAlpha = 1;
       }
 
       ctx.restore();
@@ -251,7 +285,11 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const t = currentTransform;
       const mx = (event.offsetX - t.x) / t.k;
       const my = (event.offsetY - t.y) / t.k;
-      const found = sim.find(mx, my, 20);
+      const found = sim.find(mx, my, 20) ?? null;
+      const changed = found?.id !== hoveredNode?.id;
+      hoveredNode = found;
+      if (changed) draw();
+
       if (found) {
         tooltip.textContent = found.title;
         tooltip.style.left = `${event.offsetX + 12}px`;
@@ -262,6 +300,12 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         tooltip.classList.add("hidden");
         canvas.style.cursor = "default";
       }
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+      hoveredNode = null;
+      tooltip.classList.add("hidden");
+      draw();
     });
 
     canvas.addEventListener("click", event => {
