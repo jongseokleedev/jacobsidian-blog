@@ -184,7 +184,13 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
   function setup() {
     const container = document.getElementById(containerId);
-    if (container) initGraph(container);
+    if (!container) return;
+    // Skip init if container is hidden (e.g. inside a closed overlay)
+    if (container.offsetWidth === 0) {
+      container.addEventListener("graph:show", () => initGraph(container), { once: true });
+    } else {
+      initGraph(container);
+    }
   }
 
   setup();
