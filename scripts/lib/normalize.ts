@@ -54,6 +54,7 @@ export interface NormalizedPost {
   tags?: string[];
   featured?: boolean;
   draft?: boolean;
+  links?: string[];
 }
 
 export function normalizePostFrontmatter(
@@ -75,6 +76,9 @@ export function normalizePostFrontmatter(
   }
   if (typeof fm.featured === "boolean") out.featured = fm.featured;
   if (typeof fm.draft === "boolean") out.draft = fm.draft;
+  if (Array.isArray(fm.links) && (fm.links as unknown[]).length > 0) {
+    out.links = (fm.links as unknown[]).map(l => String(l));
+  }
 
   return out;
 }
@@ -87,6 +91,7 @@ export interface NormalizedBook {
   description: string;
   tags?: string[];
   draft?: boolean;
+  links?: string[];
 }
 
 export function normalizeBookFrontmatter(
@@ -106,6 +111,9 @@ export function normalizeBookFrontmatter(
     out.tags = (fm.tags as unknown[]).map(t => String(t));
   }
   if (typeof fm.draft === "boolean") out.draft = fm.draft;
+  if (Array.isArray(fm.links) && (fm.links as unknown[]).length > 0) {
+    out.links = (fm.links as unknown[]).map(l => String(l));
+  }
 
   return out;
 }

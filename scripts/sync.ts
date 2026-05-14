@@ -18,6 +18,7 @@ import {
 } from "./lib/normalize";
 import { buildLinkMap, type LinkEntry } from "./lib/linkMap";
 import {
+  extractWikilinks,
   stripLeadingH1,
   transformCallouts,
   stripObsidianBlocks,
@@ -182,8 +183,9 @@ async function run(options: SyncOptions) {
   const postSlugs = new Set<string>();
   for (const r of resolvedPosts) {
     postSlugs.add(r.slug);
+    const links = extractWikilinks(r.body);
     const frontmatter = normalizePostFrontmatter(
-      r.item.frontmatter,
+      { ...r.item.frontmatter, links },
       r.item.category
     );
     await writeContent({
@@ -201,7 +203,8 @@ async function run(options: SyncOptions) {
   const bookSlugs = new Set<string>();
   for (const r of resolvedBooks) {
     bookSlugs.add(r.slug);
-    const frontmatter = normalizeBookFrontmatter(r.item.frontmatter);
+    const links = extractWikilinks(r.body);
+    const frontmatter = normalizeBookFrontmatter({ ...r.item.frontmatter, links });
     await writeContent({
       destDir: booksDest,
       slug: r.slug,

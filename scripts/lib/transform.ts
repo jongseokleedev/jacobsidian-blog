@@ -118,6 +118,17 @@ export function transformTransclusions(
   });
 }
 
+export function extractWikilinks(markdown: string): string[] {
+  const pattern = /(?<!!)\[\[([^\[\]\n]+)\]\]/g;
+  const links: string[] = [];
+  for (const match of markdown.matchAll(pattern)) {
+    const inner = match[1];
+    const target = inner.split("|")[0].split("#")[0].trim();
+    links.push(target);
+  }
+  return [...new Set(links)];
+}
+
 export function transformWikilinks(markdown: string, linkMap: LinkMap): string {
   return markdown.replace(/(?<!!)\[\[([^\[\]\n]+)\]\]/g, (_match, inner: string) => {
     const [targetPart, alias] = inner.split("|").map(s => s.trim());
