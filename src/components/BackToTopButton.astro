@@ -5,8 +5,7 @@ import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
 
 <div
   id="btt-btn-container"
-  class="fixed end-4 bottom-8 z-50 translate-y-14 opacity-0 transition-all duration-500 hover:!opacity-100 md:end-auto"
-  style="--app-half: calc(var(--max-w-app, 680px) / 2);"
+  class="fixed end-8 bottom-8 z-50 translate-y-14 opacity-0 transition-all duration-500 hover:!opacity-100"
 >
   <button
     data-button="back-to-top"
@@ -85,10 +84,5 @@ import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
 <style>
   #btt-btn-container.btt-idle {
     opacity: 0.15;
-  }
-  @media (min-width: 768px) {
-    #btt-btn-container {
-      right: calc(50% - 340px - 56px);
-    }
   }
 </style>
