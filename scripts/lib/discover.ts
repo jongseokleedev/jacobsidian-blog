@@ -28,27 +28,34 @@ async function exists(p: string): Promise<boolean> {
   }
 }
 
-// Obsidian meta-bind sometimes prepends a new frontmatter block instead of
-// updating the existing one, resulting in two consecutive --- blocks.
-// Parse both and merge so no fields are lost (second block wins on conflict).
+// Obsidian meta-bind sometimes prepends new frontmatter blocks instead of
+// updating existing ones, resulting in N consecutive --- blocks.
+// Parse all of them and merge (later blocks win on conflict).
 async function readMarkdown(absolutePath: string) {
   const raw = await fs.readFile(absolutePath, "utf8");
-  const trimmed = raw.trimStart();
+  let rest = raw.trimStart();
 
-  const doubleRe = /^---\r?\n([\s\S]*?)\r?\n---\r?\n[\r\n]+(---\r?\n[\s\S]*)/;
-  const doubleMatch = trimmed.match(doubleRe);
+  const fmRe = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/;
+  let merged: Record<string, unknown> = {};
+  let lastBody = "";
+  let matched = false;
 
-  if (doubleMatch) {
-    const first = matter("---\n" + doubleMatch[1] + "\n---");
-    const second = matter(doubleMatch[2]);
-    return {
-      frontmatter: { ...first.data, ...second.data } as Record<string, unknown>,
-      body: second.content,
-    };
+  while (true) {
+    const m = rest.match(fmRe);
+    if (!m) break;
+    const parsed = matter("---\n" + m[1] + "\n---");
+    merged = { ...merged, ...parsed.data };
+    rest = rest.slice(m[0].length).trimStart();
+    lastBody = rest;
+    matched = true;
   }
 
-  const { data, content } = matter(trimmed);
-  return { frontmatter: data as Record<string, unknown>, body: content };
+  if (!matched) {
+    const { data, content } = matter(rest);
+    return { frontmatter: data as Record<string, unknown>, body: content };
+  }
+
+  return { frontmatter: merged, body: lastBody };
 }
 
 export async function discoverPosts(
