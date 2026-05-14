@@ -127,9 +127,39 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     let hoveredNode = null;
-    let pinnedNodes = new Set(); // IDs of pinned nodes
-    let previewNode = null;      // node awaiting second click
+    let pinnedNodes = new Set();
+    let previewNode = null;
     let currentTransform = d3.zoomIdentity;
+
+    // Hover label animation
+    const hoverProgress = new Map(); // nodeId → 0..1
+    let animFrameId = null;
+
+    function animateTick() {
+      let needsRedraw = false;
+      const speed = 0.12;
+      for (const n of nodesCopy) {
+        const isHovered = hoveredNode?.id === n.id;
+        const cur = hoverProgress.get(n.id) ?? 0;
+        const target = isHovered ? 1 : 0;
+        if (Math.abs(cur - target) > 0.005) {
+          hoverProgress.set(n.id, cur + (target - cur) * speed);
+          needsRedraw = true;
+        } else if (cur !== target) {
+          hoverProgress.set(n.id, target);
+        }
+      }
+      if (needsRedraw) {
+        draw();
+        animFrameId = requestAnimationFrame(animateTick);
+      } else {
+        animFrameId = null;
+      }
+    }
+
+    function startAnim() {
+      if (!animFrameId) animFrameId = requestAnimationFrame(animateTick);
+    }
 
     // Label fade threshold — matches Obsidian text-fade behaviour
     const LABEL_FADE_START = 0.6;
@@ -293,24 +323,23 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         const r = nodeRadius(n);
         ctx.globalAlpha = alpha;
 
-        if (isHovered) {
-          // Large label with connection count beneath
-          const fontSize = 13;
-          ctx.font = `600 ${fontSize}px sans-serif`;
-          const label = n.title?.length > 28 ? n.title.slice(0, 27) + "…" : n.title;
-          ctx.fillStyle = fg;
-          ctx.fillText(label, n.x, n.y + r + fontSize + 3);
+        const p = hoverProgress.get(n.id) ?? 0;
+        const fontSize = 9 + p * 4; // 9px → 13px
+        const weight = p > 0.5 ? "600 " : "";
+        ctx.font = `${weight}${fontSize}px sans-serif`;
+        const maxChars = Math.round(20 + p * 8);
+        const label = n.title?.length > maxChars ? n.title.slice(0, maxChars - 1) + "…" : n.title;
+        ctx.fillStyle = p > 0.01 ? fg : fg + "aa";
+        ctx.fillText(label, n.x, n.y + r + fontSize + 2);
 
+        // Connection count fades in below label
+        if (p > 0.3) {
           const connections = degree.get(n.id) ?? 0;
+          ctx.globalAlpha = alpha * ((p - 0.3) / 0.7);
           ctx.font = `10px sans-serif`;
           ctx.fillStyle = fg + "66";
-          ctx.fillText(`${connections} connection${connections !== 1 ? "s" : ""}`, n.x, n.y + r + fontSize + 17);
-        } else {
-          const fontSize = 9;
-          ctx.font = `${fontSize}px sans-serif`;
-          const label = n.title?.length > 20 ? n.title.slice(0, 19) + "…" : n.title;
-          ctx.fillStyle = fg + "aa";
-          ctx.fillText(label, n.x, n.y + r + fontSize + 2);
+          ctx.fillText(`${connections} connection${connections !== 1 ? "s" : ""}`, n.x, n.y + r + fontSize + 16);
+          ctx.globalAlpha = alpha;
         }
 
         ctx.globalAlpha = 1;
@@ -433,13 +462,13 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
       const changed = found?.id !== hoveredNode?.id;
       hoveredNode = found;
-      if (changed) draw();
+      if (changed) startAnim();
       canvas.style.cursor = found?.url ? "pointer" : "default";
     });
 
     canvas.addEventListener("mouseleave", () => {
       hoveredNode = null;
-      draw();
+      startAnim();
     });
 
     // Click: first click shows preview, second click navigates
