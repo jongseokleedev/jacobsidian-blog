@@ -171,8 +171,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     // Label fade threshold — matches Obsidian text-fade behaviour
-    const LABEL_FADE_START = 0.8;
-    const LABEL_FADE_END   = 1.4;
+    const LABEL_FADE_START = 1.5;
+    const LABEL_FADE_END   = 2.2;
     function labelAlpha(k) {
       return Math.min(1, Math.max(0, (k - LABEL_FADE_START) / (LABEL_FADE_END - LABEL_FADE_START)));
     }
