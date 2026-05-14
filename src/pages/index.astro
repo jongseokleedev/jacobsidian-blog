@@ -30,10 +30,18 @@ const categoryPath = (category: string) => {
 <Layout>
   <Header />
   <main id="main-content" data-layout="index" class="app-layout pt-12 pb-16">
-    <!-- Hero: minimal -->
+    <!-- Hero: ASCII -->
     <section class="pb-10 border-b border-border">
-      <h1 class="text-2xl font-semibold tracking-tight mb-1">Jacob</h1>
-      <p class="text-sm text-foreground/60">글쓰기를 좋아하는 어느 개발자의 기록 저장소.</p>
+      <div class="overflow-x-auto">
+        <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] text-foreground/80 font-mono select-none" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
+     ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝██║██╔══██╗██║██╔══██╗████╗  ██║
+     ██║███████║██║     ██║   ██║██████╔╝███████╗██║██║  ██║██║███████║██╔██╗ ██║
+██   ██║██╔══██║██║     ██║   ██║██╔══██╗╚════██║██║██║  ██║██║██╔══██║██║╚██╗██║
+╚█████╔╝██║  ██║╚██████╗╚██████╔╝██████╔╝███████║██║██████╔╝██║██║  ██║██║ ╚████║
+ ╚════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
+      </div>
+      <h1 class="sr-only">jacobsidian</h1>
+      <p class="mt-3 text-sm text-foreground/60">글쓰기를 좋아하는 어느 개발자의 기록 저장소.</p>
     </section>
 
     <!-- Recent posts list -->
