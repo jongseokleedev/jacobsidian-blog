@@ -1,0 +1,69 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE } from "@/config";
+import { SOCIALS } from "@/constants";
+
+const socials = SOCIALS.filter(s => s.name === "GitHub" || s.name === "LinkedIn" || s.name === "Mail");
+
+const categories = [
+  { name: "Thoughts", desc: "일상 속의 공상과 단상", href: "/thoughts" },
+  { name: "Writing",  desc: "에세이, 혹은 소설",    href: "/writing"  },
+  { name: "Tech",     desc: "개발자의 IT, 스타트업 이모저모", href: "/tech" },
+  { name: "Books",    desc: "읽은 책들, 남은 생각들", href: "/books"  },
+];
+---
+
+<Layout title={`About | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pt-12 pb-20">
+
+    <!-- Hero -->
+    <section class="pb-10 border-b border-border">
+      <p class="text-sm text-foreground/40 mb-2 tracking-widest uppercase">About</p>
+      <h1 class="text-3xl font-bold tracking-tight mb-3">Jacob</h1>
+      <p class="text-base text-foreground/60 leading-relaxed">
+        글쓰기를 좋아하는 어느 개발자의 기록 저장소.
+      </p>
+    </section>
+
+    <!-- Categories -->
+    <section class="py-10 border-b border-border">
+      <ul class="space-y-5">
+        {categories.map(cat => (
+          <li>
+            <a href={cat.href} class="group flex items-baseline gap-4 hover:text-accent transition-colors">
+              <span class="w-20 shrink-0 text-sm font-semibold text-accent group-hover:opacity-75 transition-opacity">
+                {cat.name}
+              </span>
+              <span class="text-sm text-foreground/60 group-hover:text-accent transition-colors">
+                {cat.desc}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Contact -->
+    <section class="pt-10">
+      <ul class="flex gap-5">
+        {SOCIALS.filter(s => ["GitHub", "LinkedIn", "Mail"].includes(s.name)).map(s => (
+          <li>
+            <a
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm text-foreground/50 hover:text-accent transition-colors"
+            >
+              {s.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+  </main>
+  <Footer />
+</Layout>

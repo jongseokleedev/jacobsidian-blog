@@ -19,16 +19,12 @@ const { title, description, pubDatetime, modDatetime, timezone } = data;
   <a
     href={getPath(entry as Entry)}
     class:list={[
-      "inline-block text-lg font-medium text-accent",
+      "inline-block text-lg font-medium hover:text-accent transition-colors",
       "decoration-dashed underline-offset-4 hover:underline",
       "focus-visible:no-underline focus-visible:underline-offset-0",
     ]}
   >
-    <Heading
-      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
-    >
-      {title}
-    </Heading>
+    <Heading>{title}</Heading>
   </a>
   <Datetime {pubDatetime} {modDatetime} {timezone} />
   <p>{description}</p>
