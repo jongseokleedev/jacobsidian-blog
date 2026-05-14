@@ -3,9 +3,6 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE } from "@/config";
-import { SOCIALS } from "@/constants";
-
-const socials = SOCIALS.filter(s => s.name === "GitHub" || s.name === "LinkedIn" || s.name === "Mail");
 
 const categories = [
   { name: "Thoughts", desc: "일상 속의 공상과 단상", href: "/thoughts" },
@@ -46,23 +43,6 @@ const categories = [
       </ul>
     </section>
 
-    <!-- Contact -->
-    <section class="pt-10">
-      <ul class="flex gap-5">
-        {SOCIALS.filter(s => ["GitHub", "LinkedIn", "Mail"].includes(s.name)).map(s => (
-          <li>
-            <a
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-sm text-foreground/50 hover:text-accent transition-colors"
-            >
-              {s.name}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
 
   </main>
   <Footer />
