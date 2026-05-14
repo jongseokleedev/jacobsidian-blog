@@ -17,6 +17,12 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 >
   <canvas style="width: 100%; height: 100%;"></canvas>
   <div class="graph-tooltip pointer-events-none absolute hidden text-xs text-foreground/70"></div>
+  <!-- Node preview popup -->
+  <div class="graph-preview pointer-events-none absolute hidden rounded-lg border border-border bg-background/95 backdrop-blur-sm px-3 py-2 shadow-lg max-w-[200px]">
+    <div class="graph-preview-title text-sm font-medium text-foreground truncate"></div>
+    <div class="graph-preview-meta text-xs text-foreground/40 mt-0.5"></div>
+    <div class="text-xs text-accent mt-1">클릭하여 이동 →</div>
+  </div>
   <!-- Zoom-to-fit button -->
   <button
     class="fit-btn absolute bottom-3 right-3 size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
@@ -55,6 +61,9 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const canvas = containerEl.querySelector("canvas");
     const tooltip = containerEl.querySelector(".graph-tooltip");
+    const preview = containerEl.querySelector(".graph-preview");
+    const previewTitle = containerEl.querySelector(".graph-preview-title");
+    const previewMeta = containerEl.querySelector(".graph-preview-meta");
     const fitBtn = containerEl.querySelector(".fit-btn");
     const rect = containerEl.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -120,6 +129,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     let hoveredNode = null;
+    let pinnedNodes = new Set(); // IDs of pinned nodes
+    let previewNode = null;      // node awaiting second click
     let currentTransform = d3.zoomIdentity;
 
     // Label fade threshold — matches Obsidian text-fade behaviour
@@ -130,19 +141,15 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     function drawDotGrid(fg) {
-      const spacing = 28; // world-space grid spacing
+      const spacing = 28;
       const dotR = 0.8 / currentTransform.k;
       const t = currentTransform;
-
-      // Visible bounds in world space
       const x0 = -t.x / t.k;
       const y0 = -t.y / t.k;
       const x1 = (rect.width - t.x) / t.k;
       const y1 = (rect.height - t.y) / t.k;
-
       const startX = Math.floor(x0 / spacing) * spacing;
       const startY = Math.floor(y0 / spacing) * spacing;
-
       ctx.fillStyle = fg + "18";
       for (let gx = startX; gx < x1; gx += spacing) {
         for (let gy = startY; gy < y1; gy += spacing) {
@@ -151,6 +158,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           ctx.fill();
         }
       }
+    }
+
+    // Draw diamond shape for tag nodes
+    function drawDiamond(x, y, r) {
+      ctx.beginPath();
+      ctx.moveTo(x, y - r * 1.4);
+      ctx.lineTo(x + r, y);
+      ctx.lineTo(x, y + r * 1.4);
+      ctx.lineTo(x - r, y);
+      ctx.closePath();
     }
 
     function draw() {
@@ -164,10 +181,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const accent = getVar("--accent") || "#f97316";
       const muted = getVar("--muted") || "#555";
 
-      // 1. Dot grid background
       drawDotGrid(fg);
 
-      // 2. Hover dim sets
       const { hop1, hop2 } = hoveredNode ? getHopSets(hoveredNode) : { hop1: null, hop2: null };
 
       function nodeOpacity(id) {
@@ -210,14 +225,20 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         if (n.x == null) continue;
         const isFocused = n.id === focusId;
         const isHovered = hoveredNode?.id === n.id;
+        const isPinned = pinnedNodes.has(n.id);
         const r = (isFocused || isHovered) ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
         const baseColor = isFocused ? accent : nodeColor(n);
         const opacity = nodeOpacity(n.id);
 
+        // Glow ring
         if (isHovered) {
           ctx.globalAlpha = 1;
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+          if (n.type === "tag") {
+            drawDiamond(n.x, n.y, r + 5);
+          } else {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+          }
           ctx.fillStyle = baseColor + "33";
           ctx.fill();
         } else if (isFocused) {
@@ -229,14 +250,28 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         }
 
         ctx.globalAlpha = opacity;
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        if (n.type === "tag") {
+          drawDiamond(n.x, n.y, r);
+        } else {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        }
         ctx.fillStyle = baseColor;
         ctx.fill();
+
+        // Pin indicator — small dot at top-right of pinned nodes
+        if (isPinned && n.type !== "tag") {
+          ctx.globalAlpha = 1;
+          ctx.beginPath();
+          ctx.arc(n.x + r * 0.7, n.y - r * 0.7, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = accent;
+          ctx.fill();
+        }
+
         ctx.globalAlpha = 1;
       }
 
-      // Labels — zoom-based smooth fade (Obsidian text-fade behaviour)
+      // Labels
       const zoomLabelAlpha = labelAlpha(currentTransform.k);
       ctx.textAlign = "center";
 
@@ -245,13 +280,12 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         const isHovered = hoveredNode?.id === n.id;
         const isHop1 = hop1?.has(n.id);
 
-        // Always show for hovered/hop1; otherwise fade with zoom
         let alpha;
         if (isHovered) {
           alpha = 1;
         } else if (hop1) {
           if (isHop1) alpha = 0.75;
-          else alpha = 0; // hide unrelated labels on hover
+          else alpha = 0;
         } else {
           alpha = zoomLabelAlpha;
         }
@@ -321,7 +355,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     const fitTransform = computeFitTransform();
     d3.select(canvas).call(zoom.transform, fitTransform);
 
-    // Zoom-to-fit button
     fitBtn?.addEventListener("click", () => {
       d3.select(canvas).transition().duration(400).call(zoom.transform, computeFitTransform());
     });
@@ -339,6 +372,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     sim.on("tick", draw);
     sim.alpha(1).restart();
 
+    // Drag with pin-on-release
     const drag = d3.drag()
       .subject(event => {
         const t = currentTransform;
@@ -359,12 +393,27 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       .on("end", event => {
         if (!event.subject) return;
         if (!event.active) sim.alphaTarget(0);
-        event.subject.fx = null;
-        event.subject.fy = null;
+        // Pin the node at its current position
+        pinnedNodes.add(event.subject.id);
+        draw();
       });
 
     d3.select(canvas).call(drag);
 
+    // Double-click to unpin
+    canvas.addEventListener("dblclick", event => {
+      const t = currentTransform;
+      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20);
+      if (found && pinnedNodes.has(found.id)) {
+        pinnedNodes.delete(found.id);
+        found.fx = null;
+        found.fy = null;
+        sim.alpha(0.3).restart();
+        draw();
+      }
+    });
+
+    // Hover — show tooltip with connection count
     canvas.addEventListener("mousemove", event => {
       const t = currentTransform;
       const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
@@ -373,11 +422,15 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       if (changed) draw();
 
       if (found) {
-        tooltip.textContent = found.title;
+        const connections = degree.get(found.id) ?? 0;
+        const connLabel = found.type === "tag"
+          ? `tag · ${connections} posts`
+          : `${connections} connection${connections !== 1 ? "s" : ""}`;
+        tooltip.textContent = `${found.title}  —  ${connLabel}`;
         tooltip.style.left = `${event.offsetX + 12}px`;
         tooltip.style.top = `${event.offsetY - 4}px`;
         tooltip.classList.remove("hidden");
-        canvas.style.cursor = "pointer";
+        canvas.style.cursor = found.url ? "pointer" : "default";
       } else {
         tooltip.classList.add("hidden");
         canvas.style.cursor = "default";
@@ -390,10 +443,51 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       draw();
     });
 
+    // Click: first click shows preview, second click navigates
     canvas.addEventListener("click", event => {
       const t = currentTransform;
-      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20);
-      if (found?.url) window.location.href = found.url;
+      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
+
+      if (!found?.url) {
+        previewNode = null;
+        preview.classList.add("hidden");
+        return;
+      }
+
+      if (previewNode?.id === found.id) {
+        // Second click — navigate
+        window.location.href = found.url;
+        return;
+      }
+
+      // First click — show preview
+      previewNode = found;
+      previewTitle.textContent = found.title;
+      previewMeta.textContent = found.pubDatetime
+        ? new Date(found.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
+        : found.category ?? "";
+
+      // Position preview, keep within canvas bounds
+      const pw = 200, ph = 80;
+      let px = event.offsetX + 16;
+      let py = event.offsetY - ph / 2;
+      if (px + pw > rect.width) px = event.offsetX - pw - 16;
+      if (py < 0) py = 4;
+      if (py + ph > rect.height) py = rect.height - ph - 4;
+
+      preview.style.left = `${px}px`;
+      preview.style.top = `${py}px`;
+      preview.classList.remove("hidden");
+    });
+
+    // Hide preview when clicking outside a node
+    canvas.addEventListener("mousedown", event => {
+      const t = currentTransform;
+      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
+      if (!found) {
+        previewNode = null;
+        preview.classList.add("hidden");
+      }
     });
 
     const themeObserver = new MutationObserver(draw);
