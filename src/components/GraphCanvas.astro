@@ -17,6 +17,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 >
   <canvas style="width: 100%; height: 100%;"></canvas>
   <div class="graph-tooltip pointer-events-none absolute hidden text-xs text-foreground/70"></div>
+  <!-- Zoom-to-fit button -->
+  <button
+    class="fit-btn absolute bottom-3 right-3 size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
+    title="Fit view"
+    aria-label="Fit graph to view"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+    </svg>
+  </button>
 </div>
 
 <script define:vars={{ containerId }}>
@@ -45,6 +55,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const canvas = containerEl.querySelector("canvas");
     const tooltip = containerEl.querySelector(".graph-tooltip");
+    const fitBtn = containerEl.querySelector(".fit-btn");
     const rect = containerEl.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     canvas.width = rect.width * dpr;
@@ -53,18 +64,17 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const getVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
-    // Category → color map
     const CATEGORY_COLORS = {
-      thought:  "#a78bfa",  // violet
-      tech:     "#60a5fa",  // blue
-      writing:  "#34d399",  // emerald
-      book:     "#fbbf24",  // amber
+      thought: "#a78bfa",
+      tech:    "#60a5fa",
+      writing: "#34d399",
+      book:    "#fbbf24",
     };
 
     const nodesCopy = nodes.map(n => ({ ...n }));
     const edgesCopy = edges.map(e => ({ ...e }));
 
-    // Precompute degree per node
+    // Degree
     const degree = new Map();
     for (const n of nodesCopy) degree.set(n.id, 0);
     for (const e of edges) {
@@ -72,7 +82,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       degree.set(e.target, (degree.get(e.target) ?? 0) + 1);
     }
 
-    // Remove isolated nodes (degree 0) — orphaned tag nodes
+    // Remove isolated nodes
     const connectedIds = new Set(nodesCopy.filter(n => (degree.get(n.id) ?? 0) > 0).map(n => n.id));
     nodesCopy.splice(0, nodesCopy.length, ...nodesCopy.filter(n => connectedIds.has(n.id)));
     edgesCopy.splice(0, edgesCopy.length, ...edgesCopy.filter(e =>
@@ -82,35 +92,65 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const nodeRadius = n => {
       if (n.type === "tag") return 4;
-      const d = degree.get(n.id) ?? 0;
-      return Math.min(5 + d * 1.5, 14);
+      return Math.min(5 + (degree.get(n.id) ?? 0) * 1.5, 14);
     };
 
-    let currentTransform = d3.zoomIdentity;
-
-    const sim = d3.forceSimulation(nodesCopy)
-      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => e.type === "tag" ? 30 : 60))
-      .force("charge", d3.forceManyBody().strength(n => n.type === "tag" ? -30 : -120))
-      .force("center", d3.forceCenter(rect.width / 2, rect.height / 2))
-      .force("collision", d3.forceCollide(n => nodeRadius(n) + 4));
-
-    // Returns a clean hex color (no alpha suffix)
     function nodeColor(n) {
       if (n.type === "tag") return "#888888";
       return CATEGORY_COLORS[n.category] ?? "#aaaaaa";
     }
 
-    let hoveredNode = null;
+    // Build adjacency for 2-hop lookup
+    const adjacency = new Map();
+    for (const n of nodesCopy) adjacency.set(n.id, new Set());
+    for (const e of edgesCopy) {
+      const sid = typeof e.source === "object" ? e.source.id : e.source;
+      const tid = typeof e.target === "object" ? e.target.id : e.target;
+      adjacency.get(sid)?.add(tid);
+      adjacency.get(tid)?.add(sid);
+    }
 
-    function getNeighborIds(node) {
-      const ids = new Set([node.id]);
-      for (const e of edgesCopy) {
-        const sid = e.source?.id ?? e.source;
-        const tid = e.target?.id ?? e.target;
-        if (sid === node.id) ids.add(tid);
-        if (tid === node.id) ids.add(sid);
+    function getHopSets(node) {
+      const hop1 = new Set([node.id, ...(adjacency.get(node.id) ?? [])]);
+      const hop2 = new Set(hop1);
+      for (const id of adjacency.get(node.id) ?? []) {
+        for (const nid of adjacency.get(id) ?? []) hop2.add(nid);
       }
-      return ids;
+      return { hop1, hop2 };
+    }
+
+    let hoveredNode = null;
+    let currentTransform = d3.zoomIdentity;
+
+    // Label fade threshold — matches Obsidian text-fade behaviour
+    const LABEL_FADE_START = 0.6;
+    const LABEL_FADE_END   = 1.3;
+    function labelAlpha(k) {
+      return Math.min(1, Math.max(0, (k - LABEL_FADE_START) / (LABEL_FADE_END - LABEL_FADE_START)));
+    }
+
+    function drawDotGrid(fg) {
+      const spacing = 28; // world-space grid spacing
+      const dotR = 0.8 / currentTransform.k;
+      const t = currentTransform;
+
+      // Visible bounds in world space
+      const x0 = -t.x / t.k;
+      const y0 = -t.y / t.k;
+      const x1 = (rect.width - t.x) / t.k;
+      const y1 = (rect.height - t.y) / t.k;
+
+      const startX = Math.floor(x0 / spacing) * spacing;
+      const startY = Math.floor(y0 / spacing) * spacing;
+
+      ctx.fillStyle = fg + "18";
+      for (let gx = startX; gx < x1; gx += spacing) {
+        for (let gy = startY; gy < y1; gy += spacing) {
+          ctx.beginPath();
+          ctx.arc(gx, gy, dotR, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
     }
 
     function draw() {
@@ -124,56 +164,71 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const accent = getVar("--accent") || "#f97316";
       const muted = getVar("--muted") || "#555";
 
-      const neighborIds = hoveredNode ? getNeighborIds(hoveredNode) : null;
-      const dimAlpha = "22";   // dimmed opacity for unrelated elements
-      const activeAlpha = "cc"; // edge opacity when active
+      // 1. Dot grid background
+      drawDotGrid(fg);
+
+      // 2. Hover dim sets
+      const { hop1, hop2 } = hoveredNode ? getHopSets(hoveredNode) : { hop1: null, hop2: null };
+
+      function nodeOpacity(id) {
+        if (!hop1) return 1;
+        if (hop1.has(id)) return 1;
+        if (hop2.has(id)) return 0.45;
+        return 0.1;
+      }
 
       // Edges
       for (const e of edgesCopy) {
         if (!e.source.x) continue;
         const sid = e.source?.id ?? e.source;
         const tid = e.target?.id ?? e.target;
-        const isActive = !neighborIds || (neighborIds.has(sid) && neighborIds.has(tid));
+        const isActive = !hop1 || (hop1.has(sid) && hop1.has(tid));
+        const opacity = hop1
+          ? (isActive ? 1 : (hop2?.has(sid) || hop2?.has(tid) ? 0.2 : 0.05))
+          : 1;
 
+        ctx.globalAlpha = opacity;
         ctx.beginPath();
         ctx.moveTo(e.source.x, e.source.y);
         ctx.lineTo(e.target.x, e.target.y);
         if (e.type === "tag") {
           ctx.setLineDash([3, 4]);
-          ctx.strokeStyle = isActive ? muted + "66" : muted + dimAlpha;
+          ctx.strokeStyle = muted + "66";
           ctx.lineWidth = 0.8;
         } else {
           ctx.setLineDash([]);
-          ctx.strokeStyle = isActive ? fg + activeAlpha : fg + dimAlpha;
-          ctx.lineWidth = isActive ? 1.5 : 0.8;
+          ctx.strokeStyle = isActive ? fg + "cc" : fg + "44";
+          ctx.lineWidth = isActive && hop1 ? 1.8 : 1.2;
         }
         ctx.stroke();
         ctx.setLineDash([]);
       }
+      ctx.globalAlpha = 1;
 
       // Nodes
       for (const n of nodesCopy) {
         if (n.x == null) continue;
         const isFocused = n.id === focusId;
         const isHovered = hoveredNode?.id === n.id;
-        const isNeighbor = neighborIds ? neighborIds.has(n.id) : true;
         const r = (isFocused || isHovered) ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
         const baseColor = isFocused ? accent : nodeColor(n);
+        const opacity = nodeOpacity(n.id);
 
-        // Outer ring for hovered node
         if (isHovered) {
+          ctx.globalAlpha = 1;
           ctx.beginPath();
           ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
           ctx.fillStyle = baseColor + "33";
           ctx.fill();
         } else if (isFocused) {
+          ctx.globalAlpha = 1;
           ctx.beginPath();
           ctx.arc(n.x, n.y, r + 4, 0, Math.PI * 2);
           ctx.fillStyle = accent + "33";
           ctx.fill();
         }
 
-        ctx.globalAlpha = neighborIds && !isNeighbor ? 0.12 : 1;
+        ctx.globalAlpha = opacity;
         ctx.beginPath();
         ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
         ctx.fillStyle = baseColor;
@@ -181,21 +236,34 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         ctx.globalAlpha = 1;
       }
 
-      // Labels — hovered node always, others only when zoomed in enough
+      // Labels — zoom-based smooth fade (Obsidian text-fade behaviour)
+      const zoomLabelAlpha = labelAlpha(currentTransform.k);
       ctx.textAlign = "center";
+
       for (const n of nodesCopy) {
         if (n.x == null || n.type === "tag") continue;
         const isHovered = hoveredNode?.id === n.id;
-        const isNeighbor = neighborIds ? neighborIds.has(n.id) : false;
-        const showLabel = isHovered || isNeighbor || (!hoveredNode && currentTransform.k > 1.4);
-        if (!showLabel) continue;
+        const isHop1 = hop1?.has(n.id);
+
+        // Always show for hovered/hop1; otherwise fade with zoom
+        let alpha;
+        if (isHovered) {
+          alpha = 1;
+        } else if (hop1) {
+          if (isHop1) alpha = 0.75;
+          else alpha = 0; // hide unrelated labels on hover
+        } else {
+          alpha = zoomLabelAlpha;
+        }
+
+        if (alpha <= 0.01) continue;
 
         const r = nodeRadius(n);
-        const fontSize = isHovered ? 11 : Math.max(9, 11 / currentTransform.k);
+        const fontSize = isHovered ? 11 : 9;
         ctx.font = `${isHovered ? "500 " : ""}${fontSize}px sans-serif`;
         const label = n.title?.length > 20 ? n.title.slice(0, 19) + "…" : n.title;
-        ctx.globalAlpha = neighborIds && !isNeighbor ? 0.12 : 1;
-        ctx.fillStyle = isHovered ? fg : fg + "99";
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = isHovered ? fg : fg + "aa";
         ctx.fillText(label, n.x, n.y + r + fontSize + 2);
         ctx.globalAlpha = 1;
       }
@@ -212,11 +280,26 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     d3.select(canvas).call(zoom);
 
-    // 1. Silently converge to get stable final positions
+    // Cluster nodes at center before silent convergence
+    const cx0 = rect.width / 2;
+    const cy0 = rect.height / 2;
+    nodesCopy.forEach(n => {
+      n.x = cx0 + (Math.random() - 0.5) * 20;
+      n.y = cy0 + (Math.random() - 0.5) * 20;
+      n.vx = 0;
+      n.vy = 0;
+    });
+
+    const sim = d3.forceSimulation(nodesCopy)
+      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => e.type === "tag" ? 30 : 60))
+      .force("charge", d3.forceManyBody().strength(n => n.type === "tag" ? -30 : -120))
+      .force("center", d3.forceCenter(rect.width / 2, rect.height / 2))
+      .force("collision", d3.forceCollide(n => nodeRadius(n) + 4));
+
+    // Silently converge
     sim.stop();
     for (let i = 0; i < 300; i++) sim.tick();
 
-    // 2. Compute fit transform from stable positions (post/book nodes only)
     function computeFitTransform() {
       const postNodes = nodesCopy.filter(n => n.type !== "tag");
       const xs = postNodes.map(n => n.x).filter(x => x != null);
@@ -238,8 +321,12 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     const fitTransform = computeFitTransform();
     d3.select(canvas).call(zoom.transform, fitTransform);
 
-    // 3. Reset nodes to a tight cluster at the center (in data space)
-    //    so animation fans out from center within the already-fitted view
+    // Zoom-to-fit button
+    fitBtn?.addEventListener("click", () => {
+      d3.select(canvas).transition().duration(400).call(zoom.transform, computeFitTransform());
+    });
+
+    // Reset nodes to center cluster and animate from fit view
     const cx = (rect.width / 2 - fitTransform.x) / fitTransform.k;
     const cy = (rect.height / 2 - fitTransform.y) / fitTransform.k;
     nodesCopy.forEach(n => {
@@ -249,16 +336,13 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       n.vy = 0;
     });
 
-    // 4. Restart animation — nodes fan out from center in fit view
     sim.on("tick", draw);
     sim.alpha(1).restart();
 
     const drag = d3.drag()
       .subject(event => {
         const t = currentTransform;
-        const mx = (event.x - t.x) / t.k;
-        const my = (event.y - t.y) / t.k;
-        return sim.find(mx, my, 20) ?? null;
+        return sim.find((event.x - t.x) / t.k, (event.y - t.y) / t.k, 20) ?? null;
       })
       .on("start", event => {
         if (!event.subject) return;
@@ -283,9 +367,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     canvas.addEventListener("mousemove", event => {
       const t = currentTransform;
-      const mx = (event.offsetX - t.x) / t.k;
-      const my = (event.offsetY - t.y) / t.k;
-      const found = sim.find(mx, my, 20) ?? null;
+      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
       const changed = found?.id !== hoveredNode?.id;
       hoveredNode = found;
       if (changed) draw();
@@ -310,9 +392,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     canvas.addEventListener("click", event => {
       const t = currentTransform;
-      const mx = (event.offsetX - t.x) / t.k;
-      const my = (event.offsetY - t.y) / t.k;
-      const found = sim.find(mx, my, 20);
+      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20);
       if (found?.url) window.location.href = found.url;
     });
 
@@ -323,7 +403,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   function setup() {
     const container = document.getElementById(containerId);
     if (!container) return;
-    // Skip init if container is hidden (e.g. inside a closed overlay)
     if (container.offsetWidth === 0) {
       container.addEventListener("graph:show", () => initGraph(container), { once: true });
     } else {
