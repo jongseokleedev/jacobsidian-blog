@@ -33,7 +33,7 @@ const categoryPath = (category: string) => {
     <!-- Hero: ASCII -->
     <section class="pb-10 border-b border-border">
       <div class="overflow-x-auto rounded-lg border border-border bg-muted/30 px-4 py-6">
-        <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] text-foreground/80 font-mono select-none" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
+        <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] font-mono select-none ascii-gradient" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
      ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝██║██╔══██╗██║██╔══██╗████╗  ██║
      ██║███████║██║     ██║   ██║██████╔╝███████╗██║██║  ██║██║███████║██╔██╗ ██║
 ██   ██║██╔══██║██║     ██║   ██║██╔══██╗╚════██║██║██║  ██║██║██╔══██║██║╚██╗██║
@@ -83,6 +83,15 @@ const categoryPath = (category: string) => {
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .ascii-gradient {
+    background: linear-gradient(90deg, var(--foreground) 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
