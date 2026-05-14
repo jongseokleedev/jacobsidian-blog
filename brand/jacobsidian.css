@@ -52,7 +52,7 @@
 
 /* ── Wordmark ────────────────────────────────────────────────── */
 .jsd-wm {
-  font-family: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   font-size: 1em;
   letter-spacing: var(--jsd-tracking);
   line-height: 1;
@@ -63,8 +63,8 @@
 
 /* ── Hover redraw ────────────────────────────────────────────── */
 /* On pointer hover or keyboard focus the three edges draw themselves
-   in sequence (~250ms apart), each easing in with a snappy beat.
-   At rest the edges sit fully drawn. */
+   in sequence (~180ms apart), each easing in with a snappy "차-차-착"
+   beat. At rest the edges sit fully drawn. */
 .jsd-mark .edge {
   stroke-dasharray: 30;
   stroke-dashoffset: 0;
