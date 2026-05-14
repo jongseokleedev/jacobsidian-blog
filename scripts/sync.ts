@@ -89,9 +89,27 @@ async function run(options: SyncOptions) {
     url: string;
   }
 
-  const resolvedPosts: Resolved<(typeof posts)[number]>[] = posts.map(post => {
+  function deduplicateSlugs<T>(
+    items: T[],
+    getSlug: (item: T) => string
+  ): string[] {
+    const seen = new Map<string, number>();
+    return items.map(item => {
+      const base = getSlug(item);
+      const count = seen.get(base) ?? 0;
+      seen.set(base, count + 1);
+      return count === 0 ? base : `${base}-${count + 1}`;
+    });
+  }
+
+  const postSlugsRaw = posts.map(post =>
+    pickSlug(post.frontmatter, post.absolutePath, String(post.frontmatter.title ?? "Untitled"))
+  );
+  const postSlugsFinal = deduplicateSlugs(postSlugsRaw, s => s);
+
+  const resolvedPosts: Resolved<(typeof posts)[number]>[] = posts.map((post, i) => {
     const title = String(post.frontmatter.title ?? "Untitled");
-    const slug = pickSlug(post.frontmatter, post.absolutePath, title);
+    const slug = postSlugsFinal[i];
     const basename = path.basename(post.absolutePath, ".md");
     return {
       item: post,
@@ -103,9 +121,14 @@ async function run(options: SyncOptions) {
     };
   });
 
-  const resolvedBooks: Resolved<(typeof books)[number]>[] = books.map(book => {
+  const bookSlugsRaw = books.map(book =>
+    pickSlug(book.frontmatter, book.absolutePath, String(book.frontmatter.title ?? "Untitled"))
+  );
+  const bookSlugsFinal = deduplicateSlugs(bookSlugsRaw, s => s);
+
+  const resolvedBooks: Resolved<(typeof books)[number]>[] = books.map((book, i) => {
     const title = String(book.frontmatter.title ?? "Untitled");
-    const slug = pickSlug(book.frontmatter, book.absolutePath, title);
+    const slug = bookSlugsFinal[i];
     const basename = path.basename(book.absolutePath, ".md");
     return {
       item: book,

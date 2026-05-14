@@ -1,6 +1,5 @@
 ---
 import "@pagefind/default-ui/css/ui.css";
-import Main from "@/layouts/Main.astro";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -11,9 +10,15 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 
 <Layout title={`Search | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
-    <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
-  </Main>
+  <main id="main-content" class="app-layout pt-12 pb-16" data-backurl={backUrl}>
+    <section class="pb-10 border-b border-border">
+      <h1 class="text-2xl font-semibold tracking-tight mb-1">Search</h1>
+      <p class="text-sm text-foreground/60">글, 생각, 책을 검색하세요</p>
+    </section>
+    <section class="pt-8">
+      <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
+    </section>
+  </main>
   <Footer />
 </Layout>
 
