@@ -11,23 +11,35 @@ if (!SITE.showArchives) {
   return Astro.redirect("/404");
 }
 
-const all = await getCollection("posts", ({ data }) => !data.draft);
-const posts = getSortedPosts(all);
+const allPosts = await getCollection("posts", ({ data }) => !data.draft);
+const posts = getSortedPosts(allPosts);
+
+const allBooks = await getCollection("books", ({ data }) => !data.draft);
+const books = allBooks.sort(
+  (a, b) =>
+    new Date(b.data.modDatetime ?? b.data.pubDatetime).getTime() -
+    new Date(a.data.modDatetime ?? a.data.pubDatetime).getTime()
+);
 
 const categoryLabel: Record<string, string> = {
   thought: "Thoughts",
   writing: "Writing",
   tech: "Tech",
+  book: "Books",
 };
 
-const counts: Record<string, number> = { all: posts.length };
+const total = posts.length + books.length;
+const counts: Record<string, number> = { all: total, book: books.length };
 for (const post of posts) {
   counts[post.data.category] = (counts[post.data.category] ?? 0) + 1;
 }
 
 const filters = [
-  { key: "all", label: "All" },
-  ...Object.entries(categoryLabel).map(([key, label]) => ({ key, label })),
+  { key: "all",     label: "All"      },
+  { key: "thought", label: "Thoughts" },
+  { key: "writing", label: "Writing"  },
+  { key: "tech",    label: "Tech"     },
+  { key: "book",    label: "Books"    },
 ].filter(f => f.key === "all" || counts[f.key]);
 ---
 
@@ -36,7 +48,7 @@ const filters = [
   <main id="main-content" class="app-layout pt-12 pb-16">
     <section class="pb-8 border-b border-border">
       <h1 class="text-2xl font-semibold tracking-tight mb-1">모든 글</h1>
-      <p class="text-sm text-foreground/60">{posts.length}개의 글</p>
+      <p class="text-sm text-foreground/60">{total}개의 기록</p>
     </section>
 
     <!-- 카테고리 필터 뱃지 -->
@@ -80,6 +92,26 @@ const filters = [
             </a>
           </li>
         ))}
+        {books.map(book => (
+          <li data-category="book">
+            <a
+              href={`/books/${book.id}`}
+              class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
+            >
+              <span class="text-xs text-foreground/40 tabular-nums self-center">
+                {new Date(book.data.pubDatetime).toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                {book.data.title}
+              </span>
+              <span class="text-xs text-foreground/40 self-center text-right">Books</span>
+            </a>
+          </li>
+        ))}
       </ul>
     </section>
   </main>
@@ -109,7 +141,6 @@ const filters = [
       btn.addEventListener("click", () => setActive(btn.dataset.filter ?? "all"));
     });
 
-    // URL hash로 초기 필터 적용 (예: /archives#tech)
     const hash = location.hash.slice(1);
     setActive(hash && [...buttons].some(b => b.dataset.filter === hash) ? hash : "all");
   }
