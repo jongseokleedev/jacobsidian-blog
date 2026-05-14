@@ -110,7 +110,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const fg = getVar("--foreground") || "#e2e2e2";
       const accent = getVar("--accent") || "#f97316";
       const muted = getVar("--muted") || "#555";
-      const bg = getVar("--background") || "#fff";
 
       // Edges
       for (const e of edgesCopy) {
@@ -131,70 +130,26 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         ctx.setLineDash([]);
       }
 
-      // Nodes
+      // Nodes — Obsidian-style flat circles
       for (const n of nodesCopy) {
         if (n.x == null) continue;
         const isFocused = n.id === focusId;
         const r = isFocused ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
         const color = isFocused ? accent : nodeColor(n);
 
-        // Parse hex color to rgb components for rgba() usage
-        const hexToRgb = hex => {
-          const h = hex.replace("#", "");
-          const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
-          return [r, g, b];
-        };
-        const [cr, cg, cb] = hexToRgb(color);
-
-        // Soft ambient glow (focused or highly connected)
-        if (isFocused || (degree.get(n.id) ?? 0) >= 3) {
-          const glow = ctx.createRadialGradient(n.x, n.y, r * 0.8, n.x, n.y, r + 6);
-          glow.addColorStop(0, `rgba(${cr},${cg},${cb},0.18)`);
-          glow.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+        // Focused node: soft outer ring
+        if (isFocused) {
           ctx.beginPath();
-          ctx.arc(n.x, n.y, r + 6, 0, Math.PI * 2);
-          ctx.fillStyle = glow;
+          ctx.arc(n.x, n.y, r + 4, 0, Math.PI * 2);
+          ctx.fillStyle = accent + "33";
           ctx.fill();
         }
 
-        // Main sphere — gradient from slightly bright top-left to darker edge
-        const grad = ctx.createRadialGradient(
-          n.x - r * 0.25, n.y - r * 0.28, r * 0.01,
-          n.x + r * 0.1, n.y + r * 0.1, r * 1.1
-        );
-        const lighten = (v, a) => Math.min(v + a, 255);
-        const darken  = (v, a) => Math.max(v - a, 0);
-        grad.addColorStop(0,   `rgba(${lighten(cr,30)},${lighten(cg,30)},${lighten(cb,30)},1)`);
-        grad.addColorStop(0.45,`rgba(${cr},${cg},${cb},1)`);
-        grad.addColorStop(1,   `rgba(${darken(cr,35)},${darken(cg,35)},${darken(cb,35)},0.9)`);
+        // Flat filled circle
         ctx.beginPath();
         ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
+        ctx.fillStyle = color;
         ctx.fill();
-
-        // Subtle rim — thin border at full opacity edge
-        if (n.type !== "tag") {
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(${darken(cr,20)},${darken(cg,20)},${darken(cb,20)},0.4)`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
-
-        // Subtle specular — small soft highlight top-left
-        if (n.type !== "tag") {
-          const shine = ctx.createRadialGradient(
-            n.x - r * 0.3, n.y - r * 0.32, 0,
-            n.x - r * 0.15, n.y - r * 0.15, r * 0.6
-          );
-          shine.addColorStop(0, "rgba(255,255,255,0.28)");
-          shine.addColorStop(0.5, "rgba(255,255,255,0.06)");
-          shine.addColorStop(1, "rgba(255,255,255,0)");
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = shine;
-          ctx.fill();
-        }
       }
 
       // Labels — only when zoomed in enough
@@ -223,25 +178,46 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     d3.select(canvas).call(zoom);
 
-    // Auto-fit all nodes into view once simulation settles
-    sim.on("tick", draw);
-    sim.on("end", () => {
-      // Use only post/book nodes for bounding box (tags scatter too far)
+    // 1. Silently converge to get stable final positions
+    sim.stop();
+    for (let i = 0; i < 300; i++) sim.tick();
+
+    // 2. Compute fit transform from stable positions (post/book nodes only)
+    function computeFitTransform() {
       const postNodes = nodesCopy.filter(n => n.type !== "tag");
       const xs = postNodes.map(n => n.x).filter(x => x != null);
       const ys = postNodes.map(n => n.y).filter(y => y != null);
-      if (!xs.length) return;
+      if (!xs.length) return d3.zoomIdentity;
       const minX = Math.min(...xs), maxX = Math.max(...xs);
       const minY = Math.min(...ys), maxY = Math.max(...ys);
       const pad = 48;
-      const scaleX = (rect.width - pad * 2) / (maxX - minX || 1);
-      const scaleY = (rect.height - pad * 2) / (maxY - minY || 1);
-      const k = Math.min(scaleX, scaleY, 2);
+      const k = Math.min(
+        (rect.width - pad * 2) / (maxX - minX || 1),
+        (rect.height - pad * 2) / (maxY - minY || 1),
+        2
+      );
       const tx = rect.width / 2 - k * (minX + maxX) / 2;
       const ty = rect.height / 2 - k * (minY + maxY) / 2;
-      const t = d3.zoomIdentity.translate(tx, ty).scale(k);
-      d3.select(canvas).call(zoom.transform, t);
+      return d3.zoomIdentity.translate(tx, ty).scale(k);
+    }
+
+    const fitTransform = computeFitTransform();
+    d3.select(canvas).call(zoom.transform, fitTransform);
+
+    // 3. Reset nodes to a tight cluster at the center (in data space)
+    //    so animation fans out from center within the already-fitted view
+    const cx = (rect.width / 2 - fitTransform.x) / fitTransform.k;
+    const cy = (rect.height / 2 - fitTransform.y) / fitTransform.k;
+    nodesCopy.forEach(n => {
+      n.x = cx + (Math.random() - 0.5) * 20;
+      n.y = cy + (Math.random() - 0.5) * 20;
+      n.vx = 0;
+      n.vy = 0;
     });
+
+    // 4. Restart animation — nodes fan out from center in fit view
+    sim.on("tick", draw);
+    sim.alpha(1).restart();
 
     const drag = d3.drag()
       .subject(event => {
