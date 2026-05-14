@@ -1,6 +1,6 @@
 export const SITE = {
   website: "https://jacobsidian.com/",
-  author: "Jacob Lee",
+  author: "Jacob",
   profile: "",
   desc: "jacobsidian — 글, 책 노트, 개발 기록",
   title: "jacobsidian",
