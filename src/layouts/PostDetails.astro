@@ -14,6 +14,7 @@ import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
+import GraphCanvas from "@/components/GraphCanvas.astro";
 
 type Entry = CollectionEntry<"posts"> | CollectionEntry<"books">;
 
@@ -120,6 +121,11 @@ const nextPost =
     >
       <Content />
     </article>
+
+    <div class="mt-12">
+      <p class="mb-4 text-sm font-medium text-muted">연결된 노트</p>
+      <GraphCanvas focusId={post.id} height={280} />
+    </div>
 
     <hr class="my-8 border-dashed" />
 
