@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./typography.css";
+@import "./jacobsidian.css";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -157,28 +158,6 @@ html[data-theme="dark"] {
   text-decoration: none !important;
 }
 
-/* Logo color wave */
-.logo-char {
-  display: inline-block;
-  transition: color 200ms ease;
-}
-
-.site-logo:hover .logo-char {
-  color: var(--accent);
-}
-
-.site-logo:hover .logo-char:nth-child(1)  { transition-delay: 0ms; }
-.site-logo:hover .logo-char:nth-child(2)  { transition-delay: 30ms; }
-.site-logo:hover .logo-char:nth-child(3)  { transition-delay: 60ms; }
-.site-logo:hover .logo-char:nth-child(4)  { transition-delay: 90ms; }
-.site-logo:hover .logo-char:nth-child(5)  { transition-delay: 120ms; }
-.site-logo:hover .logo-char:nth-child(6)  { transition-delay: 150ms; }
-.site-logo:hover .logo-char:nth-child(7)  { transition-delay: 180ms; }
-.site-logo:hover .logo-char:nth-child(8)  { transition-delay: 210ms; }
-.site-logo:hover .logo-char:nth-child(9)  { transition-delay: 240ms; }
-.site-logo:hover .logo-char:nth-child(10) { transition-delay: 270ms; }
-.site-logo:hover .logo-char:nth-child(11) { transition-delay: 300ms; }
-.site-logo:hover .logo-char:nth-child(12) { transition-delay: 330ms; }
 
 /* Header border shimmer on scroll */
 #top-nav-wrap {

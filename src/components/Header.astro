@@ -5,6 +5,7 @@ import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenu from "@/assets/icons/IconMenu.svg";
 import LinkButton from "./LinkButton.astro";
+import Logo from "./Logo.astro";
 import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
@@ -36,12 +37,7 @@ const isActive = (path: string) => {
   >
     <!-- 모바일: 로고(좌) + 햄버거(우) 한 줄 / 데스크탑: 로고(좌) + nav(우) 한 줄 -->
     <div class="flex items-center justify-between py-4 sm:py-5">
-      <a
-        href="/"
-        class="site-logo text-lg font-semibold tracking-tight whitespace-nowrap sm:text-xl"
-      >
-        {SITE.title.split("").map(ch => <span class="logo-char">{ch}</span>)}
-      </a>
+      <Logo size={20} />
 
       <!-- 데스크탑 nav -->
       <nav class="hidden sm:flex items-center gap-5">

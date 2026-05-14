@@ -1,0 +1,91 @@
+/* ──────────────────────────────────────────────────────────────
+   jacobsidian — brand tokens & logo components
+   Monochrome. Accent expressed as hover-redraw motion.
+
+   Import once globally, then use .jsd-logo lockup or <Logo /> component.
+   ────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Brand palette — black/white/obsidian only */
+  --jsd-ink: #16140f;
+  --jsd-ink-soft: #4b4740;
+  --jsd-paper: #fbfaf6;
+  --jsd-obsidian: #0d0c0a;
+  --jsd-obsidian-fg: #efece5;
+
+  /* Logo intrinsics */
+  --jsd-logo-gap: 0.5em;
+  --jsd-tracking: -0.04em;
+  --jsd-thin-weight: 300;
+  --jsd-bold-weight: 800;
+  --jsd-thin-opacity: 0.55;
+
+  /* Motion */
+  --jsd-redraw-duration: 0.8s;
+  --jsd-redraw-easing: cubic-bezier(.65, 0, .35, 1);
+}
+
+/* ── Lockup ──────────────────────────────────────────────────── */
+.jsd-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--jsd-logo-gap);
+  color: currentColor;
+  text-decoration: none;
+  line-height: 1;
+}
+.jsd-logo--stacked {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35em;
+}
+
+/* ── Symbol ──────────────────────────────────────────────────── */
+.jsd-mark {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  display: block;
+  overflow: visible;
+}
+
+/* ── Wordmark ────────────────────────────────────────────────── */
+.jsd-wm {
+  font-family: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1em;
+  letter-spacing: var(--jsd-tracking);
+  line-height: 1;
+  white-space: nowrap;
+}
+.jsd-wm .t { font-weight: var(--jsd-thin-weight); opacity: var(--jsd-thin-opacity); }
+.jsd-wm .b { font-weight: var(--jsd-bold-weight); }
+
+/* ── Hover redraw ────────────────────────────────────────────── */
+/* Each edge stays drawn at rest; on pointer hover or keyboard focus
+   the three edges wipe and re-stroke themselves with a 100ms stagger. */
+.jsd-mark .edge {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 0;
+}
+.jsd-logo:hover .jsd-mark .edge,
+.jsd-logo:focus-visible .jsd-mark .edge {
+  animation: jsd-redraw var(--jsd-redraw-duration) var(--jsd-redraw-easing);
+}
+.jsd-logo:hover .jsd-mark .edge.e2,
+.jsd-logo:focus-visible .jsd-mark .edge.e2 { animation-delay: 0.10s; }
+.jsd-logo:hover .jsd-mark .edge.e3,
+.jsd-logo:focus-visible .jsd-mark .edge.e3 { animation-delay: 0.20s; }
+
+@keyframes jsd-redraw {
+  0%   { stroke-dashoffset: 0; }
+  35%  { stroke-dashoffset: 30; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Respect user accessibility preference. */
+@media (prefers-reduced-motion: reduce) {
+  .jsd-logo:hover .jsd-mark .edge,
+  .jsd-logo:focus-visible .jsd-mark .edge {
+    animation: none;
+  }
+}

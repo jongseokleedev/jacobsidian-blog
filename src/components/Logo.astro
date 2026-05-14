@@ -1,0 +1,43 @@
+---
+// jacobsidian — Astro logo component
+// Usage:
+//   <Logo />               -> 22px primary lockup linking to "/"
+//   <Logo size={48} />     -> custom size
+//   <Logo stacked />       -> symbol on top, wordmark below
+//   <Logo href={null} />   -> render as <span> (no link)
+//
+// Pair with brand/jacobsidian.css imported globally.
+interface Props {
+  size?: number | string;
+  stacked?: boolean;
+  href?: string | null;
+  class?: string;
+}
+const {
+  size = 22,
+  stacked = false,
+  href = "/",
+  class: className = "",
+} = Astro.props;
+
+const fontSize = typeof size === "number" ? `${size}px` : size;
+const Tag = href ? "a" : "span";
+---
+
+<Tag
+  class:list={["jsd-logo", stacked && "jsd-logo--stacked", className]}
+  style={`font-size: ${fontSize};`}
+  {...(href ? { href, "aria-label": "jacobsidian — home" } : {})}
+>
+  <svg class="jsd-mark" viewBox="0 0 32 32" aria-hidden="true">
+    <line class="edge e1" x1="7"  y1="9"  x2="22" y2="22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    <line class="edge e2" x1="22" y1="22" x2="25" y2="8"  stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    <line class="edge e3" x1="7"  y1="9"  x2="25" y2="8"  stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.4" />
+    <circle cx="7"  cy="9"  r="3.2" fill="currentColor" />
+    <circle cx="22" cy="22" r="4"   fill="currentColor" />
+    <circle cx="25" cy="8"  r="2.4" fill="currentColor" />
+  </svg>
+  <span class="jsd-wm">
+    <span class="t">jac</span><span class="b">ob</span><span class="t">sidian</span>
+  </span>
+</Tag>
