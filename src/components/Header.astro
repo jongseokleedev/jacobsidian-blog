@@ -3,7 +3,7 @@ import IconX from "@/assets/icons/IconX.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
-import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
+import IconMenu from "@/assets/icons/IconMenu.svg";
 import LinkButton from "./LinkButton.astro";
 import { SITE } from "@/config";
 
@@ -94,49 +94,49 @@ const isActive = (path: string) => {
           aria-controls="menu-items"
         >
           <IconX id="close-icon" class="hidden" />
-          <IconMenuDeep id="menu-icon" />
+          <IconMenu id="menu-icon" />
         </button>
       </div>
     </div>
 
     <!-- 모바일 드롭다운 메뉴 -->
-    <ul
-      id="menu-items"
-      class:list={[
-        "hidden pb-4 flex-col gap-1 sm:hidden",
-        "[&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-2.5 [&>li>a]:text-sm [&>li>a]:font-medium [&>li>a]:hover:text-accent",
-      ]}
-    >
+    <div id="menu-items" class="overflow-hidden" style="max-height: 0; transition: max-height 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0;">
+      <ul class="pb-4 flex flex-col gap-1 sm:hidden
+        [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-2.5 [&>li>a]:text-sm [&>li>a]:font-medium [&>li>a]:hover:text-accent">
         <li><a href="/thoughts" class:list={{ "active-nav": isActive("/thoughts") }}>Thoughts</a></li>
         <li><a href="/writing"  class:list={{ "active-nav": isActive("/writing") }}>Writing</a></li>
         <li><a href="/tech"     class:list={{ "active-nav": isActive("/tech") }}>Tech</a></li>
         <li><a href="/books"    class:list={{ "active-nav": isActive("/books") }}>Books</a></li>
         <li><a href="/about"    class:list={{ "active-nav": isActive("/about") }}>About</a></li>
       </ul>
+    </div>
   </div>
 </header>
 
 <script>
   function toggleNav() {
     const menuBtn = document.querySelector("#menu-btn");
-    const menuItems = document.querySelector("#menu-items");
+    const menuItems = document.querySelector("#menu-items") as HTMLElement | null;
     const menuIcon = document.querySelector("#menu-icon");
     const closeIcon = document.querySelector("#close-icon");
 
     if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
 
+    const MENU_HEIGHT = 220;
+
     menuBtn.addEventListener("click", () => {
-      const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
-      menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
-      menuBtn.setAttribute("aria-label", openMenu ? "Open Menu" : "Close Menu");
-      menuItems.classList.toggle("hidden");
-      menuItems.classList.toggle("flex");
-      menuIcon.classList.toggle("hidden");
-      closeIcon.classList.toggle("hidden");
+      const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
+      const next = !isOpen;
+
+      menuBtn.setAttribute("aria-expanded", next ? "true" : "false");
+      menuBtn.setAttribute("aria-label", next ? "Close Menu" : "Open Menu");
+      menuItems.style.maxHeight = next ? `${MENU_HEIGHT}px` : "0";
+      menuItems.style.opacity = next ? "1" : "0";
+      menuIcon.classList.toggle("hidden", next);
+      closeIcon.classList.toggle("hidden", !next);
     });
   }
 
-  // 모바일 테마 버튼을 데스크탑 버튼과 동기화
   function syncThemeButtons() {
     const mobileBtn = document.querySelector("#theme-btn-mobile");
     const desktopBtn = document.querySelector("#theme-btn");
