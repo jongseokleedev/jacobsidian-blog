@@ -38,18 +38,18 @@ const isActive = (path: string) => {
     <div class="flex items-center justify-between py-4 sm:py-5">
       <a
         href="/"
-        class="text-lg font-semibold tracking-tight whitespace-nowrap sm:text-xl"
+        class="site-logo text-lg font-semibold tracking-tight whitespace-nowrap sm:text-xl"
       >
-        {SITE.title}
+        {SITE.title.split("").map(ch => <span class="logo-char">{ch}</span>)}
       </a>
 
       <!-- 데스크탑 nav -->
       <nav class="hidden sm:flex items-center gap-5">
-        <a href="/thoughts" class:list={["text-sm font-medium hover:text-accent transition-colors", { "active-nav": isActive("/thoughts") }]}>Thoughts</a>
-        <a href="/writing"  class:list={["text-sm font-medium hover:text-accent transition-colors", { "active-nav": isActive("/writing") }]}>Writing</a>
-        <a href="/tech"     class:list={["text-sm font-medium hover:text-accent transition-colors", { "active-nav": isActive("/tech") }]}>Tech</a>
-        <a href="/books"    class:list={["text-sm font-medium hover:text-accent transition-colors", { "active-nav": isActive("/books") }]}>Books</a>
-        <a href="/about"    class:list={["text-sm font-medium hover:text-accent transition-colors", { "active-nav": isActive("/about") }]}>About</a>
+        <a href="/thoughts" class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/thoughts") }]}>Thoughts</a>
+        <a href="/writing"  class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/writing") }]}>Writing</a>
+        <a href="/tech"     class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/tech") }]}>Tech</a>
+        <a href="/books"    class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/books") }]}>Books</a>
+        <a href="/about"    class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/about") }]}>About</a>
         <LinkButton href="/search" class="focus-outline p-1 hover:text-accent" title="Search" aria-label="search">
           <IconSearch class="size-4" />
           <span class="sr-only">Search</span>
@@ -144,11 +144,22 @@ const isActive = (path: string) => {
     mobileBtn.addEventListener("click", () => (desktopBtn as HTMLElement).click());
   }
 
+  function initScrollBorder() {
+    const nav = document.querySelector("#top-nav-wrap");
+    if (!nav) return;
+    const update = () =>
+      nav.classList.toggle("scrolled", window.scrollY > 10);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  }
+
   toggleNav();
   syncThemeButtons();
+  initScrollBorder();
 
   document.addEventListener("astro:after-swap", () => {
     toggleNav();
     syncThemeButtons();
+    initScrollBorder();
   });
 </script>
