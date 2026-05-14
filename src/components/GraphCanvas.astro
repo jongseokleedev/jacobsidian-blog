@@ -1,0 +1,192 @@
+---
+interface Props {
+  focusId?: string;
+  height?: number;
+}
+const { focusId, height = 500 } = Astro.props;
+const isMini = !!focusId;
+const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
+---
+
+<div
+  id={containerId}
+  data-focus-id={focusId ?? ""}
+  data-is-mini={isMini ? "true" : "false"}
+  style={`height: ${height}px; width: 100%;`}
+  class="relative overflow-hidden rounded-lg border border-border bg-background"
+>
+  <canvas style="width: 100%; height: 100%;"></canvas>
+  <div class="graph-tooltip pointer-events-none absolute hidden rounded bg-foreground/90 px-2 py-1 text-xs text-background"></div>
+</div>
+
+<script define:vars={{ containerId }}>
+  async function initGraph(containerEl) {
+    if (!containerEl) return;
+
+    const focusId = containerEl.dataset.focusId || null;
+    const isMini = containerEl.dataset.isMini === "true";
+
+    const d3 = await import("https://cdn.jsdelivr.net/npm/d3@7/+esm");
+
+    const res = await fetch("/graph.json");
+    let { nodes, edges } = await res.json();
+
+    if (isMini && focusId) {
+      const neighborIds = new Set([focusId]);
+      for (const e of edges) {
+        if (e.source === focusId || e.target === focusId) {
+          neighborIds.add(e.source);
+          neighborIds.add(e.target);
+        }
+      }
+      nodes = nodes.filter(n => neighborIds.has(n.id));
+      edges = edges.filter(e => neighborIds.has(e.source) && neighborIds.has(e.target));
+    }
+
+    const canvas = containerEl.querySelector("canvas");
+    const tooltip = containerEl.querySelector(".graph-tooltip");
+    const rect = containerEl.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext("2d");
+
+    const getVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    const nodesCopy = nodes.map(n => ({ ...n }));
+    const edgesCopy = edges.map(e => ({ ...e }));
+
+    let currentTransform = d3.zoomIdentity;
+
+    const sim = d3.forceSimulation(nodesCopy)
+      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(80))
+      .force("charge", d3.forceManyBody().strength(-150))
+      .force("center", d3.forceCenter(rect.width / 2, rect.height / 2))
+      .force("collision", d3.forceCollide(18));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.translate(currentTransform.x, currentTransform.y);
+      ctx.scale(currentTransform.k, currentTransform.k);
+
+      const fg = getVar("--foreground") || "#e2e2e2";
+      const accent = getVar("--accent") || "#f97316";
+      const muted = getVar("--muted") || "#555";
+
+      for (const e of edgesCopy) {
+        if (!e.source.x) continue;
+        ctx.beginPath();
+        ctx.moveTo(e.source.x, e.source.y);
+        ctx.lineTo(e.target.x, e.target.y);
+        if (e.type === "tag") {
+          ctx.setLineDash([3, 4]);
+          ctx.strokeStyle = muted + "55";
+          ctx.lineWidth = 0.8;
+        } else {
+          ctx.setLineDash([]);
+          ctx.strokeStyle = fg + "55";
+          ctx.lineWidth = 1.2;
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      for (const n of nodesCopy) {
+        if (n.x == null) continue;
+        const isTag = n.type === "tag";
+        const isFocused = n.id === focusId;
+        const r = isFocused ? 9 : isTag ? 4 : 6;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = isFocused ? accent : isTag ? muted + "99" : fg + "cc";
+        ctx.fill();
+        if (isFocused) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r + 3, 0, Math.PI * 2);
+          ctx.strokeStyle = accent + "55";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    sim.on("tick", draw);
+
+    const zoom = d3.zoom()
+      .scaleExtent([0.2, 5])
+      .on("zoom", event => {
+        currentTransform = event.transform;
+        draw();
+      });
+
+    d3.select(canvas).call(zoom);
+
+    const drag = d3.drag()
+      .subject(event => {
+        const t = currentTransform;
+        const mx = (event.x - t.x) / t.k;
+        const my = (event.y - t.y) / t.k;
+        return sim.find(mx, my, 20) ?? null;
+      })
+      .on("start", event => {
+        if (!event.subject) return;
+        if (!event.active) sim.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      })
+      .on("drag", event => {
+        if (!event.subject) return;
+        const t = currentTransform;
+        event.subject.fx = (event.x - t.x) / t.k;
+        event.subject.fy = (event.y - t.y) / t.k;
+      })
+      .on("end", event => {
+        if (!event.subject) return;
+        if (!event.active) sim.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      });
+
+    d3.select(canvas).call(drag);
+
+    canvas.addEventListener("mousemove", event => {
+      const t = currentTransform;
+      const mx = (event.offsetX - t.x) / t.k;
+      const my = (event.offsetY - t.y) / t.k;
+      const found = sim.find(mx, my, 20);
+      if (found) {
+        tooltip.textContent = found.title;
+        tooltip.style.left = `${event.offsetX + 12}px`;
+        tooltip.style.top = `${event.offsetY - 4}px`;
+        tooltip.classList.remove("hidden");
+        canvas.style.cursor = "pointer";
+      } else {
+        tooltip.classList.add("hidden");
+        canvas.style.cursor = "default";
+      }
+    });
+
+    canvas.addEventListener("click", event => {
+      const t = currentTransform;
+      const mx = (event.offsetX - t.x) / t.k;
+      const my = (event.offsetY - t.y) / t.k;
+      const found = sim.find(mx, my, 20);
+      if (found?.url) window.location.href = found.url;
+    });
+
+    const themeObserver = new MutationObserver(draw);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }
+
+  function setup() {
+    const container = document.getElementById(containerId);
+    if (container) initGraph(container);
+  }
+
+  setup();
+  document.addEventListener("astro:after-swap", setup);
+</script>
