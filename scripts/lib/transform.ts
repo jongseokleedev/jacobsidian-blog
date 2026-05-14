@@ -2,6 +2,23 @@ import type { LinkMap } from "./linkMap";
 
 const OBSIDIAN_BLOCK_LANGS = ["meta-bind-button", "meta-bind", "dataviewjs", "dataview"];
 
+// Converts Obsidian callouts to plain blockquotes.
+// Handles both:
+//   > [!quote] inline text
+//   > [!type]
+//   > continued text
+export function transformCallouts(markdown: string): string {
+  // Remove [!type] marker from blockquote lines, keep content after it.
+  // >[!quote] text  →  > text
+  // > [!quote]      →  (empty blockquote line, removed)
+  let out = markdown.replace(/^(>)[^\S\n]*\[![^\]]+\][^\S\n]*/gm, "$1 ");
+  // Remove lines that became bare "> " with no content
+  out = out.replace(/^> $/gm, "");
+  // Collapse resulting blank lines
+  out = out.replace(/\n{3,}/g, "\n\n");
+  return out;
+}
+
 export function stripObsidianBlocks(markdown: string): string {
   const pattern = new RegExp(
     `(?:^|\\n)\\s*\`\`\`(?:${OBSIDIAN_BLOCK_LANGS.join("|")})\\b[\\s\\S]*?\\n\`\`\`[ \\t]*(?=\\n|$)`,
