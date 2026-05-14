@@ -60,32 +60,26 @@
 .jsd-wm .t { font-weight: var(--jsd-thin-weight); opacity: var(--jsd-thin-opacity); }
 .jsd-wm .b { font-weight: var(--jsd-bold-weight); }
 
-/* ── Hover redraw ────────────────────────────────────────────── */
-/* Each edge stays drawn at rest; on pointer hover or keyboard focus
-   the three edges wipe and re-stroke themselves with a 100ms stagger. */
+/* ── Always-on redraw loop ───────────────────────────────────── */
+/* Edges redraw over 0.8s every 3.5s, then stay static until next cycle. */
 .jsd-mark .edge {
   stroke-dasharray: 30;
   stroke-dashoffset: 0;
+  animation: jsd-redraw 3.5s var(--jsd-redraw-easing) infinite;
 }
-.jsd-logo:hover .jsd-mark .edge,
-.jsd-logo:focus-visible .jsd-mark .edge {
-  animation: jsd-redraw var(--jsd-redraw-duration) var(--jsd-redraw-easing);
-}
-.jsd-logo:hover .jsd-mark .edge.e2,
-.jsd-logo:focus-visible .jsd-mark .edge.e2 { animation-delay: 0.10s; }
-.jsd-logo:hover .jsd-mark .edge.e3,
-.jsd-logo:focus-visible .jsd-mark .edge.e3 { animation-delay: 0.20s; }
+.jsd-mark .edge.e2 { animation-delay: 0.10s; }
+.jsd-mark .edge.e3 { animation-delay: 0.20s; }
 
 @keyframes jsd-redraw {
   0%   { stroke-dashoffset: 0; }
-  35%  { stroke-dashoffset: 30; }
+  11%  { stroke-dashoffset: 30; }
+  23%  { stroke-dashoffset: 0; }
   100% { stroke-dashoffset: 0; }
 }
 
 /* Respect user accessibility preference. */
 @media (prefers-reduced-motion: reduce) {
-  .jsd-logo:hover .jsd-mark .edge,
-  .jsd-logo:focus-visible .jsd-mark .edge {
+  .jsd-mark .edge {
     animation: none;
   }
 }
