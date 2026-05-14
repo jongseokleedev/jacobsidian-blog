@@ -19,20 +19,47 @@ const categoryLabel: Record<string, string> = {
   writing: "Writing",
   tech: "Tech",
 };
+
+const counts: Record<string, number> = { all: posts.length };
+for (const post of posts) {
+  counts[post.data.category] = (counts[post.data.category] ?? 0) + 1;
+}
+
+const filters = [
+  { key: "all", label: "All" },
+  ...Object.entries(categoryLabel).map(([key, label]) => ({ key, label })),
+].filter(f => f.key === "all" || counts[f.key]);
 ---
 
 <Layout title={`모든 글 | ${SITE.title}`}>
   <Header />
   <main id="main-content" class="app-layout pt-12 pb-16">
-    <section class="pb-10 border-b border-border">
+    <section class="pb-8 border-b border-border">
       <h1 class="text-2xl font-semibold tracking-tight mb-1">모든 글</h1>
       <p class="text-sm text-foreground/60">{posts.length}개의 글</p>
     </section>
 
-    <section class="pt-8">
-      <ul class="divide-y divide-border">
+    <!-- 카테고리 필터 뱃지 -->
+    <div class="flex gap-2 overflow-x-auto py-5 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+      {filters.map(f => (
+        <button
+          data-filter={f.key}
+          class:list={[
+            "filter-btn shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium",
+            "border transition-colors duration-150 cursor-pointer",
+            "border-border text-foreground/60 hover:border-accent hover:text-accent",
+          ]}
+        >
+          {f.label}
+          <span class="text-xs opacity-60">{counts[f.key]}</span>
+        </button>
+      ))}
+    </div>
+
+    <section class="pt-2">
+      <ul class="divide-y divide-border" id="post-list">
         {posts.map(post => (
-          <li>
+          <li data-category={post.data.category}>
             <a
               href={getPath(post)}
               class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
@@ -58,3 +85,44 @@ const categoryLabel: Record<string, string> = {
   </main>
   <Footer />
 </Layout>
+
+<script>
+  function initFilter() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const items = document.querySelectorAll<HTMLLIElement>("#post-list li");
+
+    function setActive(key: string) {
+      buttons.forEach(btn => {
+        const isActive = btn.dataset.filter === key;
+        btn.classList.toggle("border-accent", isActive);
+        btn.classList.toggle("text-accent", isActive);
+        btn.classList.toggle("border-border", !isActive);
+        btn.classList.toggle("text-foreground/60", !isActive);
+      });
+      items.forEach(item => {
+        const show = key === "all" || item.dataset.category === key;
+        item.style.display = show ? "" : "none";
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => setActive(btn.dataset.filter ?? "all"));
+    });
+
+    // URL hash로 초기 필터 적용 (예: /archives#tech)
+    const hash = location.hash.slice(1);
+    setActive(hash && [...buttons].some(b => b.dataset.filter === hash) ? hash : "all");
+  }
+
+  initFilter();
+  document.addEventListener("astro:after-swap", initFilter);
+</script>
+
+<style>
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+</style>
