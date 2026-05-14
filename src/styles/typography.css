@@ -5,6 +5,18 @@
   .app-prose {
     @apply prose;
 
+    /* Remove Tailwind Typography's own max-width — layout handles it */
+    max-width: none;
+
+    /* Mobile-first font size: 17px on small screens, 16px on larger */
+    font-size: 17px;
+    line-height: 1.85;
+
+    @media (min-width: 640px) {
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
     h1,
     h2,
     h3,
@@ -12,6 +24,7 @@
     th {
       @apply mb-3 text-foreground;
       letter-spacing: -0.02em;
+      line-height: 1.4;
     }
 
     h3 {
@@ -29,7 +42,7 @@
     }
 
     p {
-      margin-bottom: 1.5em;
+      margin-bottom: 1.75em;
     }
 
     a {
