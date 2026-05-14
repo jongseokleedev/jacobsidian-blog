@@ -14,7 +14,9 @@ import { SITE } from "@/config";
       <p class="text-sm text-foreground/60">노트 간 연결 지도</p>
     </section>
     <section class="pt-8">
-      <GraphCanvas height={600} />
+      <div class="rounded-lg border border-border overflow-hidden">
+        <GraphCanvas height={600} />
+      </div>
     </section>
   </main>
   <Footer />
