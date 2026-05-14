@@ -5,7 +5,7 @@ import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
 
 <div
   id="btt-btn-container"
-  class="fixed end-4 bottom-8 z-50 translate-y-14 opacity-0 transition duration-500"
+  class="fixed end-4 bottom-8 z-50 translate-y-14 opacity-0 transition-all duration-500 hover:!opacity-100"
 >
   <button
     data-button="back-to-top"
@@ -61,7 +61,8 @@ import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
     }
 
     let ticking = false;
-    document.addEventListener("scroll", () => {
+    let idleTimer = null;
+    function onScroll() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           handleScroll();
@@ -69,7 +70,19 @@ import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
         });
         ticking = true;
       }
-    });
+      // While scrolling: fully visible
+      btnContainer.classList.remove("btt-idle");
+      clearTimeout(idleTimer);
+      // After 1.5s of no scroll: fade to subtle
+      idleTimer = setTimeout(() => btnContainer.classList.add("btt-idle"), 1500);
+    }
+    document.addEventListener("scroll", onScroll);
   }
   backToTop();
 </script>
+
+<style>
+  #btt-btn-container.btt-idle {
+    opacity: 0.15;
+  }
+</style>
