@@ -45,7 +45,6 @@ const isActive = (path: string) => {
         <a href="/writing"  class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/writing") }]}>Writing</a>
         <a href="/tech"     class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/tech") }]}>Tech</a>
         <a href="/books"    class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/books") }]}>Books</a>
-        <a href="/graph" class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/graph") }]}>Graph</a>
         <a href="/about"    class:list={["nav-link text-sm font-medium transition-colors", { "active-nav": isActive("/about") }]}>About</a>
         <LinkButton href="/search" class="focus-outline p-1 hover:text-accent" title="Search" aria-label="search">
           <IconSearch class="size-4" />
@@ -104,7 +103,6 @@ const isActive = (path: string) => {
         <li><a href="/writing"  class:list={{ "active-nav": isActive("/writing") }}>Writing</a></li>
         <li><a href="/tech"     class:list={{ "active-nav": isActive("/tech") }}>Tech</a></li>
         <li><a href="/books"    class:list={{ "active-nav": isActive("/books") }}>Books</a></li>
-        <li><a href="/graph" class:list={{ "active-nav": isActive("/graph") }}>Graph</a></li>
         <li><a href="/about"    class:list={{ "active-nav": isActive("/about") }}>About</a></li>
       </ul>
     </div>

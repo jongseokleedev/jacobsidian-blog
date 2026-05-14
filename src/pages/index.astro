@@ -3,28 +3,66 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import LinkButton from "@/components/LinkButton.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import { getPath } from "@/utils/getPath";
 import { SITE } from "@/config";
+import GraphCanvas from "@/components/GraphCanvas.astro";
 
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const recentPosts = sortedPosts.filter(({ data }) => !data.draft);
+const allPosts = await getCollection("posts", ({ data }) => !data.draft);
+const posts = getSortedPosts(allPosts);
 
-const categoryLabel = (category: string) => {
-  if (category === "thought") return "Thoughts";
-  if (category === "tech") return "Tech";
-  if (category === "writing") return "Writing";
-  return category;
+const allBooks = await getCollection("books", ({ data }) => !data.draft);
+const books = allBooks.sort(
+  (a, b) =>
+    new Date(b.data.modDatetime ?? b.data.pubDatetime).getTime() -
+    new Date(a.data.modDatetime ?? a.data.pubDatetime).getTime()
+);
+
+type EntryItem = {
+  href: string;
+  date: Date;
+  title: string;
+  category: string;
+  label: string;
 };
 
-const categoryPath = (category: string) => {
-  if (category === "thought") return "thoughts";
-  if (category === "tech") return "tech";
-  if (category === "writing") return "writing";
-  return category;
+const CATEGORY_LABEL: Record<string, string> = {
+  thought: "Thoughts",
+  writing: "Writing",
+  tech: "Tech",
+  book: "Books",
 };
+
+const allItems: EntryItem[] = [
+  ...posts.map(p => ({
+    href: getPath(p),
+    date: new Date(p.data.pubDatetime),
+    title: p.data.title,
+    category: p.data.category,
+    label: CATEGORY_LABEL[p.data.category] ?? p.data.category,
+  })),
+  ...books.map(b => ({
+    href: `/books/${b.id}`,
+    date: new Date(b.data.pubDatetime),
+    title: b.data.title,
+    category: "book",
+    label: "Books",
+  })),
+].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+const total = allItems.length;
+const counts: Record<string, number> = { all: total, book: books.length };
+for (const post of posts) {
+  counts[post.data.category] = (counts[post.data.category] ?? 0) + 1;
+}
+
+const filters = [
+  { key: "all",     label: "All"      },
+  { key: "thought", label: "Thoughts" },
+  { key: "writing", label: "Writing"  },
+  { key: "tech",    label: "Tech"     },
+  { key: "book",    label: "Books"    },
+].filter(f => f.key === "all" || counts[f.key]);
 ---
 
 <Layout>
@@ -41,43 +79,68 @@ const categoryPath = (category: string) => {
  ╚════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
       </div>
       <h1 class="sr-only">jacobsidian</h1>
-      <p class="mt-3 text-sm text-foreground/60">글쓰기를 좋아하는 어느 개발자의 기록 저장소.</p>
     </section>
 
-    <!-- Recent posts list -->
-    {recentPosts.length > 0 && (
+    <!-- Graph -->
+    <section class="py-10 border-b border-border">
+      <div class="mb-4">
+        <span class="text-sm font-medium text-foreground/60">Graph</span>
+      </div>
+      <div class="rounded-lg border border-border overflow-hidden">
+        <GraphCanvas height={340} />
+      </div>
+    </section>
+
+    <!-- Archives -->
+    {allItems.length > 0 && (
       <section class="pt-8">
-        <ul class="divide-y divide-border">
-          {recentPosts.slice(0, SITE.postPerIndex).map(({ data, id }) => (
-            <li>
+        <div class="flex items-baseline justify-between mb-5">
+          <h2 class="text-base font-semibold tracking-tight">Archives</h2>
+          <span class="text-xs text-foreground/40">{total} records</span>
+        </div>
+
+        <!-- Category filter badges -->
+        <div class="flex gap-2 overflow-x-auto pb-5 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+          {filters.map(f => (
+            <button
+              data-filter={f.key}
+              class:list={[
+                "filter-btn shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium",
+                "border transition-colors duration-150 cursor-pointer",
+                "border-border text-foreground/60 hover:border-accent hover:text-accent",
+              ]}
+            >
+              {f.label}
+              <span class="text-xs opacity-60">{counts[f.key]}</span>
+            </button>
+          ))}
+        </div>
+
+        <ul id="post-list" class="divide-y divide-border">
+          {allItems.map((item, i) => (
+            <li data-index={i} data-category={item.category} class={i >= 10 ? "hidden" : ""}>
               <a
-                href={`/${categoryPath(data.category)}/${id}`}
+                href={item.href}
                 class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
               >
                 <span class="text-xs text-foreground/40 tabular-nums self-center">
-                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
+                  {item.date.toLocaleDateString("ko-KR", {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
                   })}
                 </span>
                 <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
-                  {data.title}
+                  {item.title}
                 </span>
-                <span class="text-xs text-foreground/40 self-center">
-                  {categoryLabel(data.category)}
+                <span class="text-xs text-foreground/40 self-center text-right">
+                  {item.label}
                 </span>
               </a>
             </li>
           ))}
         </ul>
-
-        <div class="mt-8 text-center">
-          <LinkButton href="/archives/">
-            모든 글
-            <IconArrowRight class="inline-block rtl:-rotate-180" />
-          </LinkButton>
-        </div>
+        <div id="scroll-sentinel" class="h-4"></div>
       </section>
     )}
   </main>
@@ -85,6 +148,8 @@ const categoryPath = (category: string) => {
 </Layout>
 
 <style>
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
   .ascii-gradient {
     background: linear-gradient(90deg, var(--foreground) 0%, #7c3aed 100%);
     -webkit-background-clip: text;
@@ -94,11 +159,63 @@ const categoryPath = (category: string) => {
 </style>
 
 <script>
+  function initArchives() {
+    const sentinel = document.getElementById("scroll-sentinel");
+    const items = document.querySelectorAll<HTMLElement>("#post-list li[data-index]");
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    if (!sentinel || !items.length) return;
+
+    let activeFilter = "all";
+    let shown = 10;
+
+    function applyFilter(key: string) {
+      activeFilter = key;
+      shown = 10;
+      items.forEach(el => {
+        const idx = Number(el.dataset.index);
+        const match = key === "all" || el.dataset.category === key;
+        el.classList.toggle("hidden", !match || idx >= shown);
+      });
+      buttons.forEach(btn => {
+        const isActive = btn.dataset.filter === key;
+        btn.classList.toggle("border-accent", isActive);
+        btn.classList.toggle("text-accent", isActive);
+        btn.classList.toggle("border-border", !isActive);
+        btn.classList.toggle("text-foreground/60", !isActive);
+      });
+    }
+
+    buttons.forEach(btn =>
+      btn.addEventListener("click", () => applyFilter(btn.dataset.filter ?? "all"))
+    );
+
+    const observer = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      const next = shown + 10;
+      items.forEach(el => {
+        const idx = Number(el.dataset.index);
+        const match = activeFilter === "all" || el.dataset.category === activeFilter;
+        if (match && idx >= shown && idx < next) el.classList.remove("hidden");
+      });
+      shown = next;
+      const remaining = [...items].filter(el => {
+        const idx = Number(el.dataset.index);
+        const match = activeFilter === "all" || el.dataset.category === activeFilter;
+        return match && idx >= shown;
+      });
+      if (!remaining.length) observer.disconnect();
+    }, { rootMargin: "100px" });
+
+    observer.observe(sentinel);
+    applyFilter("all");
+  }
+
   document.addEventListener("astro:page-load", () => {
     const indexLayout = (document.querySelector("#main-content") as HTMLElement)
       ?.dataset?.layout;
     if (indexLayout) {
       sessionStorage.setItem("backUrl", "/");
+      initArchives();
     }
   });
 </script>

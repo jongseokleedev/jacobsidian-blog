@@ -5,6 +5,7 @@
       "title": "AI 시대, 우리 팀은 왜 피그마 없이 일하기로 했나",
       "url": "/tech/20260513-1350",
       "type": "post",
+      "category": "tech",
       "tags": [
         "post"
       ]
@@ -14,6 +15,7 @@
       "title": "엄마 풀",
       "url": "/writing/20260513-2148",
       "type": "post",
+      "category": "writing",
       "tags": [
         "post"
       ]
@@ -23,6 +25,7 @@
       "title": "AI와 질문, 그리고 사랑",
       "url": "/thoughts/20260514-2114",
       "type": "post",
+      "category": "thought",
       "tags": [
         "post"
       ]
@@ -189,8 +192,113 @@
       "type": "wikilink"
     },
     {
+      "source": "20260514-2114",
+      "target": "20260514-1544",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260513-1439",
+      "target": "20260514-2113-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1544",
+      "target": "20260514-2114",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1547",
+      "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1547",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1548",
+      "target": "20260514-2112-3",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1548",
+      "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
       "source": "20260514-1549",
       "target": "20260513-1350",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1549",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2111-2",
+      "target": "20260514-2112-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2112-2",
+      "target": "20260514-2111-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2112-2",
+      "target": "20260514-2112",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2112-3",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "20260514-2113",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "20260514-2112-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "20260514-2113-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2113-2",
+      "target": "20260514-2113",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "20260514-1544",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "20260514-2114",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "20260513-1350",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "20260514-2112",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "20260514-2113-2",
       "type": "wikilink"
     },
     {

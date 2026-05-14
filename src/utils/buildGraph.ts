@@ -3,6 +3,7 @@ export interface GraphNode {
   title: string;
   url: string;
   type: "post" | "book" | "tag";
+  category?: string;
   tags: string[];
 }
 
@@ -25,6 +26,7 @@ interface InputNode {
   links: string[];
   url: string;
   type: "post" | "book";
+  category?: string;
 }
 
 export function buildGraphData(items: InputNode[]): GraphData {
@@ -34,7 +36,7 @@ export function buildGraphData(items: InputNode[]): GraphData {
   const slugToId = new Map<string, string>();
 
   for (const item of items) {
-    nodes.push({ id: item.id, title: item.title, url: item.url, type: item.type, tags: item.tags });
+    nodes.push({ id: item.id, title: item.title, url: item.url, type: item.type, category: item.category, tags: item.tags });
     slugToId.set(item.slug, item.id);
     slugToId.set(item.title, item.id);
     slugToId.set(item.id, item.id);

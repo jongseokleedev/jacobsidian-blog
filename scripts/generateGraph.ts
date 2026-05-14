@@ -32,6 +32,7 @@ async function loadItems(dir: string, type: "post" | "book") {
         links: (data.links as string[]) ?? [],
         url,
         type,
+        category: category ?? undefined,
       };
     })
   );

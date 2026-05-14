@@ -53,16 +53,52 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const getVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
+    // Category → color map
+    const CATEGORY_COLORS = {
+      thought:  "#a78bfa",  // violet
+      tech:     "#60a5fa",  // blue
+      writing:  "#34d399",  // emerald
+      book:     "#fbbf24",  // amber
+    };
+
     const nodesCopy = nodes.map(n => ({ ...n }));
     const edgesCopy = edges.map(e => ({ ...e }));
+
+    // Precompute degree per node
+    const degree = new Map();
+    for (const n of nodesCopy) degree.set(n.id, 0);
+    for (const e of edges) {
+      degree.set(e.source, (degree.get(e.source) ?? 0) + 1);
+      degree.set(e.target, (degree.get(e.target) ?? 0) + 1);
+    }
+
+    // Remove isolated nodes (degree 0) — orphaned tag nodes
+    const connectedIds = new Set(nodesCopy.filter(n => (degree.get(n.id) ?? 0) > 0).map(n => n.id));
+    nodesCopy.splice(0, nodesCopy.length, ...nodesCopy.filter(n => connectedIds.has(n.id)));
+    edgesCopy.splice(0, edgesCopy.length, ...edgesCopy.filter(e =>
+      connectedIds.has(typeof e.source === "object" ? e.source.id : e.source) &&
+      connectedIds.has(typeof e.target === "object" ? e.target.id : e.target)
+    ));
+
+    const nodeRadius = n => {
+      if (n.type === "tag") return 4;
+      const d = degree.get(n.id) ?? 0;
+      return Math.min(5 + d * 1.5, 14);
+    };
 
     let currentTransform = d3.zoomIdentity;
 
     const sim = d3.forceSimulation(nodesCopy)
-      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(80))
-      .force("charge", d3.forceManyBody().strength(-150))
+      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => e.type === "tag" ? 30 : 60))
+      .force("charge", d3.forceManyBody().strength(n => n.type === "tag" ? -30 : -120))
       .force("center", d3.forceCenter(rect.width / 2, rect.height / 2))
-      .force("collision", d3.forceCollide(18));
+      .force("collision", d3.forceCollide(n => nodeRadius(n) + 4));
+
+    // Returns a clean hex color (no alpha suffix)
+    function nodeColor(n) {
+      if (n.type === "tag") return "#888888";
+      return CATEGORY_COLORS[n.category] ?? "#aaaaaa";
+    }
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -74,7 +110,9 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const fg = getVar("--foreground") || "#e2e2e2";
       const accent = getVar("--accent") || "#f97316";
       const muted = getVar("--muted") || "#555";
+      const bg = getVar("--background") || "#fff";
 
+      // Edges
       for (const e of edgesCopy) {
         if (!e.source.x) continue;
         ctx.beginPath();
@@ -82,39 +120,99 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         ctx.lineTo(e.target.x, e.target.y);
         if (e.type === "tag") {
           ctx.setLineDash([3, 4]);
-          ctx.strokeStyle = muted + "55";
+          ctx.strokeStyle = muted + "44";
           ctx.lineWidth = 0.8;
         } else {
           ctx.setLineDash([]);
-          ctx.strokeStyle = fg + "55";
+          ctx.strokeStyle = fg + "44";
           ctx.lineWidth = 1.2;
         }
         ctx.stroke();
         ctx.setLineDash([]);
       }
 
+      // Nodes
       for (const n of nodesCopy) {
         if (n.x == null) continue;
-        const isTag = n.type === "tag";
         const isFocused = n.id === focusId;
-        const r = isFocused ? 9 : isTag ? 4 : 6;
+        const r = isFocused ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
+        const color = isFocused ? accent : nodeColor(n);
+
+        // Parse hex color to rgb components for rgba() usage
+        const hexToRgb = hex => {
+          const h = hex.replace("#", "");
+          const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+          return [r, g, b];
+        };
+        const [cr, cg, cb] = hexToRgb(color);
+
+        // Soft ambient glow (focused or highly connected)
+        if (isFocused || (degree.get(n.id) ?? 0) >= 3) {
+          const glow = ctx.createRadialGradient(n.x, n.y, r * 0.8, n.x, n.y, r + 6);
+          glow.addColorStop(0, `rgba(${cr},${cg},${cb},0.18)`);
+          glow.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r + 6, 0, Math.PI * 2);
+          ctx.fillStyle = glow;
+          ctx.fill();
+        }
+
+        // Main sphere — gradient from slightly bright top-left to darker edge
+        const grad = ctx.createRadialGradient(
+          n.x - r * 0.25, n.y - r * 0.28, r * 0.01,
+          n.x + r * 0.1, n.y + r * 0.1, r * 1.1
+        );
+        const lighten = (v, a) => Math.min(v + a, 255);
+        const darken  = (v, a) => Math.max(v - a, 0);
+        grad.addColorStop(0,   `rgba(${lighten(cr,30)},${lighten(cg,30)},${lighten(cb,30)},1)`);
+        grad.addColorStop(0.45,`rgba(${cr},${cg},${cb},1)`);
+        grad.addColorStop(1,   `rgba(${darken(cr,35)},${darken(cg,35)},${darken(cb,35)},0.9)`);
         ctx.beginPath();
         ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = isFocused ? accent : isTag ? muted + "99" : fg + "cc";
+        ctx.fillStyle = grad;
         ctx.fill();
-        if (isFocused) {
+
+        // Subtle rim — thin border at full opacity edge
+        if (n.type !== "tag") {
           ctx.beginPath();
-          ctx.arc(n.x, n.y, r + 3, 0, Math.PI * 2);
-          ctx.strokeStyle = accent + "55";
-          ctx.lineWidth = 1.5;
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(${darken(cr,20)},${darken(cg,20)},${darken(cb,20)},0.4)`;
+          ctx.lineWidth = 0.8;
           ctx.stroke();
+        }
+
+        // Subtle specular — small soft highlight top-left
+        if (n.type !== "tag") {
+          const shine = ctx.createRadialGradient(
+            n.x - r * 0.3, n.y - r * 0.32, 0,
+            n.x - r * 0.15, n.y - r * 0.15, r * 0.6
+          );
+          shine.addColorStop(0, "rgba(255,255,255,0.28)");
+          shine.addColorStop(0.5, "rgba(255,255,255,0.06)");
+          shine.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = shine;
+          ctx.fill();
+        }
+      }
+
+      // Labels — only when zoomed in enough
+      if (currentTransform.k > 1.4) {
+        const fontSize = Math.max(9, 11 / currentTransform.k);
+        ctx.font = `${fontSize}px sans-serif`;
+        ctx.textAlign = "center";
+        for (const n of nodesCopy) {
+          if (n.x == null || n.type === "tag") continue;
+          const r = nodeRadius(n);
+          const label = n.title?.length > 18 ? n.title.slice(0, 17) + "…" : n.title;
+          ctx.fillStyle = fg + "cc";
+          ctx.fillText(label, n.x, n.y + r + fontSize + 1);
         }
       }
 
       ctx.restore();
     }
-
-    sim.on("tick", draw);
 
     const zoom = d3.zoom()
       .scaleExtent([0.2, 5])
@@ -124,6 +222,26 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       });
 
     d3.select(canvas).call(zoom);
+
+    // Auto-fit all nodes into view once simulation settles
+    sim.on("tick", draw);
+    sim.on("end", () => {
+      // Use only post/book nodes for bounding box (tags scatter too far)
+      const postNodes = nodesCopy.filter(n => n.type !== "tag");
+      const xs = postNodes.map(n => n.x).filter(x => x != null);
+      const ys = postNodes.map(n => n.y).filter(y => y != null);
+      if (!xs.length) return;
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const pad = 48;
+      const scaleX = (rect.width - pad * 2) / (maxX - minX || 1);
+      const scaleY = (rect.height - pad * 2) / (maxY - minY || 1);
+      const k = Math.min(scaleX, scaleY, 2);
+      const tx = rect.width / 2 - k * (minX + maxX) / 2;
+      const ty = rect.height / 2 - k * (minY + maxY) / 2;
+      const t = d3.zoomIdentity.translate(tx, ty).scale(k);
+      d3.select(canvas).call(zoom.transform, t);
+    });
 
     const drag = d3.drag()
       .subject(event => {
