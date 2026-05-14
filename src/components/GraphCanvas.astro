@@ -16,16 +16,18 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   class="relative overflow-hidden bg-background"
 >
   <canvas style="width: 100%; height: 100%;"></canvas>
-  <!-- Zoom-to-fit button -->
-  <button
-    class="fit-btn absolute bottom-3 right-3 size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
-    title="Fit view"
-    aria-label="Fit graph to view"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-    </svg>
-  </button>
+  <!-- Zoom-to-fit button (full graph only) -->
+  {!isMini && (
+    <button
+      class="fit-btn absolute bottom-3 right-3 size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
+      title="Fit view"
+      aria-label="Fit graph to view"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+      </svg>
+    </button>
+  )}
 </div>
 
 <script define:vars={{ containerId }}>
@@ -364,13 +366,13 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     const zoom = d3.zoom()
-      .scaleExtent([0.2, 5])
+      .scaleExtent(isMini ? [0.1, 10] : [0.2, 5])
       .on("zoom", event => {
         currentTransform = event.transform;
         draw();
       });
 
-    d3.select(canvas).call(zoom);
+    if (!isMini) d3.select(canvas).call(zoom);
 
     // Cluster nodes at center before silent convergence
     const cx0 = rect.width / 2;
@@ -413,9 +415,11 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     const fitTransform = computeFitTransform();
     d3.select(canvas).call(zoom.transform, fitTransform);
 
-    fitBtn?.addEventListener("click", () => {
-      d3.select(canvas).transition().duration(400).call(zoom.transform, computeFitTransform());
-    });
+    if (!isMini) {
+      fitBtn?.addEventListener("click", () => {
+        d3.select(canvas).transition().duration(400).call(zoom.transform, computeFitTransform());
+      });
+    }
 
     // Reset nodes to center cluster and animate from fit view
     const cx = (rect.width / 2 - fitTransform.x) / fitTransform.k;
@@ -456,7 +460,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         draw();
       });
 
-    d3.select(canvas).call(drag);
+    if (!isMini) d3.select(canvas).call(drag);
 
     // Double-click to unpin
     canvas.addEventListener("dblclick", event => {
