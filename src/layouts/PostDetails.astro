@@ -5,7 +5,6 @@ import Tag from "@/components/Tag.astro";
 import Datetime from "@/components/Datetime.astro";
 import EditPost from "@/components/EditPost.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
-import Giscus from "@/components/Giscus.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { getCategoryMeta } from "@/utils/getCategories";
@@ -28,7 +27,6 @@ const {
   author,
   description,
   ogImage: initOgImage,
-  canonicalURL,
   pubDatetime,
   modDatetime,
   timezone,
@@ -89,6 +87,7 @@ const nextPost =
   headings={headings}
   title={`${title} | ${SITE.title}`}
   description={description}
+  ogImage={ogImage}
 >
   <!-- Back link -->
   <a

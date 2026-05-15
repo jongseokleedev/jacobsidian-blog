@@ -10,6 +10,7 @@ type RailVariant = "discovery" | "category" | "reading";
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
   mode?: "discovery" | "reading";
   rail?: RailVariant;
   activeCategory?: string;
@@ -22,6 +23,7 @@ interface Props {
 const {
   title,
   description,
+  ogImage,
   mode = "discovery",
   rail = "discovery",
   activeCategory,
@@ -32,7 +34,7 @@ const {
 } = Astro.props;
 ---
 
-<Layout title={title ?? "jacobsidian"} description={description}>
+<Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
   <Header />
   <div id="shell-body" class="flex flex-1 min-h-0">
     <Sidebar {activeCategory} {activeTopic} {activePage} />
