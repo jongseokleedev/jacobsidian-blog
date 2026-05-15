@@ -240,7 +240,7 @@ const isActive = (path: string) => {
     document.addEventListener("keydown", e => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        modal.open ? closeSearchModal() : openSearchModal();
+        if (modal.open) { closeSearchModal(); } else { openSearchModal(); }
       }
     });
   }

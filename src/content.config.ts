@@ -1,6 +1,5 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
-import { SITE } from "@/config";
 
 export const POSTS_PATH = "src/data/posts";
 export const BOOKS_PATH = "src/data/books";
