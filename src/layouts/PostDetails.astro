@@ -13,7 +13,7 @@ import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 
-type Entry = CollectionEntry<"posts"> | CollectionEntry<"books">;
+type Entry = CollectionEntry<"posts">;
 
 type Props = {
   post: Entry;
@@ -59,7 +59,7 @@ const ogImage = ogImageUrl
 
 /* ========== Category helpers ========== */
 
-const categoryKey = "category" in post.data ? post.data.category : "book";
+const categoryKey = post.data.category;
 const catMeta = getCategoryMeta(categoryKey);
 const catUrlPath =
   categoryKey === "thought"
@@ -103,7 +103,7 @@ const nextPost =
   <h1 class="block text-[28px] font-bold tracking-[-0.02em] leading-snug text-foreground mb-2">
     {title}
   </h1>
-    {post.collection === "books" && (
+    {post.data.category === "book" && (
       <p class="mt-1 text-base text-foreground/50">{author}</p>
     )}
     {description && (

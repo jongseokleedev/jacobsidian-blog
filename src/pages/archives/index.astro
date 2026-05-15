@@ -14,13 +14,6 @@ if (!SITE.showArchives) {
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 const posts = getSortedPosts(allPosts);
 
-const allBooks = await getCollection("books", ({ data }) => !data.draft);
-const books = allBooks.sort(
-  (a, b) =>
-    new Date(b.data.modDatetime ?? b.data.pubDatetime).getTime() -
-    new Date(a.data.modDatetime ?? a.data.pubDatetime).getTime()
-);
-
 const categoryLabel: Record<string, string> = {
   thought: "Thoughts",
   writing: "Writing",
@@ -28,8 +21,8 @@ const categoryLabel: Record<string, string> = {
   book: "Books",
 };
 
-const total = posts.length + books.length;
-const counts: Record<string, number> = { all: total, book: books.length };
+const total = posts.length;
+const counts: Record<string, number> = { all: total };
 for (const post of posts) {
   counts[post.data.category] = (counts[post.data.category] ?? 0) + 1;
 }
@@ -89,26 +82,6 @@ const filters = [
               <span class="text-xs text-foreground/40 self-center text-right">
                 {categoryLabel[post.data.category] ?? post.data.category}
               </span>
-            </a>
-          </li>
-        ))}
-        {books.map(book => (
-          <li data-category="book">
-            <a
-              href={`/books/${book.id}`}
-              class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
-            >
-              <span class="text-xs text-foreground/40 tabular-nums self-center">
-                {new Date(book.data.pubDatetime).toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </span>
-              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
-                {book.data.title}
-              </span>
-              <span class="text-xs text-foreground/40 self-center text-right">Books</span>
             </a>
           </li>
         ))}

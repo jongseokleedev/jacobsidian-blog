@@ -9,21 +9,6 @@ import GraphCanvas from "@/components/GraphCanvas.astro";
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 const posts = getSortedPosts(allPosts);
 
-const allBooks = await getCollection("books", ({ data }) => !data.draft);
-const books = allBooks.sort(
-  (a, b) =>
-    new Date(b.data.modDatetime ?? b.data.pubDatetime).getTime() -
-    new Date(a.data.modDatetime ?? a.data.pubDatetime).getTime()
-);
-
-type EntryItem = {
-  href: string;
-  date: Date;
-  title: string;
-  category: string;
-  label: string;
-};
-
 const CATEGORY_LABEL: Record<string, string> = {
   thought: "Thoughts",
   writing: "Writing",
@@ -31,22 +16,13 @@ const CATEGORY_LABEL: Record<string, string> = {
   book: "Books",
 };
 
-const allItems: EntryItem[] = [
-  ...posts.map(p => ({
-    href: getPath(p),
-    date: new Date(p.data.pubDatetime),
-    title: p.data.title,
-    category: p.data.category,
-    label: CATEGORY_LABEL[p.data.category] ?? p.data.category,
-  })),
-  ...books.map(b => ({
-    href: `/books/${b.id}`,
-    date: new Date(b.data.pubDatetime),
-    title: b.data.title,
-    category: "book",
-    label: "Books",
-  })),
-].sort((a, b) => b.date.getTime() - a.date.getTime());
+const allItems = posts.map(p => ({
+  href: getPath(p),
+  date: new Date(p.data.pubDatetime),
+  title: p.data.title,
+  category: p.data.category,
+  label: CATEGORY_LABEL[p.data.category] ?? p.data.category,
+}));
 
 const total = allItems.length;
 ---

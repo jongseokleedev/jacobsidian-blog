@@ -4,11 +4,9 @@ import { slugifyStr } from "@/utils/slugify";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
 
-type Entry = CollectionEntry<"posts"> | CollectionEntry<"books">;
-
 type Props = {
   variant?: "h2" | "h3";
-} & Entry;
+} & CollectionEntry<"posts">;
 
 const { variant: Heading = "h2", ...entry } = Astro.props;
 const { data } = entry;
@@ -17,7 +15,7 @@ const { title, description, pubDatetime, modDatetime, timezone } = data;
 
 <li class="my-6">
   <a
-    href={getPath(entry as Entry)}
+    href={getPath(entry as CollectionEntry<"posts">)}
     class:list={[
       "inline-block text-lg font-medium hover:text-accent transition-colors",
       "decoration-dashed underline-offset-4 hover:underline",

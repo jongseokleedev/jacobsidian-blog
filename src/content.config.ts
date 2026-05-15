@@ -9,12 +9,12 @@ const posts = defineCollection({
   loader: glob({ pattern: "**/[^_]*.md", base: `./${POSTS_PATH}` }),
   schema: ({ image }) =>
     z.object({
-      author: z.string().default(SITE.author),
+      author: z.string().optional(),
       pubDatetime: z.coerce.date(),
       modDatetime: z.coerce.date().optional().nullable(),
       title: z.string(),
       slug: z.string().optional(),
-      category: z.enum(["thought", "writing", "tech"]),
+      category: z.enum(["thought", "writing", "tech", "book"]),
       featured: z.boolean().optional(),
       draft: z.boolean().optional(),
       tags: z.array(z.string()).default(["others"]),

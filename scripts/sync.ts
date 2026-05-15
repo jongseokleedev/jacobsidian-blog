@@ -235,7 +235,7 @@ async function run(options: SyncOptions) {
     const links = extractWikilinks(r.body);
     const frontmatter = normalizeBookFrontmatter({ ...r.item.frontmatter, links }, r.slug);
     await writeContent({
-      destDir: booksDest,
+      destDir: postsDest,
       slug: r.slug,
       frontmatter,
       body: applyTransforms(r.body),
