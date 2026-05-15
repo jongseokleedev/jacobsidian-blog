@@ -68,9 +68,9 @@ const filters = [
 <Layout>
   <Header />
   <main id="main-content" data-layout="index" class="app-layout pt-12 pb-16">
-    <!-- Hero: ASCII -->
+    <!-- Hero: ASCII + Graph -->
     <section class="pb-10 border-b border-border">
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto mb-8">
         <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] font-mono select-none ascii-gradient" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
      ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝██║██╔══██╗██║██╔══██╗████╗  ██║
      ██║███████║██║     ██║   ██║██████╔╝███████╗██║██║  ██║██║███████║██╔██╗ ██║
@@ -79,13 +79,6 @@ const filters = [
  ╚════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
       </div>
       <h1 class="sr-only">jacobsidian</h1>
-    </section>
-
-    <!-- Graph -->
-    <section class="py-10 border-b border-border">
-      <div class="mb-4">
-        <h2 class="text-base font-semibold tracking-tight">Graph</h2>
-      </div>
       <div class="rounded-lg border border-border overflow-hidden">
         <GraphCanvas height={340} />
       </div>
