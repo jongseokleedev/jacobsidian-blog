@@ -1,0 +1,65 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import RightRail from "@/components/RightRail.astro";
+import Layout from "./Layout.astro";
+
+type RailVariant = "discovery" | "category" | "reading";
+
+interface Props {
+  title?: string;
+  description?: string;
+  mode?: "discovery" | "reading";
+  rail?: RailVariant;
+  activeCategory?: string;
+  activeTopic?: string;
+  activePage?: string;
+  postId?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const {
+  title,
+  description,
+  mode = "discovery",
+  rail = "discovery",
+  activeCategory,
+  activeTopic,
+  activePage,
+  postId,
+  headings,
+} = Astro.props;
+---
+
+<Layout title={title ?? "jacobsidian"} description={description}>
+  <Header />
+  <div id="shell-body" class="flex flex-1 min-h-0">
+    <Sidebar {activeCategory} {activeTopic} {activePage} />
+
+    <main
+      id="main-content"
+      class:list={[
+        "flex-1 min-w-0",
+        mode === "reading" ? "flex justify-center" : "",
+      ]}
+      style={mode === "reading" ? "padding: 32px 40px;" : "padding: 32px 28px;"}
+    >
+      {mode === "reading" ? (
+        <div style="width:100%; max-width:680px;">
+          <slot />
+        </div>
+      ) : (
+        <slot />
+      )}
+    </main>
+
+    <RightRail
+      variant={rail}
+      {postId}
+      categoryKey={activeCategory}
+      {headings}
+    />
+  </div>
+  <Footer />
+</Layout>
