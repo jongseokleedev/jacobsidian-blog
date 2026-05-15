@@ -65,10 +65,10 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     const getVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
     const CATEGORY_COLORS = {
-      thought: "#a78bfa",
-      tech:    "#60a5fa",
-      writing: "#34d399",
-      book:    "#fbbf24",
+      thought: getVar("--cat-thought"),
+      tech:    getVar("--cat-tech"),
+      writing: getVar("--cat-writing"),
+      book:    getVar("--cat-book"),
     };
 
     const nodesCopy = nodes.map(n => ({ ...n }));
