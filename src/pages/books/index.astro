@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import BookCard from "@/components/BookCard.astro";
-import { SITE } from "@/config";
+import { getCategoryMeta } from "@/utils/getCategories";
+
+const catKey = "book";
+const meta = getCategoryMeta(catKey)!;
 
 const all = await getCollection("books", ({ data }) => !data.draft);
 const books = all.sort(
@@ -14,14 +15,17 @@ const books = all.sort(
 );
 ---
 
-<Layout title={`Books | ${SITE.title}`}>
-  <Header />
-  <main id="main-content" class="app-layout pt-12 pb-16">
-    <h1 class="text-2xl font-semibold tracking-tight mb-1">Books</h1>
-    <p class="text-sm text-foreground/60 mb-8">읽은 책들, 남은 생각들</p>
-    <ul class:list={["grid gap-4", books.length === 1 ? "grid-cols-1 max-w-[200px]" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"]}>
-      {books.map(entry => <BookCard {...entry} />)}
-    </ul>
-  </main>
-  <Footer />
-</Layout>
+<BlogShell mode="discovery" rail="category" activeCategory={catKey} title={meta.label}>
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+      <span class="cat-dot" style={`background:${meta.color}`} />
+      <p class="bd-overline">Category</p>
+    </div>
+    <h1 class="text-[28px] font-bold tracking-[-0.02em]">{meta.label}</h1>
+    <p class="mt-1 text-[15px]" style="color: var(--fg-mute);">{meta.desc}</p>
+  </header>
+
+  <ul class:list={["grid gap-4", books.length === 1 ? "grid-cols-1 max-w-[200px]" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"]}>
+    {books.map(entry => <BookCard {...entry} />)}
+  </ul>
+</BlogShell>

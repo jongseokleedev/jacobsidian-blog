@@ -1,50 +1,51 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import { SITE } from "@/config";
+import { getCategoryMeta } from "@/utils/getCategories";
+
+const catKey = "writing";
+const meta = getCategoryMeta(catKey)!;
 
 const all = await getCollection("posts", ({ data }) => data.category === "writing" && !data.draft);
 const posts = getSortedPosts(all);
 ---
 
-<Layout title={`Writing | ${SITE.title}`}>
-  <Header />
-  <main id="main-content" class="app-layout pt-12 pb-16">
-    <section class="pb-10 border-b border-border">
-      <h1 class="text-2xl font-semibold tracking-tight mb-1">Writing</h1>
-      <p class="text-sm text-foreground/60">에세이, 혹은 소설</p>
-    </section>
+<BlogShell mode="discovery" rail="category" activeCategory={catKey} title={meta.label}>
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+      <span class="cat-dot" style={`background:${meta.color}`} />
+      <p class="bd-overline">Category</p>
+    </div>
+    <h1 class="text-[28px] font-bold tracking-[-0.02em]">{meta.label}</h1>
+    <p class="mt-1 text-[15px]" style="color: var(--fg-mute);">{meta.desc}</p>
+  </header>
 
-    {posts.length > 0 ? (
-      <section class="pt-8">
-        <ul class="divide-y divide-border">
-          {posts.map(({ data, id }) => (
-            <li>
-              <a
-                href={`/writing/${id}`}
-                class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
-              >
-                <span class="text-xs text-foreground/40 tabular-nums self-center">
-                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })}
-                </span>
-                <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
-                  {data.title}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ) : (
-      <p class="pt-12 text-sm text-foreground/40 text-center">아직 글이 없습니다.</p>
-    )}
-  </main>
-  <Footer />
-</Layout>
+  {posts.length > 0 ? (
+    <section>
+      <ul class="divide-y divide-border">
+        {posts.map(({ data, id }) => (
+          <li>
+            <a
+              href={`/writing/${id}`}
+              class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
+            >
+              <span class="text-xs text-foreground/40 tabular-nums self-center">
+                {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                {data.title}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : (
+    <p class="pt-12 text-sm text-foreground/40 text-center">아직 글이 없습니다.</p>
+  )}
+</BlogShell>
