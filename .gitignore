@@ -31,3 +31,4 @@ public/pagefind
 .serena/
 *.png
 candidates/
+.worktrees/
