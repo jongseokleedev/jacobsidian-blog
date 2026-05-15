@@ -1,0 +1,100 @@
+---
+import { allCategories } from "@/utils/getCategories";
+
+interface Props {
+  activeCategory?: string;   // e.g. "thought"
+  activeTopic?: string;      // e.g. "work"
+  activePage?: string;       // "home" | "about"
+}
+
+const { activeCategory, activeTopic, activePage } = Astro.props;
+---
+
+<aside
+  id="left-rail"
+  class="hidden lg:flex flex-col border-r border-border shrink-0"
+  style="width:232px; padding: 28px 24px 28px 28px; overflow-y:auto;"
+>
+  <!-- Home -->
+  <a
+    href="/"
+    class:list={[
+      "flex items-center gap-2 text-sm font-medium py-1.5 rounded transition-colors hover:text-accent",
+      activePage === "home" ? "text-accent font-semibold" : "text-[color:var(--fg-mute)]",
+    ]}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    Home
+  </a>
+
+  <!-- About -->
+  <a
+    href="/about"
+    class:list={[
+      "flex items-center gap-2 text-sm font-medium py-1.5 rounded transition-colors hover:text-accent",
+      activePage === "about" ? "text-accent font-semibold" : "text-[color:var(--fg-mute)]",
+    ]}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+    </svg>
+    About
+  </a>
+
+  <hr class="my-2.5 border-border" />
+
+  <!-- Category tree -->
+  {allCategories().map(([key, meta]) => {
+    const isActive = activeCategory === key;
+    const hasTopics = meta.topics.length > 0;
+    // Resolve category URL path
+    const catPath = key === "thought" ? "/thoughts" : key === "book" ? "/books" : `/${key}`;
+    return (
+      <div class="sidebar-category">
+        <a
+          href={catPath}
+          class:list={[
+            "flex items-center gap-2 py-1.5 text-sm rounded transition-colors w-full hover:text-accent",
+            isActive ? "text-accent font-semibold" : "text-foreground",
+          ]}
+        >
+          {hasTopics ? (
+            <svg
+              class:list={["size-[9px] shrink-0 transition-transform", isActive ? "rotate-90" : ""]}
+              style="color: var(--fg-faint);"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            >
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          ) : (
+            <span class="inline-block size-[9px] shrink-0" />
+          )}
+          <span class="cat-dot shrink-0" style={`background:${meta.color}`} />
+          {meta.label}
+        </a>
+
+        {isActive && hasTopics && (
+          <ul class="mt-0.5 ml-[18px] pl-2 border-l border-border flex flex-col gap-0.5">
+            {meta.topics.map(topic => (
+              <li>
+                <a
+                  href={`/tags/${topic.key}`}
+                  class:list={[
+                    "block text-[12.5px] py-1 pl-3 rounded transition-colors hover:text-accent",
+                    activeTopic === topic.key
+                      ? "text-accent font-medium"
+                      : "text-[color:var(--fg-mute)]",
+                  ]}
+                >
+                  {topic.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  })}
+</aside>
