@@ -30,7 +30,14 @@ export function pickSlug(
 function toIsoDate(value: unknown): string | undefined {
   if (value == null) return undefined;
   if (value instanceof Date) return value.toISOString();
-  const date = new Date(String(value));
+  const s = String(value).trim();
+  // Bare date (YYYY-MM-DD) → interpret as KST midnight (UTC-9h = UTC+9 → T15:00:00Z prev day)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const date = new Date(`${s}T00:00:00+09:00`);
+    if (Number.isNaN(date.getTime())) return undefined;
+    return date.toISOString();
+  }
+  const date = new Date(s);
   if (Number.isNaN(date.getTime())) return undefined;
   return date.toISOString();
 }
@@ -47,6 +54,7 @@ function pickPubDatetime(fm: Record<string, unknown>): string {
 
 export interface NormalizedPost {
   title: string;
+  slug: string;
   category: PostCategory;
   pubDatetime: string;
   modDatetime?: string;
@@ -59,10 +67,12 @@ export interface NormalizedPost {
 
 export function normalizePostFrontmatter(
   fm: Record<string, unknown>,
-  category: PostCategory
+  category: PostCategory,
+  slug: string
 ): NormalizedPost {
   const out: NormalizedPost = {
     title: String(fm.title ?? "Untitled"),
+    slug,
     category,
     pubDatetime: pickPubDatetime(fm),
     description: String(fm.description ?? ""),
@@ -85,6 +95,7 @@ export function normalizePostFrontmatter(
 
 export interface NormalizedBook {
   title: string;
+  slug: string;
   author: string;
   pubDatetime: string;
   modDatetime?: string;
@@ -95,10 +106,12 @@ export interface NormalizedBook {
 }
 
 export function normalizeBookFrontmatter(
-  fm: Record<string, unknown>
+  fm: Record<string, unknown>,
+  slug: string
 ): NormalizedBook {
   const out: NormalizedBook = {
     title: String(fm.title ?? "Untitled"),
+    slug,
     author: String(fm.author ?? ""),
     pubDatetime: pickPubDatetime(fm),
     description: String(fm.description ?? ""),

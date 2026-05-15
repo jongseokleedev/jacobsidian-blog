@@ -1,4 +1,5 @@
 import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -179,6 +180,28 @@ async function run(options: SyncOptions) {
     return out;
   }
 
+  // Write slug back to vault file if it was missing
+  async function writeSlugToVault(absolutePath: string, slug: string): Promise<void> {
+    const raw = await fs.readFile(absolutePath, "utf8");
+    // Only write back if slug field is absent or empty
+    const hasFm = raw.trimStart().startsWith("---");
+    if (!hasFm) return;
+    const fmEnd = raw.indexOf("---", raw.indexOf("---") + 3);
+    if (fmEnd === -1) return;
+    const fmBlock = raw.slice(0, fmEnd + 3);
+    if (/^slug:\s*\S/m.test(fmBlock)) return; // already has a real slug
+    // Inject or replace empty slug line
+    let updated: string;
+    if (/^slug:/m.test(fmBlock)) {
+      updated = raw.replace(/^slug:.*$/m, `slug: ${slug}`);
+    } else {
+      // Insert after first ---
+      const firstEnd = raw.indexOf("\n", raw.indexOf("---")) + 1;
+      updated = raw.slice(0, firstEnd) + `slug: ${slug}\n` + raw.slice(firstEnd);
+    }
+    await fs.writeFile(absolutePath, updated, "utf8");
+  }
+
   // Pass 2: write
   const postSlugs = new Set<string>();
   for (const r of resolvedPosts) {
@@ -186,7 +209,8 @@ async function run(options: SyncOptions) {
     const links = extractWikilinks(r.body);
     const frontmatter = normalizePostFrontmatter(
       { ...r.item.frontmatter, links },
-      r.item.category
+      r.item.category,
+      r.slug
     );
     await writeContent({
       destDir: postsDest,
@@ -195,6 +219,10 @@ async function run(options: SyncOptions) {
       body: applyTransforms(r.body),
       dryRun,
     });
+    if (!dryRun) {
+      const hadSlug = typeof r.item.frontmatter.slug === "string" && r.item.frontmatter.slug.trim();
+      if (!hadSlug) await writeSlugToVault(r.item.absolutePath, r.slug);
+    }
     console.log(
       `  + post  [${r.item.category}] ${r.slug}  ← ${path.relative(VAULT_PATH, r.item.absolutePath)}`
     );
@@ -204,7 +232,7 @@ async function run(options: SyncOptions) {
   for (const r of resolvedBooks) {
     bookSlugs.add(r.slug);
     const links = extractWikilinks(r.body);
-    const frontmatter = normalizeBookFrontmatter({ ...r.item.frontmatter, links });
+    const frontmatter = normalizeBookFrontmatter({ ...r.item.frontmatter, links }, r.slug);
     await writeContent({
       destDir: booksDest,
       slug: r.slug,
@@ -212,6 +240,10 @@ async function run(options: SyncOptions) {
       body: applyTransforms(r.body),
       dryRun,
     });
+    if (!dryRun) {
+      const hadSlug = typeof r.item.frontmatter.slug === "string" && r.item.frontmatter.slug.trim();
+      if (!hadSlug) await writeSlugToVault(r.item.absolutePath, r.slug);
+    }
     console.log(
       `  + book  ${r.slug}  ← ${path.relative(VAULT_PATH, r.item.absolutePath)}`
     );

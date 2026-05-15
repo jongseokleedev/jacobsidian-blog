@@ -60,7 +60,7 @@ describe("pickSlug", () => {
 });
 
 describe("normalizePostFrontmatter", () => {
-  it("maps published_at → pubDatetime ISO string", () => {
+  it("maps published_at → pubDatetime ISO string (bare date → KST midnight)", () => {
     const out = normalizePostFrontmatter(
       {
         title: "T",
@@ -68,20 +68,22 @@ describe("normalizePostFrontmatter", () => {
         published_at: "2026-05-10",
         created: "2026-05-01",
       },
-      "tech"
+      "tech",
+      "test-slug"
     );
-    expect(out.pubDatetime).toBe("2026-05-10T00:00:00.000Z");
+    expect(out.pubDatetime).toBe("2026-05-09T15:00:00.000Z");
   });
 
   it("falls back to created when published_at missing", () => {
     const out = normalizePostFrontmatter(
       { title: "T", status: "published", created: "2026-05-05" },
-      "thought"
+      "thought",
+      "test-slug"
     );
-    expect(out.pubDatetime).toBe("2026-05-05T00:00:00.000Z");
+    expect(out.pubDatetime).toBe("2026-05-04T15:00:00.000Z");
   });
 
-  it("includes category and required fields", () => {
+  it("includes category, slug, and required fields", () => {
     const out = normalizePostFrontmatter(
       {
         title: "Hello",
@@ -90,9 +92,11 @@ describe("normalizePostFrontmatter", () => {
         description: "desc",
         tags: ["x", "y"],
       },
-      "tech"
+      "tech",
+      "hello-slug"
     );
     expect(out.title).toBe("Hello");
+    expect(out.slug).toBe("hello-slug");
     expect(out.category).toBe("tech");
     expect(out.description).toBe("desc");
     expect(out.tags).toEqual(["x", "y"]);
@@ -106,7 +110,8 @@ describe("normalizePostFrontmatter", () => {
         published_at: "2026-05-10",
         created: "2026-05-01",
       },
-      "tech"
+      "tech",
+      "test-slug"
     );
     expect(out).not.toHaveProperty("status");
     expect(out).not.toHaveProperty("published_at");
@@ -116,41 +121,51 @@ describe("normalizePostFrontmatter", () => {
   it("provides default description when missing", () => {
     const out = normalizePostFrontmatter(
       { title: "T", status: "published", published_at: "2026-05-10" },
-      "tech"
+      "tech",
+      "test-slug"
     );
     expect(typeof out.description).toBe("string");
   });
 });
 
 describe("normalizeBookFrontmatter", () => {
-  it("maps published_at → pubDatetime", () => {
-    const out = normalizeBookFrontmatter({
-      title: "존재와 시간",
-      author: "하이데거",
-      published: true,
-      published_at: "2026-05-09",
-    });
-    expect(out.pubDatetime).toBe("2026-05-09T00:00:00.000Z");
+  it("maps published_at → pubDatetime (bare date → KST midnight)", () => {
+    const out = normalizeBookFrontmatter(
+      {
+        title: "존재와 시간",
+        author: "하이데거",
+        published: true,
+        published_at: "2026-05-09",
+      },
+      "test-slug"
+    );
+    expect(out.pubDatetime).toBe("2026-05-08T15:00:00.000Z");
   });
 
   it("drops the published flag", () => {
-    const out = normalizeBookFrontmatter({
-      title: "T",
-      author: "A",
-      published: true,
-      published_at: "2026-05-09",
-    });
+    const out = normalizeBookFrontmatter(
+      {
+        title: "T",
+        author: "A",
+        published: true,
+        published_at: "2026-05-09",
+      },
+      "test-slug"
+    );
     expect(out).not.toHaveProperty("published");
   });
 
   it("preserves author and description", () => {
-    const out = normalizeBookFrontmatter({
-      title: "T",
-      author: "A",
-      published: true,
-      published_at: "2026-05-09",
-      description: "리뷰",
-    });
+    const out = normalizeBookFrontmatter(
+      {
+        title: "T",
+        author: "A",
+        published: true,
+        published_at: "2026-05-09",
+        description: "리뷰",
+      },
+      "test-slug"
+    );
     expect(out.author).toBe("A");
     expect(out.description).toBe("리뷰");
   });
