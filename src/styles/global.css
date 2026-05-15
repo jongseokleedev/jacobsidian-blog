@@ -21,6 +21,48 @@ html[data-theme="dark"] {
   --border: #2e2e2e;
 }
 
+/* ── 데스크탑 리디자인 토큰 ─────────────────────── */
+:root,
+html[data-theme="light"] {
+  --fg-mute:        rgba(26, 25, 24, 0.6);
+  --fg-faint:       rgba(26, 25, 24, 0.4);
+  --fg-veryfaint:   rgba(26, 25, 24, 0.25);
+  --accent-soft:    rgba(61, 90, 153, 0.14);
+  --border-soft:    #e2dfd9;
+  --rail-bg:        #f3f1ed;
+  --cat-thought:    #7c5cf0;
+  --cat-tech:       #2563eb;
+  --cat-writing:    #059669;
+  --cat-book:       #b45309;
+}
+html[data-theme="dark"] {
+  --fg-mute:        rgba(232, 230, 227, 0.6);
+  --fg-faint:       rgba(232, 230, 227, 0.4);
+  --fg-veryfaint:   rgba(232, 230, 227, 0.25);
+  --accent-soft:    rgba(122, 162, 212, 0.18);
+  --border-soft:    #232323;
+  --rail-bg:        #121212;
+  --cat-thought:    #a78bfa;
+  --cat-tech:       #60a5fa;
+  --cat-writing:    #34d399;
+  --cat-book:       #fbbf24;
+}
+
+@utility bd-overline {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+@utility cat-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex: none;
+}
+
 @theme inline {
   --font-app: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -76,6 +118,12 @@ html[data-theme="dark"] {
 
   .app-prose a:hover::after {
     transform: scaleX(1);
+  }
+
+  .active-pill {
+    border-color: var(--pill-color, var(--accent)) !important;
+    color: var(--pill-color, var(--accent)) !important;
+    background-color: color-mix(in srgb, var(--pill-color, var(--accent)) 10%, transparent) !important;
   }
 }
 
