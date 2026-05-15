@@ -12,11 +12,7 @@ export const CATEGORIES: Record<string, CategoryMeta> = {
     label: "Thoughts",
     desc: "일상 속의 공상과 단상",
     color: "var(--cat-thought)",
-    topics: [
-      { key: "work", label: "Work · 일" },
-      { key: "life", label: "Life · 일상" },
-      { key: "memo", label: "Memo · 짧은 단상" },
-    ],
+    topics: [],
   },
   writing: {
     label: "Writing",

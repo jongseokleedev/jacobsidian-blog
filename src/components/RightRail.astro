@@ -16,6 +16,7 @@ const { variant, postId, categoryKey, headings = [] } = Astro.props;
 
 const rawPosts = await getCollection("posts");
 const allPosts = getSortedPosts(rawPosts);
+const uniqueTags = new Set(allPosts.flatMap(p => p.data.tags ?? [])).size;
 const recentPosts = allPosts.slice(0, 4);
 const catMeta = categoryKey ? getCategoryMeta(categoryKey) : undefined;
 const catPosts = categoryKey
@@ -98,18 +99,10 @@ const postUrl = (post: (typeof allPosts)[number]) => {
             <p class="text-[11px] text-[color:var(--fg-faint)]">notes</p>
           </div>
           <div class="bg-muted/50 rounded p-2 text-center">
-            <p class="font-mono text-lg font-semibold">—</p>
+            <p class="font-mono text-lg font-semibold">{uniqueTags}</p>
             <p class="text-[11px] text-[color:var(--fg-faint)]">tags</p>
           </div>
         </div>
-      </section>
-
-      <!-- FOOTNOTES -->
-      <section>
-        <p class="font-mono text-[11px] leading-relaxed" style="color: var(--fg-veryfaint);">
-          Asia/Seoul · ko-KR<br />
-          Astro + Obsidian
-        </p>
       </section>
     </>
   )}

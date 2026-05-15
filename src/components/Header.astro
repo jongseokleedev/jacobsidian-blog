@@ -30,13 +30,13 @@ const isActive = (path: string) => {
   Skip to content
 </a>
 
-<header class="app-layout sticky top-0 z-10">
+<header class="sticky top-0 z-10 w-full">
   <div
     id="top-nav-wrap"
     class="border-b border-border w-full bg-background/90 backdrop-blur-sm"
   >
     <!-- 모바일: 로고(좌) + 햄버거(우) 한 줄 / 데스크탑: 로고(좌) + nav(우) 한 줄 -->
-    <div class="flex items-center justify-between py-4 sm:py-5">
+    <div class="flex items-center justify-between px-6 py-0" style="height:56px;">
       <Logo size={20} />
 
       <!-- 데스크탑: 검색 pill + 테마 + RSS -->
