@@ -1,7 +1,5 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import { SITE } from "@/config";
 
 const categories = [
@@ -12,38 +10,38 @@ const categories = [
 ];
 ---
 
-<Layout title={`About | ${SITE.title}`}>
-  <Header />
-  <main id="main-content" class="app-layout pt-12 pb-20">
+<BlogShell
+  title={`About | ${SITE.title}`}
+  mode="discovery"
+  rail="discovery"
+  activePage="about"
+>
 
-    <!-- Hero -->
-    <section class="pb-10 border-b border-border">
-      <p class="text-sm text-foreground/40 mb-2 tracking-widest uppercase">About</p>
-      <h1 class="text-3xl font-bold tracking-tight mb-3">Jacob</h1>
-      <p class="text-base text-foreground/60 leading-relaxed">
-        글쓰기를 좋아하는 어느 개발자의 기록 저장소
-      </p>
-    </section>
+  <!-- Hero -->
+  <section class="pb-10 border-b border-border">
+    <p class="text-sm text-foreground/40 mb-2 tracking-widest uppercase">About</p>
+    <h1 class="text-3xl font-bold tracking-tight mb-3">Jacob</h1>
+    <p class="text-base text-foreground/60 leading-relaxed">
+      글쓰기를 좋아하는 어느 개발자의 기록 저장소
+    </p>
+  </section>
 
-    <!-- Categories -->
-    <section class="py-10 border-b border-border">
-      <ul class="space-y-5">
-        {categories.map(cat => (
-          <li>
-            <a href={cat.href} class="group flex items-baseline gap-4 hover:text-accent transition-colors">
-              <span class="w-20 shrink-0 text-sm font-semibold text-accent group-hover:opacity-75 transition-opacity">
-                {cat.name}
-              </span>
-              <span class="text-sm text-foreground/60 group-hover:text-accent transition-colors">
-                {cat.desc}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
+  <!-- Categories -->
+  <section class="py-10 border-b border-border">
+    <ul class="space-y-5">
+      {categories.map(cat => (
+        <li>
+          <a href={cat.href} class="group flex items-baseline gap-4 hover:text-accent transition-colors">
+            <span class="w-20 shrink-0 text-sm font-semibold text-accent group-hover:opacity-75 transition-opacity">
+              {cat.name}
+            </span>
+            <span class="text-sm text-foreground/60 group-hover:text-accent transition-colors">
+              {cat.desc}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
-
-  </main>
-  <Footer />
-</Layout>
+</BlogShell>
