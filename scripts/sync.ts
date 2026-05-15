@@ -1,5 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync } from "node:fs";
 import fs from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -270,6 +271,26 @@ async function run(options: SyncOptions) {
     `\n[sync] done. ${resolvedPosts.length} post(s) + ${resolvedBooks.length} book(s) written, ` +
       `${removedPosts.length + removedBooks.length} orphan(s) removed${dryRun ? " (dry run, no changes)" : ""}.\n`
   );
+
+  if (!dryRun) {
+    const date = new Date().toISOString().slice(0, 10);
+    const git = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT, stdio: "inherit" });
+    const gitOut = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT }).toString().trim();
+    try {
+      git(["add", "src/data/", "public/images/"]);
+      const diff = gitOut(["diff", "--cached", "--name-only"]);
+      if (!diff) {
+        console.log("[sync] nothing to commit — content is up to date.\n");
+        return;
+      }
+      git(["commit", "-m", `content: sync from Obsidian vault (${date})`]);
+      git(["push", "origin", "main"]);
+      console.log("[sync] deployed successfully.\n");
+    } catch (err) {
+      console.error("[sync] deploy failed:", err);
+      process.exit(1);
+    }
+  }
 }
 
 run(parseArgs(process.argv.slice(2))).catch(err => {

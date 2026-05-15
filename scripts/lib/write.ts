@@ -13,7 +13,11 @@ export interface WriteContentOptions {
 export async function writeContent(opts: WriteContentOptions): Promise<string> {
   const { destDir, slug, frontmatter, body, dryRun = false } = opts;
   const filePath = path.join(destDir, `${slug}.md`);
-  const serialized = matter.stringify(body, frontmatter as Record<string, unknown>);
+  let serialized = matter.stringify(body, frontmatter as Record<string, unknown>);
+  // gray-matter occasionally omits the opening --- when body is empty or starts
+  // with a character sequence it misidentifies. Ensure the file always starts
+  // with a valid YAML front-matter delimiter.
+  if (!serialized.startsWith("---")) serialized = "---\n" + serialized;
 
   if (!dryRun) {
     await fs.mkdir(destDir, { recursive: true });
