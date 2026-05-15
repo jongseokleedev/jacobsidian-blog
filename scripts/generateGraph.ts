@@ -6,7 +6,7 @@ import { buildGraphData } from "../src/utils/buildGraph";
 
 const PROJECT_ROOT = path.resolve(import.meta.dirname, "..");
 
-async function loadItems(dir: string, type: "post" | "book") {
+async function loadItems(dir: string) {
   const abs = path.resolve(PROJECT_ROOT, dir);
   const files = await fg("**/*.md", { cwd: abs, absolute: true });
   const results = await Promise.all(
@@ -17,10 +17,10 @@ async function loadItems(dir: string, type: "post" | "book") {
       const id = path.basename(f, ".md");
       const category = data.category as string | undefined;
       const url =
-        type === "book"
-          ? `/books/${id}`
-          : category === "thought"
+        category === "thought"
           ? `/thoughts/${id}`
+          : category === "book"
+          ? `/books/${id}`
           : category === "writing"
           ? `/writing/${id}`
           : `/tech/${id}`;
@@ -31,8 +31,8 @@ async function loadItems(dir: string, type: "post" | "book") {
         tags: (data.tags as string[]) ?? [],
         links: (data.links as string[]) ?? [],
         url,
-        type,
-        category: category ?? undefined,
+        type: "post" as const,
+        category,
       };
     })
   );
@@ -40,9 +40,8 @@ async function loadItems(dir: string, type: "post" | "book") {
 }
 
 async function main() {
-  const posts = await loadItems("src/data/posts", "post");
-  const books = await loadItems("src/data/books", "book");
-  const graph = buildGraphData([...posts, ...books]);
+  const posts = await loadItems("src/data/posts");
+  const graph = buildGraphData(posts);
   const outPath = path.resolve(PROJECT_ROOT, "public/graph.json");
   await fs.writeFile(outPath, JSON.stringify(graph, null, 2));
   // eslint-disable-next-line no-console
