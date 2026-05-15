@@ -1,11 +1,9 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getPath } from "@/utils/getPath";
-import { SITE } from "@/config";
+import { allCategories } from "@/utils/getCategories";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
@@ -51,121 +49,118 @@ const allItems: EntryItem[] = [
 ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
 const total = allItems.length;
-const counts: Record<string, number> = { all: total, book: books.length };
-for (const post of posts) {
-  counts[post.data.category] = (counts[post.data.category] ?? 0) + 1;
-}
-
-const filters = [
-  { key: "all",     label: "All"      },
-  { key: "thought", label: "Thoughts" },
-  { key: "writing", label: "Writing"  },
-  { key: "tech",    label: "Tech"     },
-  { key: "book",    label: "Books"    },
-].filter(f => f.key === "all" || counts[f.key]);
 ---
 
-<Layout>
-  <Header />
-  <main id="main-content" data-layout="index" class="app-layout pt-12 pb-16">
-    <!-- Hero: ASCII + Graph -->
-    <section class="pb-10 border-b border-border">
-      <div class="overflow-x-auto mb-8">
-        <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] font-mono select-none ascii-gradient" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
+<BlogShell mode="discovery" rail="discovery" activePage="home" data-layout="index">
+  <!-- Hero: ASCII + Graph -->
+  <section class="pb-10 border-b border-border">
+    <div class="overflow-x-auto mb-8">
+      <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] font-mono select-none ascii-gradient" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
      ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝██║██╔══██╗██║██╔══██╗████╗  ██║
      ██║███████║██║     ██║   ██║██████╔╝███████╗██║██║  ██║██║███████║██╔██╗ ██║
 ██   ██║██╔══██║██║     ██║   ██║██╔══██╗╚════██║██║██║  ██║██║██╔══██║██║╚██╗██║
 ╚█████╔╝██║  ██║╚██████╗╚██████╔╝██████╔╝███████║██║██████╔╝██║██║  ██║██║ ╚████║
  ╚════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
+    </div>
+    <h1 class="sr-only">jacobsidian</h1>
+    <div class="rounded-lg border border-border overflow-hidden">
+      <GraphCanvas height={340} />
+    </div>
+  </section>
+
+  <!-- Category filter pills -->
+  <div id="cat-filter-row" class="flex gap-2 overflow-x-auto pb-1 mb-5 flex-wrap mt-8">
+    <button
+      class="cat-filter-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent active-pill"
+      data-cat="all"
+    >
+      All
+    </button>
+    {allCategories().map(([key, meta]) => (
+      <button
+        class="cat-filter-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
+        data-cat={key}
+        style={`--pill-color:${meta.color}`}
+      >
+        <span class="cat-dot shrink-0" style={`background:${meta.color}`} />
+        {meta.label}
+      </button>
+    ))}
+  </div>
+
+  <!-- Archives -->
+  {allItems.length > 0 && (
+    <section>
+      <div class="flex items-baseline justify-between mb-5">
+        <h2 class="text-base font-semibold tracking-tight">Archives</h2>
+        <span class="text-xs text-foreground/40">{total} records</span>
       </div>
-      <h1 class="sr-only">jacobsidian</h1>
-      <div class="rounded-lg border border-border overflow-hidden">
-        <GraphCanvas height={340} />
+
+      <ul id="post-list" class="divide-y divide-border">
+        {allItems.map((item, i) => (
+          <li data-index={i} data-category={item.category} data-postcat={item.category} class={i >= 10 ? "hidden" : ""}>
+            <a
+              href={item.href}
+              class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
+            >
+              <span class="text-xs text-foreground/40 tabular-nums self-center">
+                {item.date.toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </span>
+              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                {item.title}
+              </span>
+              <span class="text-xs text-foreground/40 self-center text-right">
+                {item.label}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div id="load-more-wrap" class="hidden mt-6 text-center">
+        <button
+          id="load-more-btn"
+          class="text-sm text-foreground/50 hover:text-accent transition-colors border border-border rounded-full px-5 py-2 hover:border-accent"
+        >
+          Load more
+        </button>
       </div>
     </section>
-
-    <!-- Archives -->
-    {allItems.length > 0 && (
-      <section class="pt-8">
-        <div class="flex items-baseline justify-between mb-5">
-          <h2 class="text-base font-semibold tracking-tight">Archives</h2>
-          <span class="text-xs text-foreground/40">{total} records</span>
-        </div>
-
-        <!-- Category filter badges -->
-        <div class="flex gap-2 overflow-x-auto pb-5 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
-          {filters.map(f => (
-            <button
-              data-filter={f.key}
-              class:list={[
-                "filter-btn shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium",
-                "border transition-colors duration-150 cursor-pointer",
-                "border-border text-foreground/60 hover:border-accent hover:text-accent",
-              ]}
-            >
-              {f.label}
-              <span class="text-xs opacity-60">{counts[f.key]}</span>
-            </button>
-          ))}
-        </div>
-
-        <ul id="post-list" class="divide-y divide-border">
-          {allItems.map((item, i) => (
-            <li data-index={i} data-category={item.category} class={i >= 10 ? "hidden" : ""}>
-              <a
-                href={item.href}
-                class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
-              >
-                <span class="text-xs text-foreground/40 tabular-nums self-center">
-                  {item.date.toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })}
-                </span>
-                <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
-                  {item.title}
-                </span>
-                <span class="text-xs text-foreground/40 self-center text-right">
-                  {item.label}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div id="load-more-wrap" class="hidden mt-6 text-center">
-          <button
-            id="load-more-btn"
-            class="text-sm text-foreground/50 hover:text-accent transition-colors border border-border rounded-full px-5 py-2 hover:border-accent"
-          >
-            Load more
-          </button>
-        </div>
-      </section>
-    )}
-  </main>
-  <Footer />
-</Layout>
+  )}
+</BlogShell>
 
 <style>
-  .scrollbar-none { scrollbar-width: none; }
-  .scrollbar-none::-webkit-scrollbar { display: none; }
   .ascii-gradient {
     background: linear-gradient(90deg, var(--foreground) 0%, #7c3aed 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+  .cat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    display: inline-block;
+  }
+  .active-pill {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 </style>
 
 <script>
-  function initArchives() {
+  function initCatFilter() {
+    const pills = document.querySelectorAll<HTMLButtonElement>(".cat-filter-pill");
+    const rows = document.querySelectorAll<HTMLElement>("[data-postcat]");
     const items = document.querySelectorAll<HTMLElement>("#post-list li[data-index]");
-    const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
     const loadMoreWrap = document.getElementById("load-more-wrap");
     const loadMoreBtn = document.getElementById("load-more-btn");
-    if (!items.length) return;
+
+    if (!pills.length) return;
 
     const PAGE = 10;
     let activeFilter = "all";
@@ -184,8 +179,8 @@ const filters = [
 
     function showItems() {
       const all = filteredItems();
-      items.forEach(el => el.classList.add("hidden"));
-      all.slice(0, shown).forEach(el => el.classList.remove("hidden"));
+      items.forEach(el => (el.style.display = "none"));
+      all.slice(0, shown).forEach(el => (el.style.display = ""));
       updateLoadMore();
     }
 
@@ -193,18 +188,13 @@ const filters = [
       activeFilter = key;
       shown = PAGE;
       showItems();
-      buttons.forEach(btn => {
-        const isActive = btn.dataset.filter === key;
-        btn.classList.toggle("border-accent", isActive);
-        btn.classList.toggle("text-accent", isActive);
-        btn.classList.toggle("border-border", !isActive);
-        btn.classList.toggle("text-foreground/60", !isActive);
-      });
+      pills.forEach(p => p.classList.toggle("active-pill", p.dataset.cat === key));
+      document.dispatchEvent(new CustomEvent("graph:filter", { detail: { category: key } }));
     }
 
-    buttons.forEach(btn =>
-      btn.addEventListener("click", () => applyFilter(btn.dataset.filter ?? "all"))
-    );
+    pills.forEach(pill => {
+      pill.addEventListener("click", () => applyFilter(pill.dataset.cat ?? "all"));
+    });
 
     loadMoreBtn?.addEventListener("click", () => {
       shown += PAGE;
@@ -214,12 +204,14 @@ const filters = [
     applyFilter("all");
   }
 
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset?.layout;
-    if (indexLayout) {
+  function initIndexPage() {
+    const mainContent = document.querySelector("#main-content") as HTMLElement | null;
+    if (mainContent) {
       sessionStorage.setItem("backUrl", "/");
-      initArchives();
     }
-  });
+    initCatFilter();
+  }
+
+  document.addEventListener("astro:page-load", initIndexPage);
+  document.addEventListener("astro:after-swap", initCatFilter);
 </script>
