@@ -81,6 +81,8 @@ html[data-theme="dark"] {
   }
   html {
     @apply overflow-y-scroll scroll-smooth;
+    /* 헤더 56px 오프셋 - TOC anchor 클릭 시 헤더에 가리지 않도록 */
+    scroll-padding-top: 72px;
   }
   body {
     @apply flex min-h-svh flex-col bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;

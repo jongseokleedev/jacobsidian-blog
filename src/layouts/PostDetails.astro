@@ -92,15 +92,15 @@ const nextPost =
   <!-- Back link -->
   <a
     href={`/${catUrlPath}`}
-    class="inline-flex items-center gap-1 text-sm text-foreground/50 hover:text-accent transition-colors mb-6"
+    class="flex items-center gap-1 text-sm mb-4 transition-colors hover:text-accent"
+    style="color: var(--fg-mute);"
   >
-    <IconChevronLeft class="size-4" />
+    <IconChevronLeft class="size-3.5" />
     {catMeta?.label ?? catUrlPath}
   </a>
 
-  <h1
-    class="inline-block text-2xl font-bold text-foreground tracking-tight sm:text-3xl"
-  >
+  <!-- Title -->
+  <h1 class="block text-[28px] font-bold tracking-[-0.02em] leading-snug text-foreground mb-2">
     {title}
   </h1>
     {post.collection === "books" && (
