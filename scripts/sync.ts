@@ -178,6 +178,7 @@ async function run(options: SyncOptions) {
     out = transformWikilinks(out, linkMap);
     out = transformImageEmbeds(out, imageResolver);
     out = stripObsidianBlocks(out);
+    if (out.startsWith("---")) out = "\n" + out;
     return out;
   }
 
