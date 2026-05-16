@@ -12,6 +12,7 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import GraphCanvas from "@/components/GraphCanvas.astro";
+import graphData from "../../public/graph.json";
 
 type Entry = CollectionEntry<"posts">;
 
@@ -35,6 +36,10 @@ const {
 } = post.data;
 
 const { Content, headings } = await render(post);
+
+const seeAlsoLinks = (post.data.links ?? [])
+  .map(title => graphData.nodes.find((n: { title: string; url: string }) => n.title === title))
+  .filter(Boolean) as { title: string; url: string }[];
 
 const readingTime = Math.max(1, Math.ceil((post.body ?? "").split(/\s+/).length / 200));
 
@@ -160,6 +165,19 @@ const nextPost =
     data-author={author ?? ""}
   >
     <Content />
+    {seeAlsoLinks.length > 0 && (
+      <div class="mt-12 pt-6 border-t border-border">
+        <p class="text-sm text-foreground/40 mb-2">see also</p>
+        <p class="text-sm italic text-foreground/70">
+          {seeAlsoLinks.map((link, i) => (
+            <>
+              {i > 0 && ", "}
+              <a href={link.url} class="hover:text-accent transition-colors">{link.title}</a>
+            </>
+          ))}
+        </p>
+      </div>
+    )}
   </article>
   <BackToTopButton />
 
