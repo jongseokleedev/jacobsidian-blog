@@ -1,0 +1,132 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import RightRail from "@/components/RightRail.astro";
+import Layout from "./Layout.astro";
+
+type RailVariant = "discovery" | "category" | "reading";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  mode?: "discovery" | "reading";
+  rail?: RailVariant;
+  activeCategory?: string;
+  activeTopic?: string;
+  activePage?: string;
+  postId?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  mode = "discovery",
+  rail = "discovery",
+  activeCategory,
+  activeTopic,
+  activePage,
+  postId,
+  headings,
+} = Astro.props;
+---
+
+<Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
+  <Header />
+  <div id="shell-body" class="flex flex-1 min-h-0">
+    <Sidebar {activeCategory} {activeTopic} {activePage} />
+
+    <main
+      id="main-content"
+      class:list={[
+        "flex-1 min-w-0",
+        mode === "reading" ? "flex justify-center" : "",
+      ]}
+      style={mode === "reading" ? "padding: 32px 40px;" : "padding: 32px 28px;"}
+    >
+      {mode === "reading" ? (
+        <div style="width:100%; max-width:680px;">
+          <slot />
+        </div>
+      ) : (
+        <slot />
+      )}
+    </main>
+
+    <RightRail
+      variant={rail}
+      {postId}
+      categoryKey={activeCategory}
+      {headings}
+    />
+  </div>
+  <Footer class="!max-w-none !px-0 !mx-0 w-full" />
+</Layout>
+
+<script>
+  // ── localStorage hydration: Now Reading + Pinned ─────────────
+  function hydratePersonalization() {
+    // Now Reading
+    const nrSection = document.getElementById("now-reading-section");
+    if (nrSection) {
+      let nr: { postId: string; title: string; author: string; category: string; url: string; progress: number } | null = null;
+      try { nr = JSON.parse(localStorage.getItem("jb:now-reading") ?? "null"); } catch { /* empty */ }
+
+      if (nr) {
+        nrSection.classList.remove("hidden");
+        const titleEl = nrSection.querySelector<HTMLAnchorElement>("#now-reading-title");
+        const authorEl = nrSection.querySelector("#now-reading-author");
+        const barEl = nrSection.querySelector<HTMLElement>("#now-reading-bar");
+        const pctEl = nrSection.querySelector("#now-reading-pct");
+        const thumbEl = document.getElementById("now-reading-thumb");
+        if (titleEl) { titleEl.textContent = nr.title; titleEl.href = nr.url ?? "#"; }
+        if (authorEl) authorEl.textContent = nr.author ?? "";
+        if (barEl) barEl.style.width = `${nr.progress}%`;
+        if (pctEl) pctEl.textContent = `${nr.progress}%`;
+        if (thumbEl) thumbEl.classList.toggle("hidden", nr.category !== "book");
+      } else {
+        nrSection.classList.add("hidden");
+      }
+    }
+
+    // Pinned
+    const section = document.getElementById("pinned-section");
+    const list = document.getElementById("pinned-list");
+    if (section && list) {
+      let pinned: { id: string; title: string; url: string; category: string }[] = [];
+      try { pinned = JSON.parse(localStorage.getItem("jb:pinned") ?? "[]"); } catch { /* empty */ }
+
+      list.replaceChildren();
+      if (pinned.length > 0) {
+        section.classList.remove("hidden");
+        for (const p of pinned) {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = p.url;
+          a.className = "flex items-center gap-2 text-[12.5px] leading-snug hover:text-accent transition-colors";
+          a.style.color = "var(--fg-mute)";
+
+          const dot = document.createElement("span");
+          dot.className = "cat-dot shrink-0";
+          dot.style.background = `var(--cat-${p.category})`;
+
+          const text = document.createElement("span");
+          text.className = "truncate";
+          text.textContent = p.title;
+
+          a.appendChild(dot);
+          a.appendChild(text);
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+      } else {
+        section.classList.add("hidden");
+      }
+    }
+  }
+
+  document.addEventListener("astro:page-load", hydratePersonalization);
+</script>

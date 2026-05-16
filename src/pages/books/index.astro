@@ -1,12 +1,14 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import BookCard from "@/components/BookCard.astro";
-import { SITE } from "@/config";
+import { getCategoryMeta } from "@/utils/getCategories";
 
-const all = await getCollection("books", ({ data }) => !data.draft);
+const catKey = "book";
+const meta = getCategoryMeta(catKey)!;
+
+const rawBooks = await getCollection("posts");
+const all = rawBooks.filter(p => p.data.category === "book" && !p.data.draft);
 const books = all.sort(
   (a, b) =>
     new Date(b.data.modDatetime ?? b.data.pubDatetime).getTime() -
@@ -14,14 +16,56 @@ const books = all.sort(
 );
 ---
 
-<Layout title={`Books | ${SITE.title}`}>
-  <Header />
-  <main id="main-content" class="app-layout pt-12 pb-16">
-    <h1 class="text-2xl font-semibold tracking-tight mb-1">Books</h1>
-    <p class="text-sm text-foreground/60 mb-8">읽은 책들, 남은 생각들</p>
-    <ul class:list={["grid gap-4", books.length === 1 ? "grid-cols-1 max-w-[200px]" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"]}>
-      {books.map(entry => <BookCard {...entry} />)}
-    </ul>
-  </main>
-  <Footer />
-</Layout>
+<BlogShell mode="discovery" rail="category" activeCategory={catKey} title={meta.label}>
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+      <span class="cat-dot" style={`background:${meta.color}`} />
+      <p class="bd-overline">Category</p>
+    </div>
+    <h1 class="text-[28px] font-bold tracking-[-0.02em]">{meta.label}</h1>
+    <p class="mt-1 text-[15px]" style="color: var(--fg-mute);">{meta.desc}</p>
+  </header>
+
+  {meta.topics.length > 0 && (
+    <div id="topic-filter-row" class="flex gap-2 flex-wrap py-3 mb-4 border-b border-border overflow-x-auto">
+      <button
+        class="topic-pill cat-filter-pill active-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+        data-topic="all"
+      >
+        모두 보기
+      </button>
+      {meta.topics.map(t => (
+        <button
+          class="topic-pill cat-filter-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+          data-topic={t.key}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  )}
+
+  <ul id="post-list" class:list={["grid gap-4", books.length === 1 ? "grid-cols-1 max-w-[200px]" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"]}>
+    {books.map(entry => <BookCard {...entry} filterTags={entry.data.tags ?? []} />)}
+  </ul>
+
+  <script>
+    document.addEventListener("astro:page-load", () => {
+      const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".topic-pill"));
+      const items = Array.from(document.querySelectorAll<HTMLElement>("#post-list li[data-tags]"));
+      if (!pills.length) return;
+      function apply(key: string) {
+        items.forEach(el => {
+          if (key === "all") {
+            el.classList.remove("hidden");
+          } else {
+            const tags: string[] = JSON.parse(el.dataset.tags ?? "[]");
+            el.classList.toggle("hidden", !tags.includes(key));
+          }
+        });
+        pills.forEach(p => p.classList.toggle("active-pill", p.dataset.topic === key));
+      }
+      pills.forEach(p => p.addEventListener("click", () => apply(p.dataset.topic ?? "all")));
+    });
+  </script>
+</BlogShell>

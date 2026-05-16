@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import { SITE } from "@/config";
 
-type FeedEntry = CollectionEntry<"posts"> | CollectionEntry<"books">;
+type FeedEntry = CollectionEntry<"posts">;
 
 const isPublishable = ({ data }: FeedEntry) => {
   const isPublishTimePassed =
@@ -16,11 +16,8 @@ const sortKey = (entry: FeedEntry) =>
   new Date(entry.data.modDatetime ?? entry.data.pubDatetime).getTime();
 
 export async function GET() {
-  const [posts, books] = await Promise.all([
-    getCollection("posts"),
-    getCollection("books"),
-  ]);
-  const entries = [...posts, ...books]
+  const posts = await getCollection("posts");
+  const entries = posts
     .filter(isPublishable)
     .sort((a, b) => sortKey(b) - sortKey(a));
 

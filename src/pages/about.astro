@@ -1,49 +1,55 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import { SITE } from "@/config";
-
-const categories = [
-  { name: "Thoughts", desc: "일상 속의 공상과 단상", href: "/thoughts" },
-  { name: "Writing",  desc: "에세이, 혹은 소설",    href: "/writing"  },
-  { name: "Tech",     desc: "개발자의 IT, 스타트업 이모저모", href: "/tech" },
-  { name: "Books",    desc: "읽은 책들, 남은 생각들", href: "/books"  },
-];
 ---
 
-<Layout title={`About | ${SITE.title}`}>
-  <Header />
-  <main id="main-content" class="app-layout pt-12 pb-20">
+<BlogShell
+  title={`About | ${SITE.title}`}
+  mode="discovery"
+  rail="discovery"
+  activePage="about"
+>
+  <!-- Hero: avatar + name + subtitle -->
+  <div class="flex items-center gap-5 mb-8">
+    <div
+      class="shrink-0 rounded-full flex items-center justify-center font-bold"
+      style="width:72px; height:72px; font-size:28px; letter-spacing:-0.05em; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 50%, var(--foreground))); color: var(--background);"
+    >
+      J
+    </div>
+    <div>
+      <h1 class="text-[28px] font-bold tracking-tight leading-tight">Jacob Lee</h1>
+      <p class="mt-1 text-[14px]" style="color: var(--fg-mute);">글쓰기를 좋아하는 어느 개발자의 기록 저장소.</p>
+    </div>
+  </div>
 
-    <!-- Hero -->
-    <section class="pb-10 border-b border-border">
-      <p class="text-sm text-foreground/40 mb-2 tracking-widest uppercase">About</p>
-      <h1 class="text-3xl font-bold tracking-tight mb-3">Jacob</h1>
-      <p class="text-base text-foreground/60 leading-relaxed">
-        글쓰기를 좋아하는 어느 개발자의 기록 저장소
-      </p>
-    </section>
+  <!-- ABOUT -->
+  <p class="bd-overline mb-3">About</p>
+  <div class="flex flex-col gap-4 text-[15px] leading-relaxed pb-8 border-b border-border" style="color: var(--fg-mute);">
+    <p>
+    그래서 자주 읽고, 때때로 쓰며, 그 사이에서 생긴 조각들을 이 곳에 이어둡니다.
+    </p>
+  </div>
 
-    <!-- Categories -->
-    <section class="py-10 border-b border-border">
-      <ul class="space-y-5">
-        {categories.map(cat => (
-          <li>
-            <a href={cat.href} class="group flex items-baseline gap-4 hover:text-accent transition-colors">
-              <span class="w-20 shrink-0 text-sm font-semibold text-accent group-hover:opacity-75 transition-opacity">
-                {cat.name}
-              </span>
-              <span class="text-sm text-foreground/60 group-hover:text-accent transition-colors">
-                {cat.desc}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
+  <!-- WHAT I'M DOING NOW -->
+  <p class="bd-overline mt-8 mb-3">What I'm doing now</p>
+  <ul class="flex flex-col gap-3 text-[14px] pb-8 border-b border-border">
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-thought);">—</span>
+      <span>일상 속에서 떠오르는 공상, 스치듯 지나가는 단상을 놓치지 않으려고 애쓰는 중</span>
+    </li>
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-tech);">—</span>
+      <span>가치 있는 프로덕트를 만드려고 고군분투 중</span>
+    </li>
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-writing);">—</span>
+      <span>등단의 꿈을 안고 소설쓰기를 연습하는 중</span>
+    </li>
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-book);">—</span>
+      <span>편식하지 않고 무엇이든 읽고 남기는 중</span>
+    </li>
+  </ul>
 
-
-  </main>
-  <Footer />
-</Layout>
+</BlogShell>

@@ -95,6 +95,7 @@ export function normalizePostFrontmatter(
 
 export interface NormalizedBook {
   title: string;
+  category: "book";
   slug: string;
   author: string;
   pubDatetime: string;
@@ -111,6 +112,7 @@ export function normalizeBookFrontmatter(
 ): NormalizedBook {
   const out: NormalizedBook = {
     title: String(fm.title ?? "Untitled"),
+    category: "book",
     slug,
     author: String(fm.author ?? ""),
     pubDatetime: pickPubDatetime(fm),
