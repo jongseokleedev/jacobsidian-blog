@@ -5,17 +5,15 @@ const CATEGORY_TO_SEGMENT = {
   thought: "thoughts",
   writing: "writing",
   tech: "tech",
+  book: "books",
 } as const;
 
-type Entry = CollectionEntry<"posts"> | CollectionEntry<"books">;
+type Entry = CollectionEntry<"posts">;
 
 export function getPath(entry: Entry): string {
   // Use the basename of the id (drop any leading subdir segments).
   const basename = entry.id.split("/").pop() ?? entry.id;
   const slug = slugifyStr(basename);
 
-  if ("category" in entry.data) {
-    return `/${CATEGORY_TO_SEGMENT[entry.data.category]}/${slug}/`;
-  }
-  return `/books/${slug}/`;
+  return `/${CATEGORY_TO_SEGMENT[entry.data.category]}/${slug}/`;
 }

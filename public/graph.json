@@ -2,12 +2,21 @@
   "nodes": [
     {
       "id": "20260513-1350",
-      "title": "AI 시대, 우리 팀은 왜 피그마 없이 일하기로 했나",
+      "title": "왜 AI 시대의 협업 도구는 코드 기반이어야 하는가",
       "url": "/tech/20260513-1350",
       "type": "post",
       "category": "tech",
+      "tags": []
+    },
+    {
+      "id": "20260513-1439",
+      "title": "쓸만한 인간",
+      "url": "/books/20260513-1439",
+      "type": "post",
+      "category": "book",
       "tags": [
-        "post"
+        "book",
+        "에세이"
       ]
     },
     {
@@ -21,44 +30,35 @@
       ]
     },
     {
-      "id": "20260514-2114",
-      "title": "AI와 질문, 그리고 사랑",
-      "url": "/thoughts/20260514-2114",
+      "id": "20260514-1200",
+      "title": "갤럭시워치 톺아보기",
+      "url": "/tech/20260514-1200",
       "type": "post",
-      "category": "thought",
-      "tags": [
-        "post"
-      ]
-    },
-    {
-      "id": "20260513-1439",
-      "title": "쓸만한 인간",
-      "url": "/books/20260513-1439",
-      "type": "book",
-      "tags": [
-        "book",
-        "에세이"
-      ]
+      "category": "tech",
+      "tags": []
     },
     {
       "id": "20260514-1544",
       "title": "모두 인공지능 백신 맞았는데 아무도 똑똑해지지 않았다",
       "url": "/books/20260514-1544",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-1547",
-      "title": "알라딘",
+      "title": "다시 보는 알라딘",
       "url": "/books/20260514-1547",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-1548",
       "title": "일의 감각",
       "url": "/books/20260514-1548",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": [
         "book"
       ]
@@ -67,7 +67,8 @@
       "id": "20260514-1549",
       "title": "실패를 통과하는 일",
       "url": "/books/20260514-1549",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": [
         "book",
         "자기계발",
@@ -80,63 +81,142 @@
       "id": "20260514-2111-2",
       "title": "아비투스",
       "url": "/books/20260514-2111-2",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2111",
       "title": "아무튼, 후드티",
       "url": "/books/20260514-2111",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2112-2",
       "title": "스토아적 삶의 권유",
       "url": "/books/20260514-2112-2",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2112-3",
       "title": "프로세스 이코노미 (아웃풋이 아닌 프로세스를 파는 새로운 가치 전략)",
       "url": "/books/20260514-2112-3",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2112",
       "title": "불안한 완벽주의자를 위한 책",
       "url": "/books/20260514-2112",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2113-2",
       "title": "단 한 번의 삶",
       "url": "/books/20260514-2113-2",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2113-3",
       "title": "두 번째 지능 (AI 시대_ 질문, 경험, 실행으로 뇌를 설계하다)",
       "url": "/books/20260514-2113-3",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
       "id": "20260514-2113",
       "title": "내가 누군지도 모른채 마흔이 되었다",
       "url": "/books/20260514-2113",
-      "type": "book",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
-      "id": "tag:post",
-      "title": "post",
-      "url": "/tags/post",
-      "type": "tag",
+      "id": "20260514-2114",
+      "title": "AI와 질문, 그리고 사랑",
+      "url": "/thoughts/20260514-2114",
+      "type": "post",
+      "category": "thought",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20260514-2115",
+      "title": "그럴 수도 있지",
+      "url": "/thoughts/20260514-2115",
+      "type": "post",
+      "category": "thought",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20260515-1013-2",
+      "title": "NFT 이야기",
+      "url": "/tech/20260515-1013-2",
+      "type": "post",
+      "category": "tech",
+      "tags": []
+    },
+    {
+      "id": "20260515-1013-3",
+      "title": "서비스 작명에 대한 고찰",
+      "url": "/tech/20260515-1013-3",
+      "type": "post",
+      "category": "tech",
+      "tags": []
+    },
+    {
+      "id": "20260515-1013",
+      "title": "스타트업의 시간은 빠르게 흐른다",
+      "url": "/thoughts/20260515-1013",
+      "type": "post",
+      "category": "thought",
+      "tags": []
+    },
+    {
+      "id": "20260515-1014-2",
+      "title": "효율적인 회의를 위한 속성 정의",
+      "url": "/tech/20260515-1014-2",
+      "type": "post",
+      "category": "tech",
+      "tags": []
+    },
+    {
+      "id": "20260515-1014",
+      "title": "이슈 분석 프로세스",
+      "url": "/tech/20260515-1014",
+      "type": "post",
+      "category": "tech",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20260515-1017-2",
+      "title": "실용주의 프로그래머",
+      "url": "/books/20260515-1017-2",
+      "type": "post",
+      "category": "book",
+      "tags": []
+    },
+    {
+      "id": "20260515-1017",
+      "title": "소년이 온다",
+      "url": "/books/20260515-1017",
+      "type": "post",
+      "category": "book",
       "tags": []
     },
     {
@@ -150,6 +230,13 @@
       "id": "tag:에세이",
       "title": "에세이",
       "url": "/tags/에세이",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:post",
+      "title": "post",
+      "url": "/tags/post",
       "type": "tag",
       "tags": []
     },
@@ -187,23 +274,23 @@
       "type": "wikilink"
     },
     {
-      "source": "20260513-2148",
-      "target": "20260513-1439",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-2114",
-      "target": "20260514-1544",
-      "type": "wikilink"
-    },
-    {
       "source": "20260513-1439",
       "target": "20260514-2113-2",
       "type": "wikilink"
     },
     {
+      "source": "20260513-2148",
+      "target": "20260513-1439",
+      "type": "wikilink"
+    },
+    {
       "source": "20260514-1544",
       "target": "20260514-2114",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1544",
+      "target": "20260513-1350",
       "type": "wikilink"
     },
     {
@@ -227,8 +314,8 @@
       "type": "wikilink"
     },
     {
-      "source": "20260514-1549",
-      "target": "20260513-1350",
+      "source": "20260514-1548",
+      "target": "20260514-1547",
       "type": "wikilink"
     },
     {
@@ -277,6 +364,11 @@
       "type": "wikilink"
     },
     {
+      "source": "20260514-2113-2",
+      "target": "20260514-2115",
+      "type": "wikilink"
+    },
+    {
       "source": "20260514-2113-3",
       "target": "20260514-1544",
       "type": "wikilink"
@@ -284,11 +376,6 @@
     {
       "source": "20260514-2113-3",
       "target": "20260514-2114",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-2113-3",
-      "target": "20260513-1350",
       "type": "wikilink"
     },
     {
@@ -302,19 +389,59 @@
       "type": "wikilink"
     },
     {
-      "source": "20260513-1350",
-      "target": "20260513-2148",
-      "type": "tag"
+      "source": "20260514-2114",
+      "target": "20260514-1544",
+      "type": "wikilink"
     },
     {
-      "source": "20260513-1350",
-      "target": "20260514-2114",
-      "type": "tag"
+      "source": "20260515-1013-2",
+      "target": "20260514-1200",
+      "type": "wikilink"
     },
     {
-      "source": "20260513-2148",
-      "target": "20260514-2114",
-      "type": "tag"
+      "source": "20260515-1013-2",
+      "target": "20260514-2112-3",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1013-3",
+      "target": "20260514-2112-3",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1013-3",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1013",
+      "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1013",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1014-2",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1014",
+      "target": "20260515-1014-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1014",
+      "target": "20260515-1017-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "20260514-2113-2",
+      "type": "wikilink"
     },
     {
       "source": "20260513-1439",
@@ -334,6 +461,36 @@
     {
       "source": "20260513-1439",
       "target": "20260514-1549",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-2148",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-2148",
+      "target": "20260514-2115",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-2148",
+      "target": "20260515-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2114",
+      "target": "20260514-2115",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2114",
+      "target": "20260515-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2115",
+      "target": "20260515-1014",
       "type": "tag"
     }
   ]
