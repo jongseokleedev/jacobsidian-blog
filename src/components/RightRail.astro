@@ -86,14 +86,16 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <!-- THIS WEEK -->
       <section>
         <p class="bd-overline mb-2">This Week</p>
-        <ul class="flex flex-col gap-2">
+        <ul class="flex flex-col gap-3">
           {recentPosts.map(post => (
             <li>
-              <a
-                href={postUrl(post)}
-                class="block text-[13px] leading-snug hover:text-accent transition-colors text-[color:var(--fg-mute)]"
-              >
-                {post.data.title}
+              <a href={postUrl(post)} class="block hover:text-accent transition-colors">
+                <span class="block font-mono text-[10.5px] mb-0.5" style="color: var(--fg-veryfaint);">
+                  {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                </span>
+                <span class="block text-[12.5px] leading-snug text-[color:var(--fg-mute)]">
+                  {post.data.title}
+                </span>
               </a>
             </li>
           ))}
@@ -141,14 +143,16 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <!-- THIS WEEK (filtered to category) -->
       <section>
         <p class="bd-overline mb-2">This Week</p>
-        <ul class="flex flex-col gap-2">
+        <ul class="flex flex-col gap-3">
           {catPosts.map(post => (
             <li>
-              <a
-                href={postUrl(post)}
-                class="block text-[13px] leading-snug hover:text-accent transition-colors text-[color:var(--fg-mute)]"
-              >
-                {post.data.title}
+              <a href={postUrl(post)} class="block hover:text-accent transition-colors">
+                <span class="block font-mono text-[10.5px] mb-0.5" style="color: var(--fg-veryfaint);">
+                  {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                </span>
+                <span class="block text-[12.5px] leading-snug text-[color:var(--fg-mute)]">
+                  {post.data.title}
+                </span>
               </a>
             </li>
           ))}
