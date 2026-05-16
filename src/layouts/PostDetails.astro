@@ -339,6 +339,7 @@ const nextPost =
   function initPinButton() {
     const btn = document.getElementById("pin-btn") as HTMLButtonElement | null;
     if (!btn) return;
+    const pinBtn = btn;
 
     const { postId, title, url, category } = btn.dataset as Record<string, string>;
     const label = document.getElementById("pin-btn-label");
@@ -357,7 +358,7 @@ const nextPost =
       const isPinned = pinned.some(p => p.id === postId);
       if (label) label.textContent = isPinned ? "Pinned" : "Pin";
       if (icon) icon.setAttribute("fill", isPinned ? "currentColor" : "none");
-      btn.style.color = isPinned ? "var(--accent)" : "";
+      pinBtn.style.color = isPinned ? "var(--accent)" : "";
     }
 
     syncUI();
