@@ -256,20 +256,14 @@ async function run(options: SyncOptions) {
 
   const removedPosts = await cleanOrphans({
     destDir: postsDest,
-    keepSlugs: postSlugs,
-    dryRun,
-  });
-  const removedBooks = await cleanOrphans({
-    destDir: booksDest,
-    keepSlugs: bookSlugs,
+    keepSlugs: new Set([...postSlugs, ...bookSlugs]),
     dryRun,
   });
   for (const file of removedPosts) console.log(`  - post  ${file}`);
-  for (const file of removedBooks) console.log(`  - book  ${file}`);
 
   console.log(
     `\n[sync] done. ${resolvedPosts.length} post(s) + ${resolvedBooks.length} book(s) written, ` +
-      `${removedPosts.length + removedBooks.length} orphan(s) removed${dryRun ? " (dry run, no changes)" : ""}.\n`
+      `${removedPosts.length} orphan(s) removed${dryRun ? " (dry run, no changes)" : ""}.\n`
   );
 
   if (!dryRun) {
