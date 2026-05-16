@@ -134,7 +134,7 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <section>
         <p class="bd-overline mb-2">{catMeta.label} Graph</p>
         <div class="rounded border border-border overflow-hidden">
-          <GraphCanvas height={200} categoryFilter={categoryKey} />
+          <GraphCanvas height={200} />
         </div>
         <p class="font-mono text-[11px] text-[color:var(--fg-faint)] mt-1">
           {catPostCount} notes
