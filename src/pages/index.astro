@@ -28,9 +28,9 @@ const total = allItems.length;
 ---
 
 <BlogShell mode="discovery" rail="discovery" activePage="home" data-layout="index">
-  <!-- Hero: ASCII + Graph -->
+  <!-- Hero: ASCII + Filter + Graph -->
   <section class="pb-10 border-b border-border">
-    <div class="overflow-x-auto mb-8">
+    <div class="overflow-x-auto mb-6">
       <pre class="text-[0.45rem] leading-[1.2] sm:text-[0.6rem] md:text-[0.7rem] font-mono select-none ascii-gradient" aria-hidden="true">     ██╗ █████╗  ██████╗ ██████╗ ██████╗ ███████╗██╗██████╗ ██╗ █████╗ ███╗   ██╗
      ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝██║██╔══██╗██║██╔══██╗████╗  ██║
      ██║███████║██║     ██║   ██║██████╔╝███████╗██║██║  ██║██║███████║██╔██╗ ██║
@@ -39,13 +39,9 @@ const total = allItems.length;
  ╚════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
     </div>
     <h1 class="sr-only">jacobsidian</h1>
-    <div class="rounded-lg border border-border overflow-hidden">
-      <GraphCanvas height={340} />
-    </div>
-  </section>
 
-  <!-- Category filter pills -->
-  <div id="cat-filter-row" class="flex gap-2 overflow-x-auto pb-1 mb-5 flex-wrap mt-8">
+    <!-- Category filter pills — unified filter for graph + archives -->
+    <div id="cat-filter-row" class="flex gap-2 overflow-x-auto pb-1 mb-4 flex-wrap">
     <button
       class="cat-filter-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent active-pill"
       data-cat="all"
@@ -62,34 +58,45 @@ const total = allItems.length;
         {meta.label}
       </button>
     ))}
-  </div>
+    </div>
+
+    <div class="rounded-lg border border-border overflow-hidden">
+      <GraphCanvas height={340} />
+    </div>
+  </section>
+
 
   <!-- Archives -->
   {allItems.length > 0 && (
     <section>
-      <div class="flex items-baseline justify-between mb-5">
-        <h2 class="text-base font-semibold tracking-tight">Archives</h2>
-        <span class="text-xs text-foreground/40">{total} records</span>
+      <div class="flex items-baseline justify-between mb-3">
+        <div>
+          <div class="bd-overline mb-1">Latest</div>
+          <h2 class="text-base font-semibold tracking-tight">Archives</h2>
+        </div>
+        <span id="archives-count" class="font-mono text-[11px]" style="color: var(--fg-faint);">{total} records</span>
       </div>
 
-      <ul id="post-list" class="divide-y divide-border">
+      <ul id="post-list" class="archives-list">
         {allItems.map((item, i) => (
-          <li data-index={i} data-category={item.category} data-postcat={item.category} class={i >= 10 ? "hidden" : ""}>
+          <li data-index={i} data-category={item.category} class={i >= 10 ? "hidden" : ""}>
             <a
               href={item.href}
-              class="group post-grid-home py-4 transition-colors duration-150 hover:text-accent"
+              class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+              style="border-color: var(--border-soft);"
             >
-              <span class="text-xs text-foreground/40 tabular-nums self-center">
+              <span class="font-mono text-[11px] tabular-nums self-center" style="color: var(--fg-faint);">
                 {item.date.toLocaleDateString("ko-KR", {
                   year: "numeric",
                   month: "2-digit",
                   day: "2-digit",
                 })}
               </span>
-              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+              <span class="font-medium text-[14px] truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+                <span class="cat-dot shrink-0" style={`background: var(--cat-${item.category})`} />
                 {item.title}
               </span>
-              <span class="text-xs text-foreground/40 self-center text-right">
+              <span class="font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
                 {item.label}
               </span>
             </a>
@@ -154,10 +161,15 @@ const total = allItems.length;
 
     function showItems() {
       const all = filteredItems();
-      items.forEach(el => (el.style.display = "none"));
+      items.forEach(el => {
+        el.classList.remove("hidden");
+        el.style.display = "none";
+      });
       all.slice(0, shown).forEach(el => (el.style.display = ""));
       updateLoadMore();
     }
+
+    const countEl = document.getElementById("archives-count");
 
     function applyFilter(key: string) {
       activeFilter = key;
@@ -165,6 +177,9 @@ const total = allItems.length;
       showItems();
       pills.forEach(p => p.classList.toggle("active-pill", p.dataset.cat === key));
       document.dispatchEvent(new CustomEvent("graph:filter", { detail: { category: key } }));
+
+      const cnt = filteredItems().length;
+      if (countEl) countEl.textContent = `${cnt} records`;
     }
 
     pills.forEach(pill => {

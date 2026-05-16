@@ -122,6 +122,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     let hoveredNode = null;
     let pinnedNodes = new Set();
     let currentTransform = d3.zoomIdentity;
+    let categoryFilter = "all";
 
     // Hover animation state
     const hoverProgress = new Map(); // nodeId → 0..1  (label scale)
@@ -230,10 +231,13 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const d = dimProgress;
 
       function nodeOpacity(id) {
-        if (d < 0.01) return 1;
-        if (hop1?.has(id)) return 1;
-        if (hop2?.has(id)) return 1 - d * 0.55;   // lerp → 0.45
-        return 1 - d * 0.9;                         // lerp → 0.1
+        const n = nodesCopy.find(n => n.id === id);
+        const catDimmed = categoryFilter !== "all" && n?.type !== "tag" && n?.category !== categoryFilter;
+        const catAlpha = catDimmed ? 0.18 : 1;
+        if (d < 0.01) return catAlpha;
+        if (hop1?.has(id)) return catAlpha;
+        if (hop2?.has(id)) return catAlpha * (1 - d * 0.55);
+        return catAlpha * (1 - d * 0.9);
       }
 
       // Edges
@@ -498,6 +502,11 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const themeObserver = new MutationObserver(draw);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+    document.addEventListener("graph:filter", event => {
+      categoryFilter = event.detail?.category ?? "all";
+      draw();
+    });
   }
 
   function setup() {
