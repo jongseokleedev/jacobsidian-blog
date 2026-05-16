@@ -2,9 +2,10 @@
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 
-type Props = CollectionEntry<"posts">;
+type Props = CollectionEntry<"posts"> & { filterTags?: string[] };
 
 const entry = Astro.props;
+const { filterTags } = Astro.props;
 const { data, body } = entry;
 const { title, author, ogImage } = data;
 const href = getPath(entry);
@@ -22,7 +23,7 @@ const imgSrc = (() => {
 })();
 ---
 
-<li>
+<li data-tags={JSON.stringify(filterTags ?? [])}>
   <a
     href={href}
     class="group block overflow-hidden rounded-lg border border-border transition-all duration-200 hover:shadow-lg hover:scale-[1.03] hover:border-accent/30"

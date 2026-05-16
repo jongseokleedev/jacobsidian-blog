@@ -26,7 +26,46 @@ const books = all.sort(
     <p class="mt-1 text-[15px]" style="color: var(--fg-mute);">{meta.desc}</p>
   </header>
 
-  <ul class:list={["grid gap-4", books.length === 1 ? "grid-cols-1 max-w-[200px]" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"]}>
-    {books.map(entry => <BookCard {...entry} />)}
+  {meta.topics.length > 0 && (
+    <div id="topic-filter-row" class="flex gap-2 flex-wrap py-3 mb-4 border-b border-border overflow-x-auto">
+      <button
+        class="topic-pill cat-filter-pill active-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+        data-topic="all"
+      >
+        모두 보기
+      </button>
+      {meta.topics.map(t => (
+        <button
+          class="topic-pill cat-filter-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+          data-topic={t.key}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  )}
+
+  <ul id="post-list" class:list={["grid gap-4", books.length === 1 ? "grid-cols-1 max-w-[200px]" : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"]}>
+    {books.map(entry => <BookCard {...entry} filterTags={entry.data.tags ?? []} />)}
   </ul>
+
+  <script>
+    document.addEventListener("astro:page-load", () => {
+      const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".topic-pill"));
+      const items = Array.from(document.querySelectorAll<HTMLElement>("#post-list li[data-tags]"));
+      if (!pills.length) return;
+      function apply(key: string) {
+        items.forEach(el => {
+          if (key === "all") {
+            el.classList.remove("hidden");
+          } else {
+            const tags: string[] = JSON.parse(el.dataset.tags ?? "[]");
+            el.classList.toggle("hidden", !tags.includes(key));
+          }
+        });
+        pills.forEach(p => p.classList.toggle("active-pill", p.dataset.topic === key));
+      }
+      pills.forEach(p => p.addEventListener("click", () => apply(p.dataset.topic ?? "all")));
+    });
+  </script>
 </BlogShell>
