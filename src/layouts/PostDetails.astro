@@ -376,12 +376,13 @@ const nextPost =
     });
   }
 
-  // ── Now Reading 자동 추적 (책 카테고리) ──────────────────────
+  // ── Now Reading 자동 추적 (모든 콘텐츠) ──────────────────────
   function initNowReadingTracker() {
     const article = document.getElementById("article");
-    if (!article || article.dataset.category !== "book") return;
+    if (!article) return;
 
-    const { postId, title, author } = article.dataset as Record<string, string>;
+    const { postId, title, author, category } = article.dataset as Record<string, string>;
+    const url = window.location.pathname;
 
     function getScrollPct() {
       const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -390,7 +391,7 @@ const nextPost =
 
     function save() {
       const progress = getScrollPct();
-      localStorage.setItem("jb:now-reading", JSON.stringify({ postId, title, author, progress }));
+      localStorage.setItem("jb:now-reading", JSON.stringify({ postId, title, author, category, url, progress }));
     }
 
     // 페이지 진입 시 즉시 등록 (진행도는 현재 scroll 위치)

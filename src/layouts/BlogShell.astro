@@ -72,7 +72,7 @@ const {
     // Now Reading
     const nrSection = document.getElementById("now-reading-section");
     if (nrSection) {
-      let nr: { postId: string; title: string; author: string; progress: number } | null = null;
+      let nr: { postId: string; title: string; author: string; category: string; url: string; progress: number } | null = null;
       try { nr = JSON.parse(localStorage.getItem("jb:now-reading") ?? "null"); } catch { /* empty */ }
 
       if (nr) {
@@ -81,10 +81,12 @@ const {
         const authorEl = nrSection.querySelector("#now-reading-author");
         const barEl = nrSection.querySelector<HTMLElement>("#now-reading-bar");
         const pctEl = nrSection.querySelector("#now-reading-pct");
-        if (titleEl) { titleEl.textContent = nr.title; titleEl.href = `/books/${nr.postId}`; }
-        if (authorEl) authorEl.textContent = nr.author;
+        const thumbEl = document.getElementById("now-reading-thumb");
+        if (titleEl) { titleEl.textContent = nr.title; titleEl.href = nr.url ?? "#"; }
+        if (authorEl) authorEl.textContent = nr.author ?? "";
         if (barEl) barEl.style.width = `${nr.progress}%`;
         if (pctEl) pctEl.textContent = `${nr.progress}%`;
+        if (thumbEl) thumbEl.classList.toggle("hidden", nr.category !== "book");
       } else {
         nrSection.classList.add("hidden");
       }
