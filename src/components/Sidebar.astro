@@ -97,4 +97,11 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
       </div>
     );
   })}
+
+  <!-- PINNED (hydrated from localStorage) -->
+  <div id="pinned-section" class="hidden mt-2">
+    <hr class="my-2.5 border-border" />
+    <p class="bd-overline mb-2">Pinned</p>
+    <ul id="pinned-list" class="flex flex-col gap-2"></ul>
+  </div>
 </aside>

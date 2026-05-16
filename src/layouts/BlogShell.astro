@@ -65,3 +65,71 @@ const {
   </div>
   <Footer />
 </Layout>
+
+<script>
+  // ── localStorage hydration: Now Reading + Pinned ─────────────
+  function hydratePersonalization() {
+    // Now Reading
+    const empty = document.getElementById("now-reading-empty");
+    const content = document.getElementById("now-reading-content");
+    const titleEl = document.getElementById("now-reading-title") as HTMLAnchorElement | null;
+    const authorEl = document.getElementById("now-reading-author");
+    const barEl = document.getElementById("now-reading-bar");
+    const pctEl = document.getElementById("now-reading-pct");
+
+    if (empty && content) {
+      let nr: { postId: string; title: string; author: string; progress: number } | null = null;
+      try { nr = JSON.parse(localStorage.getItem("jb:now-reading") ?? "null"); } catch { /* empty */ }
+
+      if (nr) {
+        empty.classList.add("hidden");
+        content.classList.remove("hidden");
+        if (titleEl) { titleEl.textContent = nr.title; titleEl.href = `/books/${nr.postId}`; }
+        if (authorEl) authorEl.textContent = nr.author;
+        if (barEl) barEl.style.width = `${nr.progress}%`;
+        if (pctEl) pctEl.textContent = `${nr.progress}%`;
+      } else {
+        empty.classList.remove("hidden");
+        content.classList.add("hidden");
+      }
+    }
+
+    // Pinned
+    const section = document.getElementById("pinned-section");
+    const list = document.getElementById("pinned-list");
+    if (section && list) {
+      let pinned: { id: string; title: string; url: string; category: string }[] = [];
+      try { pinned = JSON.parse(localStorage.getItem("jb:pinned") ?? "[]"); } catch { /* empty */ }
+
+      list.replaceChildren();
+      if (pinned.length > 0) {
+        section.classList.remove("hidden");
+        for (const p of pinned) {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = p.url;
+          a.className = "flex items-center gap-2 text-[12.5px] leading-snug hover:text-accent transition-colors";
+          a.style.color = "var(--fg-mute)";
+
+          const dot = document.createElement("span");
+          dot.className = "cat-dot shrink-0";
+          dot.style.background = `var(--cat-${p.category})`;
+
+          const text = document.createElement("span");
+          text.className = "truncate";
+          text.textContent = p.title;
+
+          a.appendChild(dot);
+          a.appendChild(text);
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+      } else {
+        section.classList.add("hidden");
+      }
+    }
+  }
+
+  hydratePersonalization();
+  document.addEventListener("astro:after-swap", hydratePersonalization);
+</script>

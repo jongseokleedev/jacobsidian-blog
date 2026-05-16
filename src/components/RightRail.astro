@@ -60,17 +60,22 @@ const postUrl = (post: (typeof allPosts)[number]) => {
 >
   {variant === "discovery" && (
     <>
-      <!-- NOW READING -->
-      <section>
+      <!-- NOW READING (hydrated from localStorage) -->
+      <section id="now-reading-section">
         <p class="bd-overline mb-2">Now Reading</p>
-        <div class="flex gap-2.5 items-start">
-          <div class="shrink-0 rounded bg-muted" style="width:40px;height:58px;" />
-          <div>
-            <p class="text-[13px] font-medium leading-snug text-[color:var(--fg-mute)]">—</p>
+        <div id="now-reading-empty" class="text-[12px]" style="color:var(--fg-faint);">설정된 책이 없어요.</div>
+        <div id="now-reading-content" class="hidden">
+          <div class="flex gap-2.5 items-start">
+            <div class="shrink-0 rounded bg-muted" style="width:40px;height:58px;" />
+            <div class="min-w-0">
+              <a id="now-reading-title" href="#" class="block text-[13px] font-medium leading-snug hover:text-accent transition-colors"></a>
+              <p id="now-reading-author" class="text-[11.5px] mt-0.5" style="color:var(--fg-faint);"></p>
+              <div class="mt-2 h-[2px] bg-muted rounded-full overflow-hidden">
+                <div id="now-reading-bar" class="h-full bg-accent rounded-full transition-all" style="width:0%"></div>
+              </div>
+              <p id="now-reading-pct" class="font-mono text-[10px] mt-1" style="color:var(--fg-faint);"></p>
+            </div>
           </div>
-        </div>
-        <div class="mt-2 h-[2px] bg-muted rounded-full overflow-hidden">
-          <div class="h-full bg-accent rounded-full" style="width:0%" />
         </div>
       </section>
 
