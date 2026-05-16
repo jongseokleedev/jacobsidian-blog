@@ -133,7 +133,7 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <!-- CATEGORY GRAPH -->
       <section>
         <p class="bd-overline mb-2">{catMeta.label} Graph</p>
-        <div class="rounded border border-border overflow-hidden" style="margin-left:-24px;margin-right:-24px;">
+        <div class="rounded border border-border overflow-hidden">
           <GraphCanvas height={200} categoryFilter={categoryKey} />
         </div>
         <p class="font-mono text-[11px] text-[color:var(--fg-faint)] mt-1">
@@ -209,7 +209,7 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <!-- LOCAL GRAPH -->
       <section>
         <p class="bd-overline mb-2">Local Graph</p>
-        <div class="rounded border border-border overflow-hidden" style="margin-left:-24px;margin-right:-24px;">
+        <div class="rounded border border-border overflow-hidden">
           {postId && <GraphCanvas focusId={postId} height={200} />}
         </div>
       </section>
