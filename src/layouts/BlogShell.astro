@@ -70,27 +70,23 @@ const {
   // ── localStorage hydration: Now Reading + Pinned ─────────────
   function hydratePersonalization() {
     // Now Reading
-    const empty = document.getElementById("now-reading-empty");
-    const content = document.getElementById("now-reading-content");
-    const titleEl = document.getElementById("now-reading-title") as HTMLAnchorElement | null;
-    const authorEl = document.getElementById("now-reading-author");
-    const barEl = document.getElementById("now-reading-bar");
-    const pctEl = document.getElementById("now-reading-pct");
-
-    if (empty && content) {
+    const nrSection = document.getElementById("now-reading-section");
+    if (nrSection) {
       let nr: { postId: string; title: string; author: string; progress: number } | null = null;
       try { nr = JSON.parse(localStorage.getItem("jb:now-reading") ?? "null"); } catch { /* empty */ }
 
       if (nr) {
-        empty.classList.add("hidden");
-        content.classList.remove("hidden");
+        nrSection.classList.remove("hidden");
+        const titleEl = nrSection.querySelector<HTMLAnchorElement>("#now-reading-title");
+        const authorEl = nrSection.querySelector("#now-reading-author");
+        const barEl = nrSection.querySelector<HTMLElement>("#now-reading-bar");
+        const pctEl = nrSection.querySelector("#now-reading-pct");
         if (titleEl) { titleEl.textContent = nr.title; titleEl.href = `/books/${nr.postId}`; }
         if (authorEl) authorEl.textContent = nr.author;
         if (barEl) barEl.style.width = `${nr.progress}%`;
         if (pctEl) pctEl.textContent = `${nr.progress}%`;
       } else {
-        empty.classList.remove("hidden");
-        content.classList.add("hidden");
+        nrSection.classList.add("hidden");
       }
     }
 
@@ -130,6 +126,5 @@ const {
     }
   }
 
-  hydratePersonalization();
-  document.addEventListener("astro:after-swap", hydratePersonalization);
+  document.addEventListener("astro:page-load", hydratePersonalization);
 </script>
