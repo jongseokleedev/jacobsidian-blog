@@ -122,21 +122,6 @@ const nextPost =
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
       <div class="ml-auto flex items-center gap-2">
-        <!-- Now Reading (책 카테고리 전용) -->
-        {post.data.category === "book" && (
-          <button
-            id="now-reading-btn"
-            data-post-id={post.id}
-            data-title={title}
-            data-author={author ?? ""}
-            class="flex items-center gap-1.5 text-sm text-foreground/40 hover:text-accent transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-            <span id="now-reading-btn-label">읽는 중</span>
-          </button>
-        )}
         <!-- Pin 토글 -->
         <button
           id="pin-btn"
@@ -145,11 +130,12 @@ const nextPost =
           data-url={`/${catUrlPath}/${post.data.slug ?? post.id}`}
           data-category={post.data.category}
           class="flex items-center gap-1.5 text-sm text-foreground/40 hover:text-accent transition-colors"
+          aria-label="Pin this post"
         >
           <svg id="pin-icon" xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>
           </svg>
-          <span id="pin-btn-label">Pin</span>
+          <span id="pin-btn-label" class="max-sm:hidden">Pin</span>
         </button>
         <!-- Share -->
         <button
@@ -160,7 +146,7 @@ const nextPost =
             <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
-          <span>Share</span>
+          <span class="max-sm:hidden">Share</span>
         </button>
       </div>
     </div>
@@ -168,6 +154,10 @@ const nextPost =
     id="article"
     class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     data-pagefind-body
+    data-category={post.data.category}
+    data-post-id={post.id}
+    data-title={title}
+    data-author={author ?? ""}
   >
     <Content />
   </article>
@@ -385,50 +375,42 @@ const nextPost =
     });
   }
 
-  // ── Now Reading button (books only) ──────────────────────────
-  function initNowReadingButton() {
-    const btn = document.getElementById("now-reading-btn") as HTMLButtonElement | null;
-    if (!btn) return;
+  // ── Now Reading 자동 추적 (책 카테고리) ──────────────────────
+  function initNowReadingTracker() {
+    const article = document.getElementById("article");
+    if (!article || article.dataset.category !== "book") return;
 
-    const { postId, title, author } = btn.dataset as Record<string, string>;
-    const label = document.getElementById("now-reading-btn-label");
+    const { postId, title, author } = article.dataset as Record<string, string>;
 
-    function getCurrent(): { postId: string; progress: number } | null {
-      try { return JSON.parse(localStorage.getItem("jb:now-reading") ?? "null"); } catch { return null; }
+    function getScrollPct() {
+      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      return h > 0 ? Math.round((window.scrollY / h) * 100) : 0;
     }
 
-    function syncUI() {
-      const cur = getCurrent();
-      const isActive = cur?.postId === postId;
-      if (label) label.textContent = isActive ? `읽는 중 (${cur!.progress}%)` : "읽는 중";
-      btn.style.color = isActive ? "var(--accent)" : "";
+    function save() {
+      const progress = getScrollPct();
+      localStorage.setItem("jb:now-reading", JSON.stringify({ postId, title, author, progress }));
     }
 
-    syncUI();
+    // 페이지 진입 시 즉시 등록 (진행도는 현재 scroll 위치)
+    save();
 
-    btn.addEventListener("click", () => {
-      const cur = getCurrent();
-      if (cur?.postId === postId) {
-        // 이미 설정된 경우 → 진행도 업데이트 프롬프트
-        const input = prompt("읽은 진행도를 입력하세요 (0-100):", String(cur.progress));
-        if (input === null) return;
-        const pct = Math.min(100, Math.max(0, parseInt(input, 10) || 0));
-        localStorage.setItem("jb:now-reading", JSON.stringify({ postId, title, author, progress: pct }));
-      } else {
-        const input = prompt("읽은 진행도를 입력하세요 (0-100):", "0");
-        if (input === null) return;
-        const pct = Math.min(100, Math.max(0, parseInt(input, 10) || 0));
-        localStorage.setItem("jb:now-reading", JSON.stringify({ postId, title, author, progress: pct }));
-      }
-      syncUI();
+    let rafId: ReturnType<typeof requestAnimationFrame> | null = null;
+    window.addEventListener("scroll", () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => { save(); rafId = null; });
+    }, { passive: true });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") save();
     });
   }
 
   initPinButton();
-  initNowReadingButton();
+  initNowReadingTracker();
   document.addEventListener("astro:after-swap", () => {
     initPinButton();
-    initNowReadingButton();
+    initNowReadingTracker();
   });
 </script>
 
