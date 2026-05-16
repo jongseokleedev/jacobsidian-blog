@@ -1,13 +1,6 @@
 ---
 import BlogShell from "@/layouts/BlogShell.astro";
 import { SITE } from "@/config";
-
-const categories = [
-  { name: "Thoughts", desc: "일상 속의 공상과 단상", href: "/thoughts" },
-  { name: "Writing",  desc: "에세이, 혹은 소설",    href: "/writing"  },
-  { name: "Tech",     desc: "개발자의 IT, 스타트업 이모저모", href: "/tech" },
-  { name: "Books",    desc: "읽은 책들, 남은 생각들", href: "/books"  },
-];
 ---
 
 <BlogShell
@@ -16,32 +9,55 @@ const categories = [
   rail="discovery"
   activePage="about"
 >
+  <!-- Hero: avatar + name + subtitle -->
+  <div class="flex items-center gap-5 mb-8">
+    <div
+      class="shrink-0 rounded-full flex items-center justify-center font-bold"
+      style="width:72px; height:72px; font-size:28px; letter-spacing:-0.05em; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 50%, var(--foreground))); color: var(--background);"
+    >
+      J
+    </div>
+    <div>
+      <h1 class="text-[28px] font-bold tracking-tight leading-tight">Jacob Lee</h1>
+      <p class="mt-1 text-[14px]" style="color: var(--fg-mute);">글쓰기를 좋아하는 어느 개발자의 기록 저장소.</p>
+    </div>
+  </div>
 
-  <!-- Hero -->
-  <section class="pb-10 border-b border-border">
-    <p class="text-sm text-foreground/40 mb-2 tracking-widest uppercase">About</p>
-    <h1 class="text-3xl font-bold tracking-tight mb-3">Jacob</h1>
-    <p class="text-base text-foreground/60 leading-relaxed">
-      글쓰기를 좋아하는 어느 개발자의 기록 저장소
+  <!-- ABOUT -->
+  <p class="bd-overline mb-3">About</p>
+  <div class="flex flex-col gap-4 text-[15px] leading-relaxed pb-8 border-b border-border" style="color: var(--fg-mute);">
+    <p>
+      반도체 대기업에서 7년, 지금은 스타트업에서 매니저 1년차. 사이드로 소설을 쓰고, 시간이 남으면 코드를 짜요.
+      이 곳은 그 사이에서 생긴 짧은 글들을 모으는 공간이에요.
     </p>
-  </section>
+    <p>
+      노트 사이의 연결을 좋아해서 Obsidian으로 글을 관리하고, Astro로 빌드하고 있어요.
+      기록은 휘발성이 강해요. 그래서 자주 돌아와서 다시 읽고, 새로 쓰고, 잇고 있어요.
+    </p>
+  </div>
 
-  <!-- Categories -->
-  <section class="py-10 border-b border-border">
-    <ul class="space-y-5">
-      {categories.map(cat => (
-        <li>
-          <a href={cat.href} class="group flex items-baseline gap-4 hover:text-accent transition-colors">
-            <span class="w-20 shrink-0 text-sm font-semibold text-accent group-hover:opacity-75 transition-opacity">
-              {cat.name}
-            </span>
-            <span class="text-sm text-foreground/60 group-hover:text-accent transition-colors">
-              {cat.desc}
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
+  <!-- WHAT I'M DOING NOW -->
+  <p class="bd-overline mt-8 mb-3">What I'm doing now</p>
+  <ul class="flex flex-col gap-3 text-[14px] pb-8 border-b border-border">
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-tech);">—</span>
+      <span>스타트업에서 프로덕트 매니징 1년차로 적응 중</span>
+    </li>
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-writing);">—</span>
+      <span>장편 소설 첫 챕터 다듬는 중</span>
+    </li>
+    <li class="flex gap-3">
+      <span class="shrink-0 w-4" style="color: var(--cat-book);">—</span>
+      <span>독서 중 — 좌측 사이드바의 Now Reading 참고</span>
+    </li>
+  </ul>
 
+  <!-- ELSEWHERE -->
+  <p class="bd-overline mt-8 mb-3">Elsewhere</p>
+  <div class="flex gap-5 text-[13.5px]">
+    <a href="https://github.com/jacoblee" class="hover:text-accent transition-colors" style="border-bottom: 1px dashed var(--border);">GitHub</a>
+    <a href="mailto:jongsuklee45@gmail.com" class="hover:text-accent transition-colors" style="border-bottom: 1px dashed var(--border);">Email</a>
+    <a href="/rss.xml" class="hover:text-accent transition-colors" style="border-bottom: 1px dashed var(--border);">RSS</a>
+  </div>
 </BlogShell>
