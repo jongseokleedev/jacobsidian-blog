@@ -19,6 +19,9 @@ const rawPosts = await getCollection("posts");
 const allPosts = getSortedPosts(rawPosts);
 const totalNotes = rawPosts.length;
 const uniqueTags = new Set(allPosts.flatMap(p => p.data.tags ?? [])).size;
+const totalLinks = rawPosts.reduce((sum, p) => sum + (((p.data as any).links?.length) ?? 0), 0);
+const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+const thisWeekCount = allPosts.filter(p => new Date(p.data.pubDatetime) >= oneWeekAgo).length;
 const recentPosts = allPosts.slice(0, 4);
 const catMeta = categoryKey ? getCategoryMeta(categoryKey) : undefined;
 const catPosts = categoryKey
@@ -99,14 +102,22 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <!-- STATS -->
       <section>
         <p class="bd-overline mb-2">Stats</p>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-muted/50 rounded p-2 text-center">
-            <p class="font-mono text-lg font-semibold">{totalNotes}</p>
-            <p class="text-[11px] text-[color:var(--fg-faint)]">notes</p>
+        <div class="grid grid-cols-2 gap-x-3 gap-y-4">
+          <div>
+            <p class="font-mono text-[22px] leading-none">{totalNotes}</p>
+            <p class="text-[11px] mt-1" style="color: var(--fg-faint);">notes</p>
           </div>
-          <div class="bg-muted/50 rounded p-2 text-center">
-            <p class="font-mono text-lg font-semibold">{uniqueTags}</p>
-            <p class="text-[11px] text-[color:var(--fg-faint)]">tags</p>
+          <div>
+            <p class="font-mono text-[22px] leading-none">{totalLinks}</p>
+            <p class="text-[11px] mt-1" style="color: var(--fg-faint);">links</p>
+          </div>
+          <div>
+            <p class="font-mono text-[22px] leading-none">{uniqueTags}</p>
+            <p class="text-[11px] mt-1" style="color: var(--fg-faint);">tags</p>
+          </div>
+          <div>
+            <p class="font-mono text-[22px] leading-none" style="color: var(--accent);">+{thisWeekCount}</p>
+            <p class="text-[11px] mt-1" style="color: var(--fg-faint);">this week</p>
           </div>
         </div>
       </section>
@@ -115,17 +126,14 @@ const postUrl = (post: (typeof allPosts)[number]) => {
 
   {variant === "category" && catMeta && (
     <>
-      <!-- CATEGORY GRAPH placeholder -->
+      <!-- CATEGORY GRAPH -->
       <section>
         <p class="bd-overline mb-2">{catMeta.label} Graph</p>
-        <div
-          class="rounded border border-border bg-muted/30 flex items-center justify-center"
-          style="height:160px;"
-        >
-          <span class="text-[12px] text-[color:var(--fg-faint)]">graph</span>
+        <div class="rounded border border-border overflow-hidden" style="margin-left:-24px;margin-right:-24px;">
+          <GraphCanvas height={200} categoryFilter={categoryKey} />
         </div>
         <p class="font-mono text-[11px] text-[color:var(--fg-faint)] mt-1">
-          {catPosts.length} notes
+          {allPosts.filter(p => p.data.category === categoryKey).length} notes
         </p>
       </section>
 
