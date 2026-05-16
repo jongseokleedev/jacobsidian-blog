@@ -30,7 +30,7 @@ const posts = getSortedPosts(all);
               href={`/thoughts/${id}`}
               class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
             >
-              <span class="text-xs text-foreground/40 tabular-nums self-center">
+              <span class="text-xs text-foreground/40 tabular-nums self-center whitespace-nowrap">
                 {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
                   year: "numeric",
                   month: "2-digit",
