@@ -28,6 +28,7 @@ const catPosts = categoryKey
   ? allPosts.filter(p => p.data.category === categoryKey).slice(0, 4)
   : recentPosts;
 const catPostCount = categoryKey ? allPosts.filter(p => p.data.category === categoryKey).length : 0;
+const thisWeekPosts = variant === "category" ? catPosts : recentPosts;
 
 // For reading variant: related posts and backlinks
 const currentPost = postId
@@ -87,10 +88,10 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <section>
         <p class="bd-overline mb-2">This Week</p>
         <ul class="flex flex-col gap-3">
-          {recentPosts.map(post => (
+          {thisWeekPosts.map(post => (
             <li>
               <a href={postUrl(post)} class="block hover:text-accent transition-colors">
-                <span class="block font-mono text-[10.5px] mb-0.5" style="color: var(--fg-veryfaint);">
+                <span class="block font-mono text-[10.5px] mb-0.5 text-[color:var(--fg-veryfaint)]">
                   {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
                 </span>
                 <span class="block text-[12.5px] leading-snug text-[color:var(--fg-mute)]">
@@ -144,10 +145,10 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <section>
         <p class="bd-overline mb-2">This Week</p>
         <ul class="flex flex-col gap-3">
-          {catPosts.map(post => (
+          {thisWeekPosts.map(post => (
             <li>
               <a href={postUrl(post)} class="block hover:text-accent transition-colors">
-                <span class="block font-mono text-[10.5px] mb-0.5" style="color: var(--fg-veryfaint);">
+                <span class="block font-mono text-[10.5px] mb-0.5 text-[color:var(--fg-veryfaint)]">
                   {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
                 </span>
                 <span class="block text-[12.5px] leading-snug text-[color:var(--fg-mute)]">
