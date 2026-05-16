@@ -1,0 +1,157 @@
+/* ─────────────────────────────────────────────────────────────
+   jacobsidian — Desktop redesign tokens
+   Merge into src/styles/global.css. Most of these already exist;
+   the ones marked NEW are required for the redesign components.
+   ───────────────────────────────────────────────────────────── */
+
+:root,
+html[data-theme="light"] {
+  /* existing */
+  --background: #f8f8f7;
+  --foreground: #1a1918;
+  --accent:     #3d5a99;
+  --muted:      #e8e6e3;
+  --border:     #d4d0cb;
+
+  /* NEW — foreground tints */
+  --fg-mute:        rgba(26, 25, 24, 0.6);
+  --fg-faint:       rgba(26, 25, 24, 0.4);
+  --fg-veryfaint:   rgba(26, 25, 24, 0.25);
+
+  /* NEW — surface variants */
+  --accent-soft:    rgba(61, 90, 153, 0.14);
+  --border-soft:    #e2dfd9;
+  --muted-2:        #f0eeea;
+  --rail-bg:        #f3f1ed;       /* alt rail bg, unused in V1 */
+
+  /* NEW — category accents (match GraphCanvas CATEGORY_COLORS) */
+  --cat-thought:    #7c5cf0;
+  --cat-tech:       #2563eb;
+  --cat-writing:    #059669;
+  --cat-book:       #b45309;
+}
+
+html[data-theme="dark"] {
+  /* existing */
+  --background: #141414;
+  --foreground: #e8e6e3;
+  --accent:     #7aa2d4;
+  --muted:      #242424;
+  --border:     #2e2e2e;
+
+  /* NEW — foreground tints */
+  --fg-mute:        rgba(232, 230, 227, 0.6);
+  --fg-faint:       rgba(232, 230, 227, 0.4);
+  --fg-veryfaint:   rgba(232, 230, 227, 0.25);
+
+  /* NEW — surface variants */
+  --accent-soft:    rgba(122, 162, 212, 0.18);
+  --border-soft:    #232323;
+  --muted-2:        #1c1c1c;
+  --rail-bg:        #121212;
+
+  /* NEW — category accents */
+  --cat-thought:    #a78bfa;
+  --cat-tech:       #60a5fa;
+  --cat-writing:    #34d399;
+  --cat-book:       #fbbf24;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Utilities the redesign relies on. Tailwind v4 @utility blocks.
+   Drop these into src/styles/global.css alongside the existing
+   @utility max-w-app, app-layout, etc.
+   ────────────────────────────────────────────────────────────── */
+
+@utility overline {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+@utility cat-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex: none;
+}
+
+/* Use as: <span class="cat-dot cat-dot--thought" /> */
+.cat-dot--thought { background: var(--cat-thought); }
+.cat-dot--tech    { background: var(--cat-tech); }
+.cat-dot--writing { background: var(--cat-writing); }
+.cat-dot--book    { background: var(--cat-book); }
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* TOC item — vertical guide turns accent on .active */
+.toc-item {
+  position: relative;
+  padding: 4px 0 4px 14px;
+  font-size: 12.5px;
+  color: var(--fg-mute);
+  cursor: pointer;
+  line-height: 1.5;
+}
+.toc-item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.toc-item.active        { color: var(--accent); }
+.toc-item.active::before { background: var(--accent); width: 2px; }
+.toc-item.h3 { padding-left: 24px; font-size: 12px; }
+
+/* Post row in archive lists */
+.row-link {
+  display: grid;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  text-decoration: none;
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border-soft);
+  transition: color 150ms ease, transform 150ms ease;
+  cursor: pointer;
+}
+.row-link:hover { color: var(--accent); }
+.row-link:hover .row-link-title { transform: translateX(3px); }
+.row-link-date  { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--fg-faint); }
+.row-link-title { font-weight: 500; font-size: 14px; transition: transform 150ms ease; }
+.row-link-meta  { font-size: 11px; color: var(--fg-faint); text-align: right; }
+
+/* Filter pill (unified filter row + subtopic row) */
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-family: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  color: var(--fg-mute);
+  background: transparent;
+  transition: all 150ms ease;
+}
+.filter-pill:hover { border-color: var(--accent); color: var(--accent); }
+.filter-pill.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 500;
+}
+/* When a pill represents a colored category, prefer category color */
+.filter-pill.active[data-cat="thought"] { color: var(--cat-thought); border-color: var(--cat-thought); background: color-mix(in srgb, var(--cat-thought) 10%, transparent); }
+.filter-pill.active[data-cat="tech"]    { color: var(--cat-tech);    border-color: var(--cat-tech);    background: color-mix(in srgb, var(--cat-tech) 10%, transparent); }
+.filter-pill.active[data-cat="writing"] { color: var(--cat-writing); border-color: var(--cat-writing); background: color-mix(in srgb, var(--cat-writing) 10%, transparent); }
+.filter-pill.active[data-cat="book"]    { color: var(--cat-book);    border-color: var(--cat-book);    background: color-mix(in srgb, var(--cat-book) 10%, transparent); }
