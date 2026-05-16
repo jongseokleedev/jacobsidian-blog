@@ -179,6 +179,10 @@ async function run(options: SyncOptions) {
     out = transformImageEmbeds(out, imageResolver);
     out = stripObsidianBlocks(out);
     if (out.startsWith("---")) out = "\n" + out;
+    // Strip trailing italic link line (rendered by PostDetails see-also instead)
+    out = out.replace(/\n\*[^\n]+\*\s*$/, "");
+    // Strip trailing --- divider left after removing the link line
+    out = out.replace(/\n---\s*$/, "");
     return out;
   }
 
