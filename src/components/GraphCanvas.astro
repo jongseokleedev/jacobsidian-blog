@@ -77,10 +77,10 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     const getVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
     const CATEGORY_COLORS = {
-      thought: getVar("--cat-thought"),
+      essay:   getVar("--cat-essay"),
       tech:    getVar("--cat-tech"),
-      writing: getVar("--cat-writing"),
-      book:    getVar("--cat-book"),
+      review:  getVar("--cat-review"),
+      fiction: getVar("--cat-fiction"),
     };
 
     const nodesCopy = nodes.map(n => ({ ...n }));
@@ -109,7 +109,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     function nodeColor(n) {
       if (n.type === "tag") return "#888888";
-      return CATEGORY_COLORS[n.category] ?? "#aaaaaa";
+      const parent = n.category?.split("-")[0] ?? n.category;
+      return CATEGORY_COLORS[parent] ?? "#aaaaaa";
     }
 
     // Build adjacency for 2-hop lookup
