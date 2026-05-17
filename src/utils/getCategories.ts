@@ -41,7 +41,7 @@ export const PARENTS: Record<string, ParentMeta> = {
     label: "Tech",
     color: "var(--cat-tech)",
     subs: {
-      dev: { label: "Dev", desc: "Keep Build Something", color: "var(--cat-tech)", topics: [] },
+      dev: { label: "Dev", desc: "Keep Building Something", color: "var(--cat-tech)", topics: [] },
       work: { label: "Work", desc: "어떻게 일할 것인가", color: "var(--cat-tech)", topics: [] },
       it: { label: "IT", desc: "IT 업계 이모저모", color: "var(--cat-tech)", topics: [] },
     },
@@ -84,3 +84,5 @@ export function allCategories(): [string, CategoryMeta][] {
     Object.entries(pm.subs).map(([subKey, sm]) => [`${parentKey}-${subKey}`, sm] as [string, CategoryMeta])
   );
 }
+
+
