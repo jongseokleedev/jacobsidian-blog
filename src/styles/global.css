@@ -175,7 +175,7 @@ html[data-theme="dark"] {
 }
 
 @utility reading-shell {
-  padding: 20px 16px;
+  padding: 20px 20px;
 
   @media (min-width: 640px) {
     padding: 32px 40px;
@@ -183,7 +183,7 @@ html[data-theme="dark"] {
 }
 
 @utility discovery-shell {
-  padding: 20px 16px;
+  padding: 20px 20px;
 
   @media (min-width: 640px) {
     padding: 32px 28px;
