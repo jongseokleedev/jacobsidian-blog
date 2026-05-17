@@ -35,12 +35,13 @@ const {
 ---
 
 <Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
-  <Header />
+  <Header transition:persist />
   <div id="shell-body" class="flex flex-1 min-h-0">
-    <Sidebar {activeCategory} {activeTopic} {activePage} />
+    <Sidebar transition:persist {activeCategory} {activeTopic} {activePage} />
 
     <main
       id="main-content"
+      transition:name="main-content"
       class:list={[
         "flex-1 min-w-0",
         mode === "reading" ? "flex justify-center" : "",
@@ -57,13 +58,14 @@ const {
     </main>
 
     <RightRail
+      transition:persist
       variant={rail}
       {postId}
       categoryKey={activeCategory}
       {headings}
     />
   </div>
-  <Footer class="!max-w-none !px-6 !mx-0 w-full" />
+  <Footer transition:persist class="!max-w-none !px-6 !mx-0 w-full" />
 </Layout>
 
 <script>
