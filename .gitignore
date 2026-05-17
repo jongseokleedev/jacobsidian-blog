@@ -33,3 +33,4 @@ public/pagefind
 !public/images/*.png
 candidates/
 .worktrees/
+docs/plans/
