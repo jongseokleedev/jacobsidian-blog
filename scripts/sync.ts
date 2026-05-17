@@ -249,7 +249,7 @@ async function run(options: SyncOptions) {
     const git = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT, stdio: "inherit" });
     const gitOut = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT }).toString().trim();
     try {
-      git(["add", "src/data/", "public/images/"]);
+      git(["add", "src/data/", "public/images/", "public/graph.json"]);
       const diff = gitOut(["diff", "--cached", "--name-only"]);
       if (!diff) {
         console.log("[sync] nothing to commit — content is up to date.\n");
