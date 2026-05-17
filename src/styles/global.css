@@ -170,6 +170,10 @@ html[data-theme="dark"] {
   max-width: 680px;
 }
 
+@utility max-w-reading {
+  max-width: 960px;
+}
+
 @utility app-layout {
   @apply mx-auto w-full max-w-app px-4;
 }
