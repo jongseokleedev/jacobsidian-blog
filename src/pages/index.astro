@@ -114,14 +114,7 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
         ))}
       </ul>
 
-      <div id="load-more-wrap" class="hidden mt-6 text-center">
-        <button
-          id="load-more-btn"
-          class="text-sm text-foreground/50 hover:text-accent transition-colors border border-border rounded-full px-5 py-2 hover:border-accent"
-        >
-          Load more
-        </button>
-      </div>
+      <div id="load-sentinel" class="h-10 mt-4" aria-hidden="true"></div>
     </section>
   )}
 </BlogShell>
@@ -149,14 +142,14 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
   function initCatFilter() {
     const pills = document.querySelectorAll<HTMLButtonElement>(".cat-filter-pill");
     const items = document.querySelectorAll<HTMLElement>("#post-list li[data-index]");
-    const loadMoreWrap = document.getElementById("load-more-wrap");
-    const loadMoreBtn = document.getElementById("load-more-btn");
+    const sentinel = document.getElementById("load-sentinel");
 
     if (!pills.length) return;
 
     const PAGE = 10;
     let activeFilter = "all";
     let shown = PAGE;
+    let observer: IntersectionObserver | null = null;
 
     function filteredItems() {
       return [...items].filter(el => {
@@ -166,16 +159,10 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
       });
     }
 
-    function updateLoadMore() {
-      const hasMore = filteredItems().length > shown;
-      loadMoreWrap?.classList.toggle("hidden", !hasMore);
-    }
-
     function showItems() {
       const toShow = filteredItems().slice(0, shown);
       const toShowSet = new Set(toShow);
 
-      // Fade out items that won't be shown
       items.forEach(el => {
         if (el.style.display !== "none" && !toShowSet.has(el)) {
           el.style.transition = "opacity 100ms ease";
@@ -199,8 +186,24 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
             }, i * 18);
           });
         });
-        updateLoadMore();
       }, 110);
+    }
+
+    function loadMore() {
+      const total = filteredItems().length;
+      if (shown >= total) return;
+      shown += PAGE;
+      showItems();
+    }
+
+    function setupObserver() {
+      observer?.disconnect();
+      if (!sentinel) return;
+      observer = new IntersectionObserver(
+        entries => { if (entries[0].isIntersecting) loadMore(); },
+        { rootMargin: "200px" }
+      );
+      observer.observe(sentinel);
     }
 
     const countEl = document.getElementById("archives-count");
@@ -220,11 +223,7 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
       pill.addEventListener("click", () => applyFilter(pill.dataset.cat ?? "all"));
     });
 
-    loadMoreBtn?.addEventListener("click", () => {
-      shown += PAGE;
-      showItems();
-    });
-
+    setupObserver();
     applyFilter("all");
   }
 
