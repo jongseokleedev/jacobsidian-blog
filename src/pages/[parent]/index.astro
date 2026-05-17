@@ -17,6 +17,11 @@ const all = await getCollection("posts", ({ data }) =>
 );
 const posts = getSortedPosts(all);
 const subKeys = Object.keys(parentMeta.subs);
+
+const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
+  acc[p.data.category] = (acc[p.data.category] ?? 0) + 1;
+  return acc;
+}, {});
 ---
 
 <BlogShell mode="discovery" rail="category" activeCategory={parent} title={parentMeta.label}>
@@ -31,19 +36,24 @@ const subKeys = Object.keys(parentMeta.subs);
   <!-- Sub-category filter tabs -->
   <div id="sub-filter-row" class="flex gap-2 flex-wrap py-3 mb-4 border-b border-border overflow-x-auto">
     <button
-      class="sub-filter-pill active-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+      class="sub-filter-pill active-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
       data-sub="all"
     >
-      모두 보기
+      All
+      <span class="font-mono text-[11px] opacity-50">{posts.length}</span>
     </button>
-    {subKeys.map(subKey => (
-      <button
-        class="sub-filter-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
-        data-sub={`${parent}-${subKey}`}
-      >
-        {parentMeta.subs[subKey].label}
-      </button>
-    ))}
+    {subKeys.map(subKey => {
+      const count = subCounts[`${parent}-${subKey}`] ?? 0;
+      return (
+        <button
+          class="sub-filter-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+          data-sub={`${parent}-${subKey}`}
+        >
+          {parentMeta.subs[subKey].label}
+          {count > 0 && <span class="font-mono text-[11px] opacity-50">{count}</span>}
+        </button>
+      );
+    })}
   </div>
 
   {posts.length > 0 ? (
@@ -85,12 +95,37 @@ const subKeys = Object.keys(parentMeta.subs);
       const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".sub-filter-pill"));
       const items = Array.from(document.querySelectorAll<HTMLElement>("#post-list li[data-category]"));
       if (!pills.length) return;
+
       function apply(key: string) {
+        const toShow = items.filter(el => key === "all" || el.dataset.category === key);
+        const toShowSet = new Set(toShow);
+
         items.forEach(el => {
-          el.classList.toggle("hidden", key !== "all" && el.dataset.category !== key);
+          if (!el.classList.contains("hidden") && !toShowSet.has(el)) {
+            el.style.transition = "opacity 100ms ease";
+            el.style.opacity = "0";
+          }
         });
-        pills.forEach(p => p.classList.toggle("active-pill", p.dataset.sub === key));
+
+        setTimeout(() => {
+          items.forEach(el => {
+            el.classList.add("hidden");
+            el.style.opacity = "0";
+            el.style.transition = "";
+          });
+          toShow.forEach((el, i) => {
+            el.classList.remove("hidden");
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                el.style.transition = "opacity 150ms ease";
+                el.style.opacity = "1";
+              }, i * 18);
+            });
+          });
+          pills.forEach(p => p.classList.toggle("active-pill", p.dataset.sub === key));
+        }, 110);
       }
+
       pills.forEach(p => p.addEventListener("click", () => apply(p.dataset.sub ?? "all")));
     });
   </script>

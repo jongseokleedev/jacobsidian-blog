@@ -172,13 +172,35 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
     }
 
     function showItems() {
-      const all = filteredItems();
+      const toShow = filteredItems().slice(0, shown);
+      const toShowSet = new Set(toShow);
+
+      // Fade out items that won't be shown
       items.forEach(el => {
-        el.classList.remove("hidden");
-        el.style.display = "none";
+        if (el.style.display !== "none" && !toShowSet.has(el)) {
+          el.style.transition = "opacity 100ms ease";
+          el.style.opacity = "0";
+        }
       });
-      all.slice(0, shown).forEach(el => (el.style.display = ""));
-      updateLoadMore();
+
+      setTimeout(() => {
+        items.forEach(el => {
+          el.classList.remove("hidden");
+          el.style.display = "none";
+          el.style.opacity = "0";
+          el.style.transition = "";
+        });
+        toShow.forEach((el, i) => {
+          el.style.display = "";
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              el.style.transition = "opacity 150ms ease";
+              el.style.opacity = "1";
+            }, i * 18);
+          });
+        });
+        updateLoadMore();
+      }, 110);
     }
 
     const countEl = document.getElementById("archives-count");
