@@ -103,7 +103,7 @@ const isActive = (path: string) => {
 
     <!-- 모바일 드롭다운 메뉴 -->
     <div id="menu-items" class="overflow-hidden" style="max-height: 0; transition: max-height 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0;">
-      <ul class="pb-4 flex flex-col gap-1 sm:hidden
+      <ul class="pb-4 px-6 flex flex-col gap-1 sm:hidden
         [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-2.5 [&>li>a]:text-sm [&>li>a]:font-medium [&>li>a]:hover:text-accent">
         <li><a href="/thoughts" class:list={{ "active-nav": isActive("/thoughts") }}>Thoughts</a></li>
         <li><a href="/writing"  class:list={{ "active-nav": isActive("/writing") }}>Writing</a></li>
