@@ -35,9 +35,9 @@ const {
 ---
 
 <Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
-  <Header transition:persist />
+  <Header transition:persist transition:name="site-header" />
   <div id="shell-body" class="flex flex-1 min-h-0">
-    <Sidebar transition:persist {activeCategory} {activeTopic} {activePage} />
+    <Sidebar transition:persist transition:name="site-sidebar" {activeCategory} {activeTopic} {activePage} />
 
     <main
       id="main-content"
@@ -64,7 +64,7 @@ const {
       {headings}
     />
   </div>
-  <Footer transition:persist class="!max-w-none !px-6 !mx-0 w-full" />
+  <Footer transition:persist transition:name="site-footer" class="!max-w-none !px-6 !mx-0 w-full" />
 </Layout>
 
 <script>
