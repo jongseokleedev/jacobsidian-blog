@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { getCategoryMeta, allCategories, parseCategory } from "@/utils/getCategories";
+import { getCategoryMeta, PARENTS, parseCategory } from "@/utils/getCategories";
 import getSortedPosts from "@/utils/getSortedPosts";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 
@@ -163,17 +163,20 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <section>
         <p class="bd-overline mb-2">Other Categories</p>
         <nav class="flex flex-col gap-1">
-          {allCategories()
-            .filter(([key]) => key !== categoryKey)
-            .map(([key, meta]) => (
-              <a
-                href={catUrl(key)}
-                class="flex items-center gap-1.5 text-[13px] text-[color:var(--fg-mute)] hover:text-accent transition-colors"
-              >
-                <span class="cat-dot shrink-0" style={`background:${meta.color}`} />
-                {meta.label}
-              </a>
-            ))}
+          {(() => {
+            const { parent: activeParent } = categoryKey ? parseCategory(categoryKey) : { parent: "" };
+            return Object.entries(PARENTS)
+              .filter(([parentKey]) => parentKey !== activeParent)
+              .map(([parentKey, parentMeta]) => (
+                <a
+                  href={`/${parentKey}/${Object.keys(parentMeta.subs)[0]}`}
+                  class="flex items-center gap-1.5 text-[13px] text-[color:var(--fg-mute)] hover:text-accent transition-colors"
+                >
+                  <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+                  {parentMeta.label}
+                </a>
+              ));
+          })()}
         </nav>
       </section>
     </>

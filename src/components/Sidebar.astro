@@ -1,5 +1,5 @@
 ---
-import { allCategories, parseCategory } from "@/utils/getCategories";
+import { PARENTS, parseCategory } from "@/utils/getCategories";
 
 interface Props {
   activeCategory?: string;   // e.g. "thought"
@@ -46,55 +46,51 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
   <hr class="my-2.5 border-border" />
 
   <!-- Category tree -->
-  {allCategories().map(([key, meta]) => {
-    const isActive = activeCategory === key;
-    const hasTopics = meta.topics.length > 0;
-    // Resolve category URL path
-    const { parent, sub } = parseCategory(key);
-    const catPath = `/${parent}/${sub}`;
+  {Object.entries(PARENTS).map(([parentKey, parentMeta]) => {
+    const { parent: activeParent } = activeCategory ? parseCategory(activeCategory) : { parent: "" };
+    const isParentActive = activeParent === parentKey;
     return (
       <div class="sidebar-category">
-        <a
-          href={catPath}
+        <!-- Parent label (not a link — expands to show subs) -->
+        <div
           class:list={[
-            "flex items-center gap-2 py-1.5 text-sm rounded transition-colors w-full hover:text-accent",
-            isActive ? "text-accent font-semibold" : "text-foreground",
+            "flex items-center gap-2 py-1.5 text-sm rounded transition-colors w-full",
+            isParentActive ? "text-accent font-semibold" : "text-foreground",
           ]}
         >
-          {hasTopics ? (
-            <svg
-              class:list={["size-[9px] shrink-0 transition-transform", isActive ? "rotate-90" : ""]}
-              style="color: var(--fg-faint);"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            >
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          ) : (
-            <span class="inline-block size-[9px] shrink-0" />
-          )}
-          <span class="cat-dot shrink-0" style={`background:${meta.color}`} />
-          {meta.label}
-        </a>
+          <svg
+            class:list={["size-[9px] shrink-0 transition-transform", isParentActive ? "rotate-90" : ""]}
+            style="color: var(--fg-faint);"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          >
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+          <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+          {parentMeta.label}
+        </div>
 
-        {isActive && hasTopics && (
-          <ul class="mt-0.5 ml-[18px] pl-2 border-l border-border flex flex-col gap-0.5">
-            {meta.topics.map(topic => (
+        <!-- Sub-categories (always visible) -->
+        <ul class="mt-0.5 ml-[18px] pl-2 border-l border-border flex flex-col gap-0.5">
+          {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => {
+            const catKey = `${parentKey}-${subKey}`;
+            const isSubActive = activeCategory === catKey;
+            return (
               <li>
                 <a
-                  href={`/tags/${topic.key}`}
+                  href={`/${parentKey}/${subKey}`}
                   class:list={[
                     "block text-[12.5px] py-1 pl-3 rounded transition-colors hover:text-accent",
-                    activeTopic === topic.key
-                      ? "text-accent font-medium"
+                    isSubActive
+                      ? "text-accent font-medium border-l-2 border-accent -ml-px"
                       : "text-[color:var(--fg-mute)]",
                   ]}
                 >
-                  {topic.label}
+                  {subMeta.label}
                 </a>
               </li>
-            ))}
-          </ul>
-        )}
+            );
+          })}
+        </ul>
       </div>
     );
   })}
