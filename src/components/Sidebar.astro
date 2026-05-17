@@ -149,7 +149,6 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const toTop = linkRect.top - ulRect.top;
     const toHeight = linkRect.height;
 
-    // Commit final state to DOM immediately
     indicator.style.top = `${toTop}px`;
     indicator.style.height = `${toHeight}px`;
     indicator.style.opacity = "1";
@@ -167,39 +166,69 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     );
   }
 
+  function openCategory(key: string) {
+    const btn = document.querySelector<HTMLButtonElement>(`.sidebar-toggle[data-target="${key}"]`);
+    const wrap = document.getElementById(`sub-wrap-${key}`);
+    const ul = document.getElementById(`sub-${key}`);
+    if (!btn || !wrap) return;
+    btn.setAttribute("aria-expanded", "true");
+    btn.querySelector("svg")?.classList.add("rotate-90");
+    wrap.style.maxHeight = ul ? `${ul.scrollHeight + 8}px` : "200px";
+  }
+
+  function closeCategory(key: string) {
+    const btn = document.querySelector<HTMLButtonElement>(`.sidebar-toggle[data-target="${key}"]`);
+    const wrap = document.getElementById(`sub-wrap-${key}`);
+    if (!btn || !wrap) return;
+    btn.setAttribute("aria-expanded", "false");
+    btn.querySelector("svg")?.classList.remove("rotate-90");
+    wrap.style.maxHeight = "0";
+  }
+
+  function getOpenKey(): string | null {
+    const btn = document.querySelector<HTMLButtonElement>(".sidebar-toggle[aria-expanded='true']");
+    return btn?.dataset.target ?? null;
+  }
+
   function initSidebar() {
-    const toggles = document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle");
-    toggles.forEach(btn => {
+    const sig = { signal: controller.signal };
+
+    // Chevron toggle buttons
+    document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle").forEach(btn => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.target!;
-        const wrap = document.getElementById(`sub-wrap-${key}`);
-        const svg = btn.querySelector("svg");
-        const expanded = btn.getAttribute("aria-expanded") === "true";
-        const next = !expanded;
-
-        btn.setAttribute("aria-expanded", next ? "true" : "false");
-        svg?.classList.toggle("rotate-90", next);
-
-        if (wrap) {
-          if (next) {
-            const ul = document.getElementById(`sub-${key}`);
-            wrap.style.maxHeight = ul ? `${ul.scrollHeight + 8}px` : "200px";
-          } else {
-            wrap.style.maxHeight = "0";
-          }
+        const isOpen = btn.getAttribute("aria-expanded") === "true";
+        if (isOpen) {
+          closeCategory(key);
+        } else {
+          const current = getOpenKey();
+          if (current && current !== key) closeCategory(current);
+          openCategory(key);
         }
-      }, { signal: controller.signal });
+      }, sig);
     });
 
-    // Restore previous position instantly, then animate to new active position
+    // Parent category links — animate accordion, then navigate
+    document.querySelectorAll<HTMLAnchorElement>(".sidebar-category > div > a").forEach(link => {
+      link.addEventListener("click", e => {
+        const catDiv = link.closest<HTMLElement>(".sidebar-category");
+        const key = catDiv?.dataset.parent ?? "";
+        if (!key) return;
+        const current = getOpenKey();
+        if (!current || current === key) return; // nothing to animate
+        e.preventDefault();
+        closeCategory(current);
+        openCategory(key);
+        const href = link.getAttribute("href")!;
+        setTimeout(() => { window.location.href = href; }, 160);
+      }, sig);
+    });
+
+    // Restore indicator positions
     document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle").forEach(btn => {
       const key = btn.dataset.target!;
       if (btn.getAttribute("aria-expanded") !== "true") return;
-
-      const indicator = document.getElementById(`sub-indicator-${key}`);
-      const saved = savedIndicators[key];
-
-      positionIndicator(key, saved?.height > 0 ? saved : undefined);
+      positionIndicator(key, savedIndicators[key]?.height > 0 ? savedIndicators[key] : undefined);
     });
 
     savedIndicators = {};
@@ -208,7 +237,6 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
   initSidebar();
 
   document.addEventListener("astro:before-swap", () => {
-    // Save current indicator positions before the DOM is replaced
     document.querySelectorAll<HTMLElement>("[id^='sub-indicator-']").forEach(el => {
       const key = el.id.replace("sub-indicator-", "");
       savedIndicators[key] = {
