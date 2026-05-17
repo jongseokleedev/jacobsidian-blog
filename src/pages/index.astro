@@ -159,6 +159,7 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
       });
     }
 
+    // 필터 변경 시: 전체 재렌더 (fade out → fade in)
     function showItems() {
       const toShow = filteredItems().slice(0, shown);
       const toShowSet = new Set(toShow);
@@ -189,11 +190,29 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
       }, 110);
     }
 
+    // 무한 스크롤 시: 새 항목만 append
+    function appendItems(prevShown: number) {
+      const next = filteredItems().slice(prevShown, shown);
+      next.forEach((el, i) => {
+        el.classList.remove("hidden");
+        el.style.display = "";
+        el.style.opacity = "0";
+        el.style.transition = "";
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            el.style.transition = "opacity 150ms ease";
+            el.style.opacity = "1";
+          }, i * 18);
+        });
+      });
+    }
+
     function loadMore() {
       const total = filteredItems().length;
       if (shown >= total) return;
+      const prev = shown;
       shown += PAGE;
-      showItems();
+      appendItems(prev);
     }
 
     function setupObserver() {
