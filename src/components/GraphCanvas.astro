@@ -298,6 +298,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       // Edges
       for (const e of edgesCopy) {
         if (!e.source.x) continue;
+        if (e.type === "tag") continue; // tag edges are for force clustering only
         const sid = e.source?.id ?? e.source;
         const tid = e.target?.id ?? e.target;
         const isActive = !hop1 || (hop1.has(sid) && hop1.has(tid));
@@ -308,23 +309,17 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         ctx.beginPath();
         ctx.moveTo(e.source.x, e.source.y);
         ctx.lineTo(e.target.x, e.target.y);
-        if (e.type === "tag") {
-          ctx.setLineDash([3, 4]);
-          ctx.strokeStyle = muted + "66";
-          ctx.lineWidth = 0.8;
-        } else {
-          ctx.setLineDash([]);
-          ctx.strokeStyle = isActive ? fg + "cc" : fg + "44";
-          ctx.lineWidth = isActive && hop1 ? 1.8 : 1.2;
-        }
-        ctx.stroke();
         ctx.setLineDash([]);
+        ctx.strokeStyle = isActive ? fg + "cc" : fg + "44";
+        ctx.lineWidth = isActive && hop1 ? 1.8 : 1.2;
+        ctx.stroke();
       }
       ctx.globalAlpha = 1;
 
       // Nodes
       for (const n of nodesCopy) {
         if (n.x == null) continue;
+        if (n.type === "tag") continue; // tag nodes are invisible clustering anchors
         const isFocused = n.id === focusId;
         const isHovered = hoveredNode?.id === n.id;
         const isPinned = pinnedNodes.has(n.id);
@@ -557,7 +552,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     // Hover
     canvas.addEventListener("mousemove", event => {
       const t = currentTransform;
-      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
+      const nearest = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20) ?? null;
+      const found = nearest?.type === "tag" ? null : nearest;
       const changed = found?.id !== hoveredNode?.id;
       hoveredNode = found;
       if (changed) startAnim();
@@ -596,7 +592,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     canvas.addEventListener("click", event => {
       const t = currentTransform;
-      const found = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20);
+      const nearest = sim.find((event.offsetX - t.x) / t.k, (event.offsetY - t.y) / t.k, 20);
+      const found = nearest?.type === "tag" ? null : nearest;
       if (!found?.url) { hideBar(); return; }
       if (barNode?.id === found.id) { hideBar(); return; }
       showBar(found);
