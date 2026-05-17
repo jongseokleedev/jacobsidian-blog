@@ -16,14 +16,8 @@ async function loadItems(dir: string) {
       if (data.draft) return null;
       const id = path.basename(f, ".md");
       const category = data.category as string | undefined;
-      const url =
-        category === "thought"
-          ? `/thoughts/${id}`
-          : category === "book"
-          ? `/books/${id}`
-          : category === "writing"
-          ? `/writing/${id}`
-          : `/tech/${id}`;
+      const [parent, sub] = (category ?? "").split("-");
+      const url = parent && sub ? `/${parent}/${sub}/${id}` : `/tech/${id}`;
       return {
         id,
         slug: id,
