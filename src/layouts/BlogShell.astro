@@ -44,9 +44,8 @@ const {
       transition:name="main-content"
       class:list={[
         "flex-1 min-w-0",
-        mode === "reading" ? "flex justify-center" : "",
+        mode === "reading" ? "flex justify-center reading-shell" : "discovery-shell",
       ]}
-      style={mode === "reading" ? "padding: 32px 40px;" : "padding: 32px 28px;"}
     >
       {mode === "reading" ? (
         <div style="width:100%; max-width:680px;">
