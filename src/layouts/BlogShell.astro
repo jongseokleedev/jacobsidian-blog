@@ -44,16 +44,10 @@ const {
       transition:name="main-content"
       class:list={[
         "flex-1 min-w-0",
-        mode === "reading" ? "flex justify-center reading-shell" : "discovery-shell",
+        mode === "reading" ? "reading-shell" : "discovery-shell",
       ]}
     >
-      {mode === "reading" ? (
-        <div class="w-full max-w-app">
-          <slot />
-        </div>
-      ) : (
-        <slot />
-      )}
+      <slot />
     </main>
 
     <RightRail
