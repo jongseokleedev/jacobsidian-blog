@@ -35,9 +35,9 @@ const {
 ---
 
 <Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
-  <Header transition:persist />
+  <Header />
   <div id="shell-body" class="flex flex-1 min-h-0">
-    <Sidebar transition:persist {activeCategory} {activeTopic} {activePage} />
+    <Sidebar {activeCategory} {activeTopic} {activePage} />
 
     <main
       id="main-content"
@@ -64,7 +64,7 @@ const {
       {headings}
     />
   </div>
-  <Footer transition:persist transition:name="site-footer" class="!max-w-none !px-6 !mx-0 w-full" />
+  <Footer class="!max-w-none !px-6 !mx-0 w-full" />
 </Layout>
 
 <script>
@@ -131,80 +131,4 @@ const {
   }
 
   document.addEventListener("astro:page-load", hydratePersonalization);
-
-  // ── Sidebar active state (client-side update for transition:persist) ──
-  function updateSidebarActive() {
-    const path = window.location.pathname;
-
-    // Home link
-    const homeLink = document.querySelector<HTMLAnchorElement>('#left-rail a[href="/"]');
-    if (homeLink) {
-      const isHome = path === "/";
-      homeLink.classList.toggle("text-accent", isHome);
-      homeLink.classList.toggle("font-semibold", isHome);
-      homeLink.classList.toggle("text-[color:var(--fg-mute)]", !isHome);
-    }
-
-    // About link
-    const aboutLink = document.querySelector<HTMLAnchorElement>('#left-rail a[href="/about"]');
-    if (aboutLink) {
-      const isAbout = path === "/about";
-      aboutLink.classList.toggle("text-accent", isAbout);
-      aboutLink.classList.toggle("font-semibold", isAbout);
-      aboutLink.classList.toggle("text-[color:var(--fg-mute)]", !isAbout);
-    }
-
-    // Category tree: parents and subs
-    const segments = path.replace(/^\//, "").split("/");
-    const activeParent = segments[0] ?? "";
-    const activeSub = segments[1] ?? "";
-
-    const parentKeys = Array.from(
-      document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle")
-    ).map(btn => btn.dataset.target!).filter(Boolean);
-
-    for (const parentKey of parentKeys) {
-      const isParentActive = activeParent === parentKey;
-      // Parent link
-      const parentLink = document.querySelector<HTMLAnchorElement>(`#left-rail a[href="/${parentKey}"]`);
-      if (parentLink) {
-        parentLink.classList.toggle("text-accent", isParentActive);
-        parentLink.classList.toggle("font-semibold", isParentActive);
-        parentLink.classList.toggle("text-foreground", !isParentActive);
-      }
-
-      // Toggle button + sub-list visibility
-      const btn = document.querySelector<HTMLButtonElement>(`.sidebar-toggle[data-target="${parentKey}"]`);
-      const ul = document.getElementById(`sub-${parentKey}`);
-      const svg = btn?.querySelector("svg");
-      if (btn) btn.setAttribute("aria-expanded", isParentActive ? "true" : "false");
-      if (ul) ul.classList.toggle("hidden", !isParentActive);
-      if (svg) svg.classList.toggle("rotate-90", isParentActive);
-
-      // Sub-category links
-      if (ul) {
-        const subLinks = ul.querySelectorAll<HTMLAnchorElement>("a");
-        subLinks.forEach(subLink => {
-          const href = subLink.getAttribute("href") ?? "";
-          const hrefSegments = href.replace(/^\//, "").split("/");
-          const subKey = hrefSegments[1] ?? "";
-          const isSubActive = isParentActive && activeSub === subKey;
-
-          subLink.classList.toggle("text-accent", isSubActive);
-          subLink.classList.toggle("font-medium", isSubActive);
-          subLink.classList.toggle("bg-accent/10", isSubActive);
-          subLink.classList.toggle("text-[color:var(--fg-mute)]", !isSubActive);
-
-          // Border on parent <li>
-          const li = subLink.closest("li");
-          if (li) {
-            li.classList.toggle("border-accent", isSubActive);
-            li.classList.toggle("border-border", !isSubActive);
-          }
-        });
-      }
-    }
-  }
-
-  document.addEventListener("astro:page-load", updateSidebarActive);
 </script>

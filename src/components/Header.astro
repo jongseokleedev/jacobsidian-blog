@@ -181,19 +181,11 @@ const isActive = (path: string) => {
     mobileBtn.addEventListener("click", () => (desktopBtn as HTMLElement).click(), { signal: controller.signal });
   }
 
-  function initScrollBorder(instant = false) {
+  function initScrollBorder() {
     const nav = document.querySelector<HTMLElement>("#top-nav-wrap");
     if (!nav) return;
     const update = () => nav.classList.toggle("scrolled", window.scrollY > 10);
-    if (instant) {
-      // 전환 직후 호출 시 CSS transition 억제 — 300ms border 애니메이션 방지
-      nav.style.transition = "none";
-      update();
-      nav.offsetHeight; // reflow 강제
-      nav.style.transition = "";
-    } else {
-      update();
-    }
+    update();
     window.addEventListener("scroll", update, { passive: true, signal: controller.signal });
   }
 
@@ -269,10 +261,7 @@ const isActive = (path: string) => {
 
   document.addEventListener("astro:after-swap", () => {
     pagefindLoaded = false;
-    toggleNav();
-    syncThemeButtons();
-    initScrollBorder(true); // 즉시 적용 — CSS transition 없이
-    initSearchModal();
+    init();
   });
 </script>
 
