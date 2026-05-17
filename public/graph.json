@@ -7,7 +7,7 @@
       "type": "post",
       "category": "essay-thought",
       "tags": [
-        "post"
+        "독서"
       ]
     },
     {
@@ -17,7 +17,7 @@
       "type": "post",
       "category": "essay-thought",
       "tags": [
-        "post"
+        "삶"
       ]
     },
     {
@@ -27,7 +27,7 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book"
+        "문학"
       ]
     },
     {
@@ -45,7 +45,7 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book"
+        "삶"
       ]
     },
     {
@@ -71,7 +71,7 @@
       "type": "post",
       "category": "tech-dev",
       "tags": [
-        "post"
+        "개발"
       ]
     },
     {
@@ -81,7 +81,7 @@
       "type": "post",
       "category": "essay-thought",
       "tags": [
-        "post"
+        "독서"
       ]
     },
     {
@@ -91,7 +91,7 @@
       "type": "post",
       "category": "essay-journal",
       "tags": [
-        "post"
+        "커리어"
       ]
     },
     {
@@ -101,7 +101,7 @@
       "type": "post",
       "category": "tech-dev",
       "tags": [
-        "post"
+        "개발"
       ]
     },
     {
@@ -111,7 +111,7 @@
       "type": "post",
       "category": "tech-dev",
       "tags": [
-        "post"
+        "개발"
       ]
     },
     {
@@ -129,7 +129,8 @@
       "type": "post",
       "category": "tech-work",
       "tags": [
-        "post"
+        "개발",
+        "커리어"
       ]
     },
     {
@@ -147,8 +148,7 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book",
-        "에세이"
+        "삶"
       ]
     },
     {
@@ -158,7 +158,7 @@
       "type": "post",
       "category": "fiction-tales",
       "tags": [
-        "post"
+        "문학"
       ]
     },
     {
@@ -184,7 +184,7 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book"
+        "커리어"
       ]
     },
     {
@@ -194,11 +194,8 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book",
-        "자기계발",
         "커리어",
-        "창업",
-        "에세이"
+        "삶"
       ]
     },
     {
@@ -280,7 +277,7 @@
       "type": "post",
       "category": "essay-thought",
       "tags": [
-        "post"
+        "AI"
       ]
     },
     {
@@ -322,10 +319,7 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book",
-        "프로그래밍",
-        "개발",
-        "기술"
+        "개발"
       ]
     },
     {
@@ -335,7 +329,8 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book"
+        "사회",
+        "AI"
       ]
     },
     {
@@ -369,55 +364,28 @@
       "type": "post",
       "category": "essay-thought",
       "tags": [
-        "post"
+        "삶",
+        "커리어"
       ]
     },
     {
-      "id": "tag:post",
-      "title": "post",
-      "url": "/tags/post",
+      "id": "tag:독서",
+      "title": "독서",
+      "url": "/tags/독서",
       "type": "tag",
       "tags": []
     },
     {
-      "id": "tag:book",
-      "title": "book",
-      "url": "/tags/book",
+      "id": "tag:삶",
+      "title": "삶",
+      "url": "/tags/삶",
       "type": "tag",
       "tags": []
     },
     {
-      "id": "tag:에세이",
-      "title": "에세이",
-      "url": "/tags/에세이",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:자기계발",
-      "title": "자기계발",
-      "url": "/tags/자기계발",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:커리어",
-      "title": "커리어",
-      "url": "/tags/커리어",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:창업",
-      "title": "창업",
-      "url": "/tags/창업",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:프로그래밍",
-      "title": "프로그래밍",
-      "url": "/tags/프로그래밍",
+      "id": "tag:문학",
+      "title": "문학",
+      "url": "/tags/문학",
       "type": "tag",
       "tags": []
     },
@@ -429,9 +397,23 @@
       "tags": []
     },
     {
-      "id": "tag:기술",
-      "title": "기술",
-      "url": "/tags/기술",
+      "id": "tag:커리어",
+      "title": "커리어",
+      "url": "/tags/커리어",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:AI",
+      "title": "AI",
+      "url": "/tags/AI",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:사회",
+      "title": "사회",
+      "url": "/tags/사회",
       "type": "tag",
       "tags": []
     }
@@ -809,82 +791,72 @@
     },
     {
       "source": "20210817-1336",
-      "target": "tag:post",
+      "target": "tag:독서",
       "type": "tag"
     },
     {
       "source": "20220130-1335",
-      "target": "tag:post",
+      "target": "tag:삶",
       "type": "tag"
     },
     {
       "source": "20230812-1256",
-      "target": "tag:book",
+      "target": "tag:문학",
       "type": "tag"
     },
     {
       "source": "20230901-1323",
-      "target": "tag:book",
+      "target": "tag:삶",
       "type": "tag"
     },
     {
       "source": "20240630-2308",
-      "target": "tag:post",
+      "target": "tag:개발",
       "type": "tag"
     },
     {
       "source": "20240911-2226",
-      "target": "tag:post",
+      "target": "tag:독서",
       "type": "tag"
     },
     {
       "source": "20241110-2232",
-      "target": "tag:post",
+      "target": "tag:커리어",
       "type": "tag"
     },
     {
       "source": "20250117-2304",
-      "target": "tag:post",
+      "target": "tag:개발",
       "type": "tag"
     },
     {
       "source": "20250220-2310",
-      "target": "tag:post",
+      "target": "tag:개발",
       "type": "tag"
     },
     {
       "source": "20250915-1014",
-      "target": "tag:post",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "tag:커리어",
       "type": "tag"
     },
     {
       "source": "20260513-1439",
-      "target": "tag:book",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1439",
-      "target": "tag:에세이",
+      "target": "tag:삶",
       "type": "tag"
     },
     {
       "source": "20260513-2148",
-      "target": "tag:post",
+      "target": "tag:문학",
       "type": "tag"
     },
     {
       "source": "20260514-1548",
-      "target": "tag:book",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1549",
-      "target": "tag:book",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1549",
-      "target": "tag:자기계발",
+      "target": "tag:커리어",
       "type": "tag"
     },
     {
@@ -894,27 +866,12 @@
     },
     {
       "source": "20260514-1549",
-      "target": "tag:창업",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1549",
-      "target": "tag:에세이",
+      "target": "tag:삶",
       "type": "tag"
     },
     {
       "source": "20260514-2114",
-      "target": "tag:post",
-      "type": "tag"
-    },
-    {
-      "source": "20260516-1250-2",
-      "target": "tag:book",
-      "type": "tag"
-    },
-    {
-      "source": "20260516-1250-2",
-      "target": "tag:프로그래밍",
+      "target": "tag:AI",
       "type": "tag"
     },
     {
@@ -923,18 +880,23 @@
       "type": "tag"
     },
     {
-      "source": "20260516-1250-2",
-      "target": "tag:기술",
+      "source": "20260516-1250",
+      "target": "tag:사회",
       "type": "tag"
     },
     {
       "source": "20260516-1250",
-      "target": "tag:book",
+      "target": "tag:AI",
       "type": "tag"
     },
     {
       "source": "20260517-1337",
-      "target": "tag:post",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1337",
+      "target": "tag:커리어",
       "type": "tag"
     }
   ]
