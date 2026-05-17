@@ -151,6 +151,13 @@ header { view-transition-name: site-header; }
   animation: none;
 }
 
+/* 뷰 전환 중 고정 크롬 요소의 CSS transition 억제 — 버튼/테두리 깜빡임 방지 */
+html:has(::view-transition) header *,
+html:has(::view-transition) #left-rail *,
+html:has(::view-transition) footer * {
+  transition: none !important;
+}
+
 /* main-content 영역만 fade + slide-up 전환 */
 ::view-transition-old(main-content) {
   animation: 150ms ease-out both content-out;
