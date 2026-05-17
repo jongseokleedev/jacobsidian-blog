@@ -135,6 +135,12 @@ html[data-theme="dark"] {
   }
 }
 
+/* root 기본 cross-fade 비활성화 — main-content만 전환 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
 /* main-content 영역만 fade + slide-up 전환 */
 ::view-transition-old(main-content) {
   animation: 150ms ease-out both content-out;
