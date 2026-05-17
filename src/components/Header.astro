@@ -150,6 +150,8 @@ const isActive = (path: string) => {
 </dialog>
 
 <script>
+  let controller = new AbortController();
+
   function toggleNav() {
     const menuBtn = document.querySelector("#menu-btn");
     const menuItems = document.querySelector("#menu-items") as HTMLElement | null;
@@ -169,14 +171,14 @@ const isActive = (path: string) => {
       menuItems.style.opacity = next ? "1" : "0";
       menuIcon.classList.toggle("hidden", next);
       closeIcon.classList.toggle("hidden", !next);
-    });
+    }, { signal: controller.signal });
   }
 
   function syncThemeButtons() {
     const mobileBtn = document.querySelector("#theme-btn-mobile");
     const desktopBtn = document.querySelector("#theme-btn");
     if (!mobileBtn || !desktopBtn) return;
-    mobileBtn.addEventListener("click", () => (desktopBtn as HTMLElement).click());
+    mobileBtn.addEventListener("click", () => (desktopBtn as HTMLElement).click(), { signal: controller.signal });
   }
 
   function initScrollBorder() {
@@ -184,7 +186,7 @@ const isActive = (path: string) => {
     if (!nav) return;
     const update = () => nav.classList.toggle("scrolled", window.scrollY > 10);
     update();
-    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true, signal: controller.signal });
   }
 
   let pagefindLoaded = false;
@@ -227,35 +229,39 @@ const isActive = (path: string) => {
     const modal = document.querySelector("#search-modal") as HTMLDialogElement | null;
     if (!modal) return;
 
-    document.querySelector("#search-pill-btn")?.addEventListener("click", openSearchModal);
-    document.querySelector("#search-pill-btn-mobile")?.addEventListener("click", openSearchModal);
-    document.querySelector("#search-modal-close")?.addEventListener("click", closeSearchModal);
+    document.querySelector("#search-pill-btn")?.addEventListener("click", openSearchModal, { signal: controller.signal });
+    document.querySelector("#search-pill-btn-mobile")?.addEventListener("click", openSearchModal, { signal: controller.signal });
+    document.querySelector("#search-modal-close")?.addEventListener("click", closeSearchModal, { signal: controller.signal });
 
-    // backdrop 클릭으로 닫기
     modal.addEventListener("click", e => {
       if (e.target === modal) closeSearchModal();
-    });
+    }, { signal: controller.signal });
 
-    // ⌘K / Ctrl+K
     document.addEventListener("keydown", e => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         if (modal.open) { closeSearchModal(); } else { openSearchModal(); }
       }
-    });
+    }, { signal: controller.signal });
   }
 
-  toggleNav();
-  syncThemeButtons();
-  initScrollBorder();
-  initSearchModal();
-
-  document.addEventListener("astro:after-swap", () => {
-    pagefindLoaded = false;
+  function init() {
     toggleNav();
     syncThemeButtons();
     initScrollBorder();
     initSearchModal();
+  }
+
+  init();
+
+  document.addEventListener("astro:before-swap", () => {
+    controller.abort();
+    controller = new AbortController();
+  });
+
+  document.addEventListener("astro:after-swap", () => {
+    pagefindLoaded = false;
+    init();
   });
 </script>
 
