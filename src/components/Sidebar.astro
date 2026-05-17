@@ -203,10 +203,11 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
         indicator.style.opacity = "1";
         indicator.getBoundingClientRect(); // force reflow
         indicator.style.transition = "";
+        // Defer to next frame so browser paints the "from" state before animating
+        requestAnimationFrame(() => positionIndicator(key));
+      } else {
+        positionIndicator(key);
       }
-
-      // Now animate to the new active position
-      positionIndicator(key);
     });
 
     savedIndicators = {};
