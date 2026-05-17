@@ -155,14 +155,16 @@ const {
     }
 
     // Category tree: parents and subs
-    const parentKeys = ["essay", "tech", "review", "fiction"];
-    for (const parentKey of parentKeys) {
-      // Determine active parent and sub from path e.g. /essay/thought or /essay
-      const segments = path.replace(/^\//, "").split("/");
-      const activeParent = segments[0] ?? "";
-      const activeSub = segments[1] ?? "";
-      const isParentActive = activeParent === parentKey;
+    const segments = path.replace(/^\//, "").split("/");
+    const activeParent = segments[0] ?? "";
+    const activeSub = segments[1] ?? "";
 
+    const parentKeys = Array.from(
+      document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle")
+    ).map(btn => btn.dataset.target!).filter(Boolean);
+
+    for (const parentKey of parentKeys) {
+      const isParentActive = activeParent === parentKey;
       // Parent link
       const parentLink = document.querySelector<HTMLAnchorElement>(`#left-rail a[href="/${parentKey}"]`);
       if (parentLink) {
