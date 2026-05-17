@@ -33,33 +33,33 @@ export const PARENTS: Record<string, ParentMeta> = {
     label: "Essay",
     color: "var(--cat-essay)",
     subs: {
-      thought: { label: "Thought", desc: "사유의 파편",            color: "var(--cat-essay)", topics: [] },
-      journal: { label: "Journal", desc: "일상의 단면",            color: "var(--cat-essay)", topics: [] },
+      thought: { label: "Thought", desc: "사유의 파편", color: "var(--cat-essay)", topics: [] },
+      journal: { label: "Journal", desc: "일상의 단면", color: "var(--cat-essay)", topics: [] },
     },
   },
   tech: {
     label: "Tech",
     color: "var(--cat-tech)",
     subs: {
-      dev:  { label: "Dev",  desc: "짓고 부수는 기록",            color: "var(--cat-tech)", topics: [] },
-      work: { label: "Work", desc: "어떻게 일할 것인가",          color: "var(--cat-tech)", topics: [] },
-      it:   { label: "IT",   desc: "IT 업계 이모저모",            color: "var(--cat-tech)", topics: [] },
+      dev: { label: "Dev", desc: "Keep Build Something", color: "var(--cat-tech)", topics: [] },
+      work: { label: "Work", desc: "어떻게 일할 것인가", color: "var(--cat-tech)", topics: [] },
+      it: { label: "IT", desc: "IT 업계 이모저모", color: "var(--cat-tech)", topics: [] },
     },
   },
   review: {
     label: "Review",
     color: "var(--cat-review)",
     subs: {
-      book:   { label: "Book",   desc: "읽고 남은 것들",          color: "var(--cat-review)", topics: [] },
-      cinema: { label: "Cinema", desc: "본 영화에 대하여",        color: "var(--cat-review)", topics: [] },
+      book: { label: "Book", desc: "읽고 남은 것들", color: "var(--cat-review)", topics: [] },
+      cinema: { label: "Cinema", desc: "본 영화에 대하여", color: "var(--cat-review)", topics: [] },
     },
   },
   fiction: {
     label: "Fiction",
     color: "var(--cat-fiction)",
     subs: {
-      novel: { label: "Novel", desc: "언젠가 완성될 소설",        color: "var(--cat-fiction)", topics: [] },
-      tales: { label: "Tales", desc: "완결된 세계",               color: "var(--cat-fiction)", topics: [] },
+      novel: { label: "Novel", desc: "언젠가 완성될 소설", color: "var(--cat-fiction)", topics: [] },
+      tales: { label: "Tales", desc: "완결된 세계", color: "var(--cat-fiction)", topics: [] },
     },
   },
 };
