@@ -135,6 +135,10 @@ html[data-theme="dark"] {
   }
 }
 
+/* 고정 크롬 요소: view-transition-name 부여 (persist와 함께 old==new, 깜빡임 방지) */
+header { view-transition-name: site-header; }
+#left-rail { view-transition-name: site-sidebar; }
+
 /* root 및 고정 크롬 요소 전환 비활성화 — main-content만 전환 */
 ::view-transition-old(root),
 ::view-transition-new(root),

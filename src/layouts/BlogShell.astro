@@ -35,9 +35,9 @@ const {
 ---
 
 <Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
-  <Header transition:persist transition:name="site-header" />
+  <Header transition:persist />
   <div id="shell-body" class="flex flex-1 min-h-0">
-    <Sidebar transition:persist transition:name="site-sidebar" {activeCategory} {activeTopic} {activePage} />
+    <Sidebar transition:persist {activeCategory} {activeTopic} {activePage} />
 
     <main
       id="main-content"
