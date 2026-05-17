@@ -79,36 +79,43 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
         </div>
 
         <!-- Sub-categories (collapsible) -->
-        <ul
-          id={`sub-${parentKey}`}
-          class:list={[
-            "mt-0.5 ml-[26px] flex flex-col gap-0.5 overflow-hidden transition-all duration-200",
-            isParentActive ? "" : "hidden",
-          ]}
+        <div
+          id={`sub-wrap-${parentKey}`}
+          class="overflow-hidden"
+          style={`max-height: ${isParentActive ? "200px" : "0"}; transition: max-height 220ms cubic-bezier(0.4, 0, 0.2, 1);`}
         >
-          {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => {
-            const catKey = `${parentKey}-${subKey}`;
-            const isSubActive = activeCategory === catKey;
-            return (
-              <li class:list={[
-                "border-l pl-2 transition-colors",
-                isSubActive ? "border-accent" : "border-border",
-              ]}>
-                <a
-                  href={`/${parentKey}/${subKey}`}
-                  class:list={[
-                    "block text-[12.5px] py-1 pl-2 rounded transition-colors hover:text-accent",
-                    isSubActive
-                      ? "text-accent font-medium bg-accent/10"
-                      : "text-[color:var(--fg-mute)]",
-                  ]}
-                >
-                  {subMeta.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+          <ul
+            id={`sub-${parentKey}`}
+            class="mt-0.5 ml-[26px] relative flex flex-col border-l border-border"
+          >
+            <!-- Sliding accent indicator -->
+            <span
+              id={`sub-indicator-${parentKey}`}
+              class="absolute pointer-events-none rounded-full bg-accent"
+              style="left: -1px; width: 2px; top: 0; height: 0; opacity: 0; transition: top 200ms cubic-bezier(0.4, 0, 0.2, 1), height 200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease;"
+            ></span>
+
+            {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => {
+              const catKey = `${parentKey}-${subKey}`;
+              const isSubActive = activeCategory === catKey;
+              return (
+                <li>
+                  <a
+                    href={`/${parentKey}/${subKey}`}
+                    class:list={[
+                      "block text-[12.5px] py-1 pl-4 rounded-r transition-colors hover:text-accent",
+                      isSubActive
+                        ? "text-accent font-medium bg-accent/10"
+                        : "text-[color:var(--fg-mute)]",
+                    ]}
+                  >
+                    {subMeta.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     );
   })}
@@ -123,26 +130,99 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
 
 <script>
   let controller = new AbortController();
+  let savedIndicators: Record<string, { top: number; height: number }> = {};
+
+  function positionIndicator(parentKey: string, instant = false) {
+    const ul = document.getElementById(`sub-${parentKey}`);
+    const indicator = document.getElementById(`sub-indicator-${parentKey}`);
+    if (!ul || !indicator) return;
+
+    const activeLink = ul.querySelector<HTMLAnchorElement>("a.text-accent");
+    if (!activeLink) {
+      indicator.style.opacity = "0";
+      indicator.style.height = "0px";
+      return;
+    }
+
+    const ulRect = ul.getBoundingClientRect();
+    const linkRect = activeLink.getBoundingClientRect();
+    const top = linkRect.top - ulRect.top;
+    const height = linkRect.height;
+
+    if (instant) {
+      indicator.style.transition = "none";
+      indicator.style.top = `${top}px`;
+      indicator.style.height = `${height}px`;
+      indicator.style.opacity = "1";
+      indicator.getBoundingClientRect(); // force reflow
+      indicator.style.transition = "";
+    } else {
+      indicator.style.top = `${top}px`;
+      indicator.style.height = `${height}px`;
+      indicator.style.opacity = "1";
+    }
+  }
 
   function initSidebar() {
     const toggles = document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle");
     toggles.forEach(btn => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.target!;
-        const ul = document.getElementById(`sub-${key}`);
+        const wrap = document.getElementById(`sub-wrap-${key}`);
         const svg = btn.querySelector("svg");
         const expanded = btn.getAttribute("aria-expanded") === "true";
+        const next = !expanded;
 
-        btn.setAttribute("aria-expanded", expanded ? "false" : "true");
-        ul?.classList.toggle("hidden", expanded);
-        svg?.classList.toggle("rotate-90", !expanded);
+        btn.setAttribute("aria-expanded", next ? "true" : "false");
+        svg?.classList.toggle("rotate-90", next);
+
+        if (wrap) {
+          if (next) {
+            const ul = document.getElementById(`sub-${key}`);
+            wrap.style.maxHeight = ul ? `${ul.scrollHeight + 8}px` : "200px";
+          } else {
+            wrap.style.maxHeight = "0";
+          }
+        }
       }, { signal: controller.signal });
     });
+
+    // Restore previous position instantly, then animate to new active position
+    document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle").forEach(btn => {
+      const key = btn.dataset.target!;
+      if (btn.getAttribute("aria-expanded") !== "true") return;
+
+      const indicator = document.getElementById(`sub-indicator-${key}`);
+      const saved = savedIndicators[key];
+
+      if (indicator && saved && saved.height > 0) {
+        // Snap to previous position without transition
+        indicator.style.transition = "none";
+        indicator.style.top = `${saved.top}px`;
+        indicator.style.height = `${saved.height}px`;
+        indicator.style.opacity = "1";
+        indicator.getBoundingClientRect(); // force reflow
+        indicator.style.transition = "";
+      }
+
+      // Now animate to the new active position
+      positionIndicator(key);
+    });
+
+    savedIndicators = {};
   }
 
   initSidebar();
 
   document.addEventListener("astro:before-swap", () => {
+    // Save current indicator positions before the DOM is replaced
+    document.querySelectorAll<HTMLElement>("[id^='sub-indicator-']").forEach(el => {
+      const key = el.id.replace("sub-indicator-", "");
+      savedIndicators[key] = {
+        top: parseFloat(el.style.top) || 0,
+        height: parseFloat(el.style.height) || 0,
+      };
+    });
     controller.abort();
     controller = new AbortController();
   });

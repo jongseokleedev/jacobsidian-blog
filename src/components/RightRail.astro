@@ -188,13 +188,19 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       {headings.length > 0 && (
         <section>
           <p class="bd-overline mb-2">On This Page</p>
-          <ul id="bd-toc" class="flex flex-col">
+          <ul id="bd-toc" class="relative flex flex-col border-l border-border">
+            <!-- Sliding accent indicator -->
+            <span
+              id="toc-indicator"
+              class="absolute pointer-events-none rounded-full bg-accent"
+              style="left:-1px; width:2px; top:0; height:0; opacity:0; transition: top 200ms cubic-bezier(0.4,0,0.2,1), height 200ms cubic-bezier(0.4,0,0.2,1), opacity 150ms ease;"
+            ></span>
             {headings.map(h => (
               <li>
                 <a
                   href={`#${h.slug}`}
                   class:list={[
-                    "bd-toc-item block text-[12.5px] text-[color:var(--fg-mute)] hover:text-accent transition-colors border-l border-border",
+                    "bd-toc-item block text-[12.5px] text-[color:var(--fg-mute)] hover:text-accent transition-colors",
                     h.depth === 3 ? "pl-[24px] text-[12px]" : "pl-[14px]",
                   ]}
                   style="padding-top:4px;padding-bottom:4px;"
@@ -261,3 +267,73 @@ const postUrl = (post: (typeof allPosts)[number]) => {
     </>
   )}
 </aside>
+
+<script>
+  function initToc() {
+    const toc = document.getElementById("bd-toc");
+    const indicator = document.getElementById("toc-indicator");
+    if (!toc || !indicator) return;
+
+    const items = Array.from(toc.querySelectorAll<HTMLAnchorElement>("a[data-heading]"));
+    if (!items.length) return;
+
+    function moveIndicator(link: HTMLAnchorElement, instant = false) {
+      const tocRect = toc!.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const top = linkRect.top - tocRect.top;
+      const height = linkRect.height;
+
+      if (instant) {
+        indicator!.style.transition = "none";
+        indicator!.style.top = `${top}px`;
+        indicator!.style.height = `${height}px`;
+        indicator!.style.opacity = "1";
+        indicator!.getBoundingClientRect();
+        indicator!.style.transition = "";
+      } else {
+        indicator!.style.top = `${top}px`;
+        indicator!.style.height = `${height}px`;
+        indicator!.style.opacity = "1";
+      }
+
+      items.forEach(a => {
+        const isActive = a === link;
+        a.style.color = isActive ? "var(--accent)" : "";
+      });
+    }
+
+    // Scrollspy via IntersectionObserver
+    const headingEls = items.map(a => document.getElementById(a.dataset.heading!)).filter(Boolean) as HTMLElement[];
+    let activeHeading: HTMLElement | null = null;
+
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          activeHeading = entry.target as HTMLElement;
+        }
+      }
+      if (activeHeading) {
+        const link = items.find(a => a.dataset.heading === activeHeading!.id);
+        if (link) moveIndicator(link);
+      }
+    }, { rootMargin: "0px 0px -60% 0px", threshold: 0 });
+
+    headingEls.forEach(el => observer.observe(el));
+
+    // Set initial indicator to first active (or first) heading
+    const firstLink = items[0];
+    if (firstLink) moveIndicator(firstLink, true);
+
+    return () => observer.disconnect();
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  function setup() {
+    cleanup?.();
+    cleanup = initToc() ?? undefined;
+  }
+
+  setup();
+  document.addEventListener("astro:after-swap", setup);
+</script>
