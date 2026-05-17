@@ -9,18 +9,21 @@ export const VAULT_PATH = path.join(
 const PUBLIC_BASE = "020.Area/022.Writing/022-1.Public";
 
 export const POST_SOURCES = {
-  thought: path.join(PUBLIC_BASE, "022-1-1.생각"),
-  writing: path.join(PUBLIC_BASE, "022-1-2.글쓰기"),
-  tech: path.join(PUBLIC_BASE, "022-1-3.IT"),
+  "essay-thought": path.join(PUBLIC_BASE, "Essay/Thought"),
+  "essay-journal": path.join(PUBLIC_BASE, "Essay/Journal"),
+  "tech-dev":      path.join(PUBLIC_BASE, "Tech/Dev"),
+  "tech-work":     path.join(PUBLIC_BASE, "Tech/Work"),
+  "tech-it":       path.join(PUBLIC_BASE, "Tech/IT"),
+  "review-book":   path.join(PUBLIC_BASE, "Review/Book"),
+  "review-cinema": path.join(PUBLIC_BASE, "Review/Cinema"),
+  "fiction-novel": path.join(PUBLIC_BASE, "Fiction/Novel"),
+  "fiction-tales": path.join(PUBLIC_BASE, "Fiction/Tales"),
 } as const;
-
-export const BOOKS_SOURCE = path.join(PUBLIC_BASE, "022-1-4.책");
 
 export const ATTACHMENTS_SOURCE = "040.Archive/044.Attachments";
 
 export const CONTENT_DEST = {
   posts: "src/data/posts",
-  books: "src/data/books",
   images: "public/images",
 } as const;
 

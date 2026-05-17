@@ -9,9 +9,9 @@ const FIXTURE_VAULT = path.resolve(__dirname, "../__fixtures__/vault");
 describe("discoverPosts", () => {
   it("returns only published posts grouped by category", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
-      thought: "posts/thought",
-      writing: "posts/writing",
-      tech: "posts/tech",
+      "essay-thought": "posts/thought",
+      "essay-journal": "posts/writing",
+      "tech-it": "posts/it",
     });
 
     const titles = posts.map(p => p.frontmatter.title).sort();
@@ -20,29 +20,29 @@ describe("discoverPosts", () => {
 
   it("attaches category and absolute file path", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
-      thought: "posts/thought",
-      tech: "posts/tech",
+      "essay-thought": "posts/thought",
+      "tech-it": "posts/it",
     });
 
-    const it = posts.find(p => p.frontmatter.title === "발행된 IT 글");
-    expect(it?.category).toBe("tech");
-    expect(it?.absolutePath).toContain("published-post.md");
+    const itPost = posts.find(p => p.frontmatter.title === "발행된 IT 글");
+    expect(itPost?.category).toBe("tech-it");
+    expect(itPost?.absolutePath).toContain("published-post.md");
 
     const thought = posts.find(p => p.frontmatter.title === "생각 글");
-    expect(thought?.category).toBe("thought");
+    expect(thought?.category).toBe("essay-thought");
   });
 
   it("excludes posts without status: published", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
-      tech: "posts/tech",
+      "tech-it": "posts/it",
     });
     expect(posts.map(p => p.frontmatter.title)).not.toContain("초안 IT 글");
   });
 
   it("skips sources that don't exist", async () => {
     const posts = await discoverPosts(FIXTURE_VAULT, {
-      tech: "posts/tech",
-      writing: "posts/does-not-exist",
+      "tech-it": "posts/it",
+      "essay-journal": "posts/does-not-exist",
     });
     expect(posts).toHaveLength(1);
   });

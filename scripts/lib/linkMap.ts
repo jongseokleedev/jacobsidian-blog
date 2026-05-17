@@ -9,7 +9,7 @@ export type LinkMap = Map<string, LinkEntry>;
 
 export function buildLinkMap(
   posts: LinkEntry[],
-  books: LinkEntry[]
+  books: LinkEntry[] = []
 ): LinkMap {
   const map: LinkMap = new Map();
   for (const entry of [...posts, ...books]) {

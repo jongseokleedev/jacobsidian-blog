@@ -5,16 +5,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   ATTACHMENTS_SOURCE,
-  BOOKS_SOURCE,
   CONTENT_DEST,
   POST_SOURCES,
   PUBLIC_IMAGE_URL,
   VAULT_PATH,
   type PostCategory,
 } from "./config";
-import { discoverBooks, discoverPosts } from "./lib/discover";
+import { discoverPosts } from "./lib/discover";
 import {
-  normalizeBookFrontmatter,
   normalizePostFrontmatter,
   pickSlug,
 } from "./lib/normalize";
@@ -36,9 +34,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 
 const CATEGORY_TO_SEGMENT: Record<PostCategory, string> = {
-  thought: "thoughts",
-  writing: "writing",
-  tech: "tech",
+  "essay-thought": "essay/thought",
+  "essay-journal": "essay/journal",
+  "tech-dev":      "tech/dev",
+  "tech-work":     "tech/work",
+  "tech-it":       "tech/it",
+  "review-book":   "review/book",
+  "review-cinema": "review/cinema",
+  "fiction-novel": "fiction/novel",
+  "fiction-tales": "fiction/tales",
 };
 
 interface SyncOptions {
@@ -76,12 +80,10 @@ async function run(options: SyncOptions) {
   console.log(`\n[sync] ${mode} — vault: ${VAULT_PATH}\n`);
 
   const postsDest = path.join(PROJECT_ROOT, CONTENT_DEST.posts);
-  const booksDest = path.join(PROJECT_ROOT, CONTENT_DEST.books);
   const imagesDest = path.join(PROJECT_ROOT, CONTENT_DEST.images);
 
   const posts = await discoverPosts(VAULT_PATH, POST_SOURCES);
-  const books = await discoverBooks(VAULT_PATH, BOOKS_SOURCE);
-  console.log(`[sync] discovered ${posts.length} post(s), ${books.length} book(s)`);
+  console.log(`[sync] discovered ${posts.length} post(s)`);
 
   // Pass 1: decide slugs + build link/body maps
   interface Resolved<T> {
@@ -125,42 +127,17 @@ async function run(options: SyncOptions) {
     };
   });
 
-  const bookSlugsRaw = books.map(book =>
-    pickSlug(book.frontmatter, book.absolutePath, String(book.frontmatter.title ?? "Untitled"))
-  );
-  const bookSlugsFinal = deduplicateSlugs(bookSlugsRaw, s => s);
-
-  const resolvedBooks: Resolved<(typeof books)[number]>[] = books.map((book, i) => {
-    const title = String(book.frontmatter.title ?? "Untitled");
-    const slug = bookSlugsFinal[i];
-    const basename = path.basename(book.absolutePath, ".md");
-    return {
-      item: book,
-      slug,
-      title,
-      basename,
-      body: book.body,
-      url: `/books/${slug}/`,
-    };
-  });
-
   const postEntries: LinkEntry[] = resolvedPosts.map(r => ({
     basename: r.basename,
     slug: r.slug,
     title: r.title,
     url: r.url,
   }));
-  const bookEntries: LinkEntry[] = resolvedBooks.map(r => ({
-    basename: r.basename,
-    slug: r.slug,
-    title: r.title,
-    url: r.url,
-  }));
 
-  const linkMap = buildLinkMap(postEntries, bookEntries);
+  const linkMap = buildLinkMap(postEntries);
 
   const bodyByName = new Map<string, string>();
-  for (const r of [...resolvedPosts, ...resolvedBooks]) {
+  for (const r of resolvedPosts) {
     bodyByName.set(r.basename, r.body);
     bodyByName.set(r.title, r.body);
     bodyByName.set(r.slug, r.body);
@@ -234,40 +211,19 @@ async function run(options: SyncOptions) {
     );
   }
 
-  const bookSlugs = new Set<string>();
-  for (const r of resolvedBooks) {
-    bookSlugs.add(r.slug);
-    const links = extractWikilinks(r.body);
-    const frontmatter = normalizeBookFrontmatter({ ...r.item.frontmatter, links }, r.slug);
-    await writeContent({
-      destDir: postsDest,
-      slug: r.slug,
-      frontmatter,
-      body: applyTransforms(r.body),
-      dryRun,
-    });
-    if (!dryRun) {
-      const hadSlug = typeof r.item.frontmatter.slug === "string" && r.item.frontmatter.slug.trim();
-      if (!hadSlug) await writeSlugToVault(r.item.absolutePath, r.slug);
-    }
-    console.log(
-      `  + book  ${r.slug}  ← ${path.relative(VAULT_PATH, r.item.absolutePath)}`
-    );
-  }
-
   if (copiedImages.size > 0) {
     console.log(`  · images: ${copiedImages.size} copied → ${path.relative(PROJECT_ROOT, imagesDest)}/`);
   }
 
   const removedPosts = await cleanOrphans({
     destDir: postsDest,
-    keepSlugs: new Set([...postSlugs, ...bookSlugs]),
+    keepSlugs: postSlugs,
     dryRun,
   });
   for (const file of removedPosts) console.log(`  - post  ${file}`);
 
   console.log(
-    `\n[sync] done. ${resolvedPosts.length} post(s) + ${resolvedBooks.length} book(s) written, ` +
+    `\n[sync] done. ${resolvedPosts.length} post(s) written, ` +
       `${removedPosts.length} orphan(s) removed${dryRun ? " (dry run, no changes)" : ""}.\n`
   );
 
