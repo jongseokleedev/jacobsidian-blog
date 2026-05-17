@@ -31,6 +31,7 @@ public/pagefind
 .serena/
 *.png
 !public/images/*.png
+!public/jacob_profile.png
 candidates/
 .worktrees/
 docs/plans/
