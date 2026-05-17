@@ -68,6 +68,8 @@ const {
 
 <script>
   // ── localStorage hydration: Now Reading + Pinned ─────────────
+  let lastPinnedKey: string | null = null;
+
   function hydratePersonalization() {
     // Now Reading
     const nrSection = document.getElementById("now-reading-section");
@@ -98,6 +100,10 @@ const {
     if (section && list) {
       let pinned: { id: string; title: string; url: string; category: string }[] = [];
       try { pinned = JSON.parse(localStorage.getItem("jb:pinned") ?? "[]"); } catch { /* empty */ }
+
+      const newKey = pinned.map(p => p.id).join(",");
+      if (lastPinnedKey === newKey) return;
+      lastPinnedKey = newKey;
 
       list.replaceChildren();
       if (pinned.length > 0) {
