@@ -74,6 +74,8 @@
 
     img {
       @apply mx-auto border border-border;
+      max-width: 100%;
+      height: auto;
     }
 
     figcaption {
@@ -81,6 +83,12 @@
     }
 
     table {
+      @media (width < 640px) {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
       th,
       td {
         @apply border border-border p-2;
