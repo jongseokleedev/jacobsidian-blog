@@ -92,7 +92,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
             <span
               id={`sub-indicator-${parentKey}`}
               class="absolute pointer-events-none rounded-full bg-accent"
-              style="left: -1px; width: 2px; top: 0; height: 0; opacity: 0; transition: top 200ms cubic-bezier(0.4, 0, 0.2, 1), height 200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease;"
+              style="left: -1px; width: 2px; top: 0; height: 0; opacity: 0;"
             ></span>
 
             {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => {
@@ -132,7 +132,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
   let controller = new AbortController();
   let savedIndicators: Record<string, { top: number; height: number }> = {};
 
-  function positionIndicator(parentKey: string, instant = false) {
+  function positionIndicator(parentKey: string, from?: { top: number; height: number }) {
     const ul = document.getElementById(`sub-${parentKey}`);
     const indicator = document.getElementById(`sub-indicator-${parentKey}`);
     if (!ul || !indicator) return;
@@ -146,21 +146,25 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
 
     const ulRect = ul.getBoundingClientRect();
     const linkRect = activeLink.getBoundingClientRect();
-    const top = linkRect.top - ulRect.top;
-    const height = linkRect.height;
+    const toTop = linkRect.top - ulRect.top;
+    const toHeight = linkRect.height;
 
-    if (instant) {
-      indicator.style.transition = "none";
-      indicator.style.top = `${top}px`;
-      indicator.style.height = `${height}px`;
-      indicator.style.opacity = "1";
-      indicator.getBoundingClientRect(); // force reflow
-      indicator.style.transition = "";
-    } else {
-      indicator.style.top = `${top}px`;
-      indicator.style.height = `${height}px`;
-      indicator.style.opacity = "1";
-    }
+    // Commit final state to DOM immediately
+    indicator.style.top = `${toTop}px`;
+    indicator.style.height = `${toHeight}px`;
+    indicator.style.opacity = "1";
+
+    const fromTop = from && from.height > 0 ? from.top : toTop;
+    const fromHeight = from && from.height > 0 ? from.height : 0;
+    const fromOpacity = from && from.height > 0 ? 1 : 0;
+
+    indicator.animate(
+      [
+        { top: `${fromTop}px`, height: `${fromHeight}px`, opacity: fromOpacity },
+        { top: `${toTop}px`, height: `${toHeight}px`, opacity: 1 },
+      ],
+      { duration: 200, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
+    );
   }
 
   function initSidebar() {
@@ -195,19 +199,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
       const indicator = document.getElementById(`sub-indicator-${key}`);
       const saved = savedIndicators[key];
 
-      if (indicator && saved && saved.height > 0) {
-        // Snap to previous position without transition
-        indicator.style.transition = "none";
-        indicator.style.top = `${saved.top}px`;
-        indicator.style.height = `${saved.height}px`;
-        indicator.style.opacity = "1";
-        indicator.getBoundingClientRect(); // force reflow
-        indicator.style.transition = "";
-        // Defer to next frame so browser paints the "from" state before animating
-        requestAnimationFrame(() => positionIndicator(key));
-      } else {
-        positionIndicator(key);
-      }
+      positionIndicator(key, saved?.height > 0 ? saved : undefined);
     });
 
     savedIndicators = {};
