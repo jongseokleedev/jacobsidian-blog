@@ -59,18 +59,9 @@ export function buildGraphData(items: InputNode[]): GraphData {
     }
   }
 
-  const tagToItems = new Map<string, string[]>();
   for (const item of items) {
     for (const tag of item.tags) {
-      if (!tagToItems.has(tag)) tagToItems.set(tag, []);
-      tagToItems.get(tag)!.push(item.id);
-    }
-  }
-  for (const [, ids] of tagToItems) {
-    for (let i = 0; i < ids.length; i++) {
-      for (let j = i + 1; j < ids.length; j++) {
-        edges.push({ source: ids[i], target: ids[j], type: "tag" });
-      }
+      edges.push({ source: item.id, target: `tag:${tag}`, type: "tag" });
     }
   }
 
