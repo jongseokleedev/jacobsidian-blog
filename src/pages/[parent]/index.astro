@@ -58,27 +58,31 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
 
   {posts.length > 0 ? (
     <section>
-      <ul id="post-list" class="divide-y divide-border">
+      <ul id="post-list" class="archives-list">
         {posts.map(({ data, id }) => {
           const [, sub] = data.category.split("-");
+          const subMeta = parentMeta.subs[sub];
           return (
             <li data-category={data.category}>
               <a
                 href={`/${parent}/${sub}/${slugifyStr(id.split("/").pop() ?? id)}`}
-                class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
+                class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+                style="border-color: var(--border-soft);"
               >
-                <span class="text-xs text-foreground/40 tabular-nums self-center whitespace-nowrap">
-                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })}
-                </span>
-                <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                <div class="flex items-center justify-between sm:contents">
+                  <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+                    {new Date(data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                  </span>
+                  <span class="font-mono text-[11px] sm:hidden" style="color: var(--fg-faint);">
+                    {subMeta?.label}
+                  </span>
+                </div>
+                <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+                  <span class="cat-dot shrink-0" style={`background: ${parentMeta.color}`} />
                   {data.title}
                 </span>
-                <span class="text-[11px] text-foreground/30 self-center whitespace-nowrap hidden sm:block">
-                  {parentMeta.subs[sub]?.label}
+                <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
+                  {subMeta?.label}
                 </span>
               </a>
             </li>
