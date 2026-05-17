@@ -66,12 +66,8 @@ const ogImage = ogImageUrl
 
 const categoryKey = post.data.category;
 const catMeta = getCategoryMeta(categoryKey);
-const catUrlPath =
-  categoryKey === "thought"
-    ? "thoughts"
-    : categoryKey === "book"
-      ? "books"
-      : categoryKey;
+const [catParent, catSub] = categoryKey.split("-");
+const catUrlPath = `${catParent}/${catSub}`;
 
 /* ========== Prev/Next Posts ========== */
 
@@ -108,7 +104,7 @@ const nextPost =
   <h1 class="block text-[28px] font-bold tracking-[-0.02em] leading-snug text-foreground mb-2">
     {title}
   </h1>
-    {post.data.category === "book" && (
+    {post.data.category === "review-book" && (
       <p class="mt-1 text-base text-foreground/50">{author}</p>
     )}
     {description && (

@@ -2,12 +2,19 @@
 import { getCollection } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import { getCategoryMeta } from "@/utils/getCategories";
+import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 
-const catKey = "tech";
+export async function getStaticPaths() {
+  return Object.entries(PARENTS).flatMap(([parent, pm]) =>
+    Object.keys(pm.subs).map(sub => ({ params: { parent, sub } }))
+  );
+}
+
+const { parent, sub } = Astro.params;
+const catKey = `${parent}-${sub}`;
 const meta = getCategoryMeta(catKey)!;
 
-const all = await getCollection("posts", ({ data }) => data.category === "tech" && !data.draft);
+const all = await getCollection("posts", ({ data }) => data.category === catKey && !data.draft);
 const posts = getSortedPosts(all);
 ---
 
@@ -46,7 +53,7 @@ const posts = getSortedPosts(all);
         {posts.map(({ data, id }) => (
           <li data-tags={JSON.stringify(data.tags ?? [])}>
             <a
-              href={`/tech/${id}`}
+              href={`/${parent}/${sub}/${id.split("/").pop()}`}
               class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
             >
               <span class="text-xs text-foreground/40 tabular-nums self-center whitespace-nowrap">
