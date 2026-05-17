@@ -23,13 +23,17 @@ describe("buildGraphData", () => {
     expect(edges).toContainEqual({ source: "a", target: "b", type: "wikilink" });
   });
 
-  it("creates tag edges between posts sharing a tag", () => {
+  it("creates tag edges from post to tag node (hub-spoke)", () => {
     const items = [
       { id: "a", slug: "a", title: "A", tags: ["t1"], links: [], url: "/tech/a", type: "post" as const },
       { id: "b", slug: "b", title: "B", tags: ["t1"], links: [], url: "/tech/b", type: "post" as const },
     ];
     const { edges } = buildGraphData(items);
-    expect(edges.filter(e => e.type === "tag")).toHaveLength(1);
+    const tagEdges = edges.filter(e => e.type === "tag");
+    expect(tagEdges).toContainEqual({ source: "a", target: "tag:t1", type: "tag" });
+    expect(tagEdges).toContainEqual({ source: "b", target: "tag:t1", type: "tag" });
+    // no direct post↔post tag edge
+    expect(tagEdges.some(e => (e.source === "a" && e.target === "b") || (e.source === "b" && e.target === "a"))).toBe(false);
   });
 
   it("returns empty for no items", () => {
