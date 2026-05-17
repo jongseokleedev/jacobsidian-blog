@@ -21,12 +21,116 @@
       ]
     },
     {
-      "id": "20260315-1014",
+      "id": "20230812-1256",
+      "title": "도시와 그 불확실한 벽",
+      "url": "/review/book/20230812-1256",
+      "type": "post",
+      "category": "review-book",
+      "tags": [
+        "book"
+      ]
+    },
+    {
+      "id": "20230817-2136",
+      "title": "엘리멘탈",
+      "url": "/review/cinema/20230817-2136",
+      "type": "post",
+      "category": "review-cinema",
+      "tags": []
+    },
+    {
+      "id": "20230901-1323",
+      "title": "나는 매주 시체를 보러 간다",
+      "url": "/review/book/20230901-1323",
+      "type": "post",
+      "category": "review-book",
+      "tags": [
+        "book"
+      ]
+    },
+    {
+      "id": "20230920-2210",
+      "title": "내 주위에는 왜 멍청이가 많을까 (세상을 위협하는 멍청함을 연구하다)",
+      "url": "/review/book/20230920-2210",
+      "type": "post",
+      "category": "review-book",
+      "tags": []
+    },
+    {
+      "id": "20240315-1014",
       "title": "효율적인 회의를 위한 속성 정의",
-      "url": "/tech/work/20260315-1014",
+      "url": "/tech/work/20240315-1014",
       "type": "post",
       "category": "tech-work",
       "tags": []
+    },
+    {
+      "id": "20240630-2308",
+      "title": "QA란 무엇인가",
+      "url": "/tech/dev/20240630-2308",
+      "type": "post",
+      "category": "tech-dev",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20240911-2226",
+      "title": "책장의 의미",
+      "url": "/essay/thought/20240911-2226",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20241110-2232",
+      "title": "인터뷰로 돌아본 나의 커리어 이야기",
+      "url": "/essay/journal/20241110-2232",
+      "type": "post",
+      "category": "essay-journal",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20250117-2304",
+      "title": "개발자가 보안을 바라보는 올바른 관점",
+      "url": "/tech/dev/20250117-2304",
+      "type": "post",
+      "category": "tech-dev",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20250220-2310",
+      "title": "데이터 모델링 방법론",
+      "url": "/tech/dev/20250220-2310",
+      "type": "post",
+      "category": "tech-dev",
+      "tags": [
+        "post"
+      ]
+    },
+    {
+      "id": "20250515-1013",
+      "title": "서비스 작명에 대한 고찰",
+      "url": "/tech/work/20250515-1013",
+      "type": "post",
+      "category": "tech-work",
+      "tags": []
+    },
+    {
+      "id": "20250915-1014",
+      "title": "이슈 분석 프로세스",
+      "url": "/tech/work/20250915-1014",
+      "type": "post",
+      "category": "tech-work",
+      "tags": [
+        "post"
+      ]
     },
     {
       "id": "20260513-1350",
@@ -74,14 +178,6 @@
       "tags": []
     },
     {
-      "id": "20260514-1547",
-      "title": "다시 보는 알라딘",
-      "url": "/review/cinema/20260514-1547",
-      "type": "post",
-      "category": "review-cinema",
-      "tags": []
-    },
-    {
       "id": "20260514-1548",
       "title": "일의 감각",
       "url": "/review/book/20260514-1548",
@@ -104,6 +200,14 @@
         "창업",
         "에세이"
       ]
+    },
+    {
+      "id": "20260514-1919",
+      "title": "알라딘",
+      "url": "/review/cinema/20260514-1919",
+      "type": "post",
+      "category": "review-cinema",
+      "tags": []
     },
     {
       "id": "20260514-2111-2",
@@ -180,27 +284,9 @@
       ]
     },
     {
-      "id": "20260514-2115",
-      "title": "그럴 수도 있지",
-      "url": "/essay/thought/20260514-2115",
-      "type": "post",
-      "category": "essay-thought",
-      "tags": [
-        "post"
-      ]
-    },
-    {
       "id": "20260515-1013-2",
-      "title": "서비스 작명에 대한 고찰",
-      "url": "/tech/work/20260515-1013-2",
-      "type": "post",
-      "category": "tech-work",
-      "tags": []
-    },
-    {
-      "id": "20260515-1013-3",
       "title": "NFT 이야기",
-      "url": "/tech/it/20260515-1013-3",
+      "url": "/tech/it/20260515-1013-2",
       "type": "post",
       "category": "tech-it",
       "tags": []
@@ -287,16 +373,6 @@
       ]
     },
     {
-      "id": "20260915-1014",
-      "title": "이슈 분석 프로세스",
-      "url": "/tech/work/20260915-1014",
-      "type": "post",
-      "category": "tech-work",
-      "tags": [
-        "post"
-      ]
-    },
-    {
       "id": "tag:post",
       "title": "post",
       "url": "/tags/post",
@@ -362,13 +438,123 @@
   ],
   "edges": [
     {
-      "source": "20260315-1014",
+      "source": "20210817-1336",
+      "target": "20260513-2148",
+      "type": "wikilink"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20260514-1919",
+      "type": "wikilink"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20230901-1323",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230812-1256",
+      "target": "20210817-1336",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "20260514-2111-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "20260514-2112-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "20260514-2114",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20230812-1256",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20260514-1919",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "20250220-2310",
+      "type": "wikilink"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "20240315-1014",
+      "type": "wikilink"
+    },
+    {
+      "source": "20240315-1014",
       "target": "20260514-1548",
       "type": "wikilink"
     },
     {
-      "source": "20260315-1014",
+      "source": "20240315-1014",
       "target": "20260513-1350",
+      "type": "wikilink"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20250117-2304",
+      "type": "wikilink"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20210817-1336",
+      "type": "wikilink"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20250915-1014",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "20240630-2308",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "20250915-1014",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250515-1013",
+      "target": "20260514-2112-3",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250515-1013",
+      "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "20240315-1014",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "20260515-1017-2",
       "type": "wikilink"
     },
     {
@@ -407,21 +593,6 @@
       "type": "wikilink"
     },
     {
-      "source": "20260514-1547",
-      "target": "20260514-1549",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-1547",
-      "target": "20260514-2112-2",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-1547",
-      "target": "20260513-1439",
-      "type": "wikilink"
-    },
-    {
       "source": "20260514-1548",
       "target": "20260514-2112-3",
       "type": "wikilink"
@@ -432,11 +603,6 @@
       "type": "wikilink"
     },
     {
-      "source": "20260514-1548",
-      "target": "20260514-1547",
-      "type": "wikilink"
-    },
-    {
       "source": "20260514-1549",
       "target": "20260513-1350",
       "type": "wikilink"
@@ -444,6 +610,21 @@
     {
       "source": "20260514-1549",
       "target": "20260514-1548",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "20260514-2112-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "20260513-1439",
       "type": "wikilink"
     },
     {
@@ -492,11 +673,6 @@
       "type": "wikilink"
     },
     {
-      "source": "20260514-2113-2",
-      "target": "20260514-2115",
-      "type": "wikilink"
-    },
-    {
       "source": "20260514-2113-3",
       "target": "20260514-1544",
       "type": "wikilink"
@@ -528,26 +704,16 @@
     },
     {
       "source": "20260515-1013-2",
+      "target": "20260514-1200",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260515-1013-2",
       "target": "20260514-2112-3",
       "type": "wikilink"
     },
     {
       "source": "20260515-1013-2",
-      "target": "20260514-1548",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260515-1013-3",
-      "target": "20260514-1200",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260515-1013-3",
-      "target": "20260514-2112-3",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260515-1013-3",
       "target": "20260517-1323",
       "type": "wikilink"
     },
@@ -617,13 +783,13 @@
       "type": "wikilink"
     },
     {
-      "source": "20260915-1014",
-      "target": "20260315-1014",
+      "source": "20260517-1337",
+      "target": "20210817-1336",
       "type": "wikilink"
     },
     {
-      "source": "20260915-1014",
-      "target": "20260515-1017-2",
+      "source": "20260517-1337",
+      "target": "20260514-2113-2",
       "type": "wikilink"
     },
     {
@@ -633,6 +799,36 @@
     },
     {
       "source": "20210817-1336",
+      "target": "20240630-2308",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "20240911-2226",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "20241110-2232",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "20250117-2304",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "20250220-2310",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "20250915-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
       "target": "20260513-2148",
       "type": "tag"
     },
@@ -643,17 +839,37 @@
     },
     {
       "source": "20210817-1336",
-      "target": "20260514-2115",
-      "type": "tag"
-    },
-    {
-      "source": "20210817-1336",
       "target": "20260517-1337",
       "type": "tag"
     },
     {
-      "source": "20210817-1336",
-      "target": "20260915-1014",
+      "source": "20220130-1335",
+      "target": "20240630-2308",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20240911-2226",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20241110-2232",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20250117-2304",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20250220-2310",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "20250915-1014",
       "type": "tag"
     },
     {
@@ -668,17 +884,172 @@
     },
     {
       "source": "20220130-1335",
-      "target": "20260514-2115",
-      "type": "tag"
-    },
-    {
-      "source": "20220130-1335",
       "target": "20260517-1337",
       "type": "tag"
     },
     {
-      "source": "20220130-1335",
-      "target": "20260915-1014",
+      "source": "20240630-2308",
+      "target": "20240911-2226",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20241110-2232",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20250117-2304",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20250220-2310",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20250915-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20260517-1337",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20241110-2232",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20250117-2304",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20250220-2310",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20250915-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "20260517-1337",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20250117-2304",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20250220-2310",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20250915-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "20260517-1337",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20250220-2310",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20250915-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20260517-1337",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "20250915-1014",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "20260517-1337",
+      "type": "tag"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "20260513-2148",
+      "type": "tag"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "20260514-2114",
+      "type": "tag"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "20260517-1337",
       "type": "tag"
     },
     {
@@ -688,22 +1059,7 @@
     },
     {
       "source": "20260513-2148",
-      "target": "20260514-2115",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-2148",
       "target": "20260517-1337",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-2148",
-      "target": "20260915-1014",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-2114",
-      "target": "20260514-2115",
       "type": "tag"
     },
     {
@@ -712,23 +1068,58 @@
       "type": "tag"
     },
     {
-      "source": "20260514-2114",
-      "target": "20260915-1014",
+      "source": "20230812-1256",
+      "target": "20230901-1323",
       "type": "tag"
     },
     {
-      "source": "20260514-2115",
-      "target": "20260517-1337",
+      "source": "20230812-1256",
+      "target": "20260513-1439",
       "type": "tag"
     },
     {
-      "source": "20260514-2115",
-      "target": "20260915-1014",
+      "source": "20230812-1256",
+      "target": "20260514-1548",
       "type": "tag"
     },
     {
-      "source": "20260517-1337",
-      "target": "20260915-1014",
+      "source": "20230812-1256",
+      "target": "20260514-1549",
+      "type": "tag"
+    },
+    {
+      "source": "20230812-1256",
+      "target": "20260516-1250-2",
+      "type": "tag"
+    },
+    {
+      "source": "20230812-1256",
+      "target": "20260516-1250",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20260513-1439",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20260514-1548",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20260514-1549",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20260516-1250-2",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "20260516-1250",
       "type": "tag"
     },
     {
