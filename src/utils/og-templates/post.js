@@ -1,216 +1,186 @@
 import satori from "satori";
-// import { html } from "satori-html";
 import { SITE } from "@/config";
+import { getCategoryMeta, getParentMeta } from "@/utils/getCategories";
 import loadGoogleFonts from "../loadGoogleFont";
 
-// const markup = html`<div
-//       style={{
-//         background: "#fefbfb",
-//         width: "100%",
-//         height: "100%",
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//       }}
-//     >
-//       <div
-//         style={{
-//           position: "absolute",
-//           top: "-1px",
-//           right: "-1px",
-//           border: "4px solid #000",
-//           background: "#ecebeb",
-//           opacity: "0.9",
-//           borderRadius: "4px",
-//           display: "flex",
-//           justifyContent: "center",
-//           margin: "2.5rem",
-//           width: "88%",
-//           height: "80%",
-//         }}
-//       />
+const BG = "#141414";
+const FG = "#e8e6e3";
+const ACCENT = "#7aa2d4";
+const MUTED = "rgba(232,230,227,0.35)";
+const BORDER = "#2e2e2e";
 
-//       <div
-//         style={{
-//           border: "4px solid #000",
-//           background: "#fefbfb",
-//           borderRadius: "4px",
-//           display: "flex",
-//           justifyContent: "center",
-//           margin: "2rem",
-//           width: "88%",
-//           height: "80%",
-//         }}
-//       >
-//         <div
-//           style={{
-//             display: "flex",
-//             flexDirection: "column",
-//             justifyContent: "space-between",
-//             margin: "20px",
-//             width: "90%",
-//             height: "90%",
-//           }}
-//         >
-//           <p
-//             style={{
-//               fontSize: 72,
-//               fontWeight: "bold",
-//               maxHeight: "84%",
-//               overflow: "hidden",
-//             }}
-//           >
-//             {post.data.title}
-//           </p>
-//           <div
-//             style={{
-//               display: "flex",
-//               justifyContent: "space-between",
-//               width: "100%",
-//               marginBottom: "8px",
-//               fontSize: 28,
-//             }}
-//           >
-//             <span>
-//               by{" "}
-//               <span
-//                 style={{
-//                   color: "transparent",
-//                 }}
-//               >
-//                 "
-//               </span>
-//               <span style={{ overflow: "hidden", fontWeight: "bold" }}>
-//                 {post.data.author}
-//               </span>
-//             </span>
-
-//             <span style={{ overflow: "hidden", fontWeight: "bold" }}>
-//               {SITE.title}
-//             </span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>`;
+// Hardcoded OG colors (dark mode palette) per parent category
+const PARENT_COLORS = {
+  essay:   "#a78bfa",
+  tech:    "#60a5fa",
+  review:  "#fbbf24",
+  fiction: "#34d399",
+};
 
 export default async post => {
+  const { title, category, pubDatetime } = post.data;
+
+  const catMeta = getCategoryMeta(category);
+  const parentKey = category.split("-")[0];
+  const parentMeta = getParentMeta(category);
+
+  const catLabel = catMeta
+    ? `${parentMeta?.label ?? parentKey} · ${catMeta.label}`
+    : category;
+  const catColor = PARENT_COLORS[parentKey] ?? ACCENT;
+
+  const dateStr = new Date(pubDatetime).toLocaleDateString("ko-KR", {
+    year: "numeric", month: "2-digit", day: "2-digit",
+  });
+
+  const allText = title + SITE.title + catLabel + dateStr + "jacobsidian.com" + "jacob" + "sidian";
+
   return satori(
     {
       type: "div",
       props: {
         style: {
-          background: "#fefbfb",
+          background: BG,
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "56px 64px",
+          fontFamily: "IBM Plex Mono",
+          position: "relative",
         },
         children: [
+          // Top accent line
           {
             type: "div",
             props: {
               style: {
                 position: "absolute",
-                top: "-1px",
-                right: "-1px",
-                border: "4px solid #000",
-                background: "#ecebeb",
-                opacity: "0.9",
-                borderRadius: "4px",
-                display: "flex",
-                justifyContent: "center",
-                margin: "2.5rem",
-                width: "88%",
-                height: "80%",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "3px",
+                background: catColor,
               },
             },
           },
+          // Header: wordmark + category badge
           {
             type: "div",
             props: {
               style: {
-                border: "4px solid #000",
-                background: "#fefbfb",
-                borderRadius: "4px",
                 display: "flex",
-                justifyContent: "center",
-                margin: "2rem",
-                width: "88%",
-                height: "80%",
+                alignItems: "center",
+                justifyContent: "space-between",
               },
+              children: [
+                {
+                  type: "div",
+                  props: {
+                    style: { display: "flex", alignItems: "baseline" },
+                    children: [
+                      {
+                        type: "span",
+                        props: {
+                          style: { fontSize: 28, fontWeight: 400, color: FG },
+                          children: "jacob",
+                        },
+                      },
+                      {
+                        type: "span",
+                        props: {
+                          style: { fontSize: 28, fontWeight: 700, color: ACCENT },
+                          children: "sidian",
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      display: "flex",
+                      alignItems: "center",
+                      border: `1px solid ${catColor}`,
+                      borderRadius: "999px",
+                      padding: "6px 16px",
+                      fontSize: 18,
+                      color: catColor,
+                    },
+                    children: [
+                      {
+                        type: "span",
+                        props: {
+                          style: {
+                            width: "7px",
+                            height: "7px",
+                            borderRadius: "50%",
+                            background: catColor,
+                            marginRight: "8px",
+                          },
+                        },
+                      },
+                      catLabel,
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          // Post title
+          {
+            type: "div",
+            props: {
+              style: { display: "flex", flex: 1, alignItems: "center" },
               children: {
-                type: "div",
+                type: "p",
                 props: {
                   style: {
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    margin: "20px",
-                    width: "90%",
-                    height: "90%",
+                    fontSize: title.length > 28 ? 52 : 66,
+                    fontWeight: 700,
+                    color: FG,
+                    lineHeight: 1.3,
+                    fontFamily: "Noto Sans KR",
+                    maxWidth: "960px",
+                    overflow: "hidden",
                   },
-                  children: [
-                    {
-                      type: "p",
-                      props: {
-                        style: {
-                          fontSize: 72,
-                          fontWeight: "bold",
-                          maxHeight: "84%",
-                          overflow: "hidden",
-                        },
-                        children: post.data.title,
-                      },
-                    },
-                    {
-                      type: "div",
-                      props: {
-                        style: {
-                          display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          marginBottom: "8px",
-                          fontSize: 28,
-                        },
-                        children: [
-                          {
-                            type: "span",
-                            props: {
-                              children: [
-                                "by ",
-                                {
-                                  type: "span",
-                                  props: {
-                                    style: { color: "transparent" },
-                                    children: '"',
-                                  },
-                                },
-                                {
-                                  type: "span",
-                                  props: {
-                                    style: {
-                                      overflow: "hidden",
-                                      fontWeight: "bold",
-                                    },
-                                    children: post.data.author,
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                          {
-                            type: "span",
-                            props: {
-                              style: { overflow: "hidden", fontWeight: "bold" },
-                              children: SITE.title,
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
+                  children: title,
                 },
+              },
+            },
+          },
+          // Footer
+          {
+            type: "div",
+            props: {
+              style: {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
+              children: [
+                {
+                  type: "span",
+                  props: { style: { fontSize: 18, color: MUTED }, children: dateStr },
+                },
+                {
+                  type: "span",
+                  props: { style: { fontSize: 18, color: MUTED }, children: "jacobsidian.com" },
+                },
+              ],
+            },
+          },
+          // Outer border
+          {
+            type: "div",
+            props: {
+              style: {
+                position: "absolute",
+                inset: "24px",
+                border: `1px solid ${BORDER}`,
+                borderRadius: "12px",
               },
             },
           },
@@ -221,9 +191,7 @@ export default async post => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: await loadGoogleFonts(
-        post.data.title + post.data.author + SITE.title + "by"
-      ),
+      fonts: await loadGoogleFonts(allText),
     }
   );
 };
