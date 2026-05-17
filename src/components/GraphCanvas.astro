@@ -287,7 +287,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         const isHovered = hoveredNode?.id === n.id;
         const isPinned = pinnedNodes.has(n.id);
         const r = (isFocused || isHovered) ? Math.max(nodeRadius(n), 9) : nodeRadius(n);
-        const baseColor = isFocused ? accent : nodeColor(n);
+        const baseColor = nodeColor(n);
         const opacity = nodeOpacity(n.id);
 
         // Glow ring
@@ -304,7 +304,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         } else if (isFocused) {
           ctx.globalAlpha = 1;
           ctx.beginPath();
-          ctx.arc(n.x, n.y, r + 4, 0, Math.PI * 2);
+          ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
           ctx.fillStyle = accent + "33";
           ctx.fill();
         }
@@ -318,6 +318,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         }
         ctx.fillStyle = baseColor;
         ctx.fill();
+
+        // Accent stroke ring for focused node
+        if (isFocused) {
+          ctx.globalAlpha = 1;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r + 2, 0, Math.PI * 2);
+          ctx.strokeStyle = accent;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
 
         // Pin indicator — small dot at top-right of pinned nodes
         if (isPinned && n.type !== "tag") {
