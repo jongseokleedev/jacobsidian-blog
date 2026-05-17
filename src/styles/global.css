@@ -135,15 +135,9 @@ html[data-theme="dark"] {
   }
 }
 
-/* root 및 고정 크롬 요소 전환 비활성화 — main-content만 전환 */
+/* root 기본 cross-fade 비활성화 — main-content만 전환 */
 ::view-transition-old(root),
-::view-transition-new(root),
-::view-transition-old(site-header),
-::view-transition-new(site-header),
-::view-transition-old(site-sidebar),
-::view-transition-new(site-sidebar),
-::view-transition-old(site-footer),
-::view-transition-new(site-footer) {
+::view-transition-new(root) {
   animation: none;
 }
 
