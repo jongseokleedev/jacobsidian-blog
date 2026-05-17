@@ -60,7 +60,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
           ]}
         >
           <svg
-            class:list={["size-[9px] shrink-0 transition-transform", isParentActive ? "rotate-90" : ""]}
+            class:list={["size-[9px] shrink-0 rotate-90"]}
             style="color: var(--fg-faint);"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
           >
@@ -82,7 +82,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
                   class:list={[
                     "block text-[12.5px] py-1 pl-3 rounded transition-colors hover:text-accent",
                     isSubActive
-                      ? "text-accent font-medium border-l-2 border-accent -ml-px"
+                      ? "text-accent font-medium bg-accent/10"
                       : "text-[color:var(--fg-mute)]",
                   ]}
                 >
