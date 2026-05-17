@@ -175,18 +175,18 @@ html[data-theme="dark"] {
 }
 
 @utility reading-shell {
-  padding: 32px 40px;
+  padding: 20px 16px;
 
-  @media (max-width: 639px) {
-    padding: 20px 16px;
+  @media (min-width: 640px) {
+    padding: 32px 40px;
   }
 }
 
 @utility discovery-shell {
-  padding: 32px 28px;
+  padding: 20px 16px;
 
-  @media (max-width: 639px) {
-    padding: 20px 16px;
+  @media (min-width: 640px) {
+    padding: 32px 28px;
   }
 }
 
