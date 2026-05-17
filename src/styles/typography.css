@@ -131,6 +131,14 @@
 
     pre {
       @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      @media (width < 640px) {
+        font-size: 13px;
+        padding: 12px;
+        border-radius: 6px;
+      }
     }
   }
 
