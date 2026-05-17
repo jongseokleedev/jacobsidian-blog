@@ -8,10 +8,9 @@
     /* Remove Tailwind Typography's own max-width — layout handles it */
     max-width: none;
 
-    /* Mobile-first font size: 17px on small screens, 16px on larger */
-    font-size: 17px;
-    line-height: 1.85;
-    letter-spacing: 0.015em;
+    /* Mobile-first font size: 16px on small screens, slight line-height increase on larger */
+    font-size: 16px;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -33,6 +32,15 @@
 
     h3 {
       font-style: normal;
+    }
+
+    @media (max-width: 639px) {
+      h2 {
+        font-size: 1.15rem;
+      }
+      h3 {
+        font-size: 1rem;
+      }
     }
 
     p,
