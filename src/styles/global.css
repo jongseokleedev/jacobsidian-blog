@@ -135,10 +135,6 @@ html[data-theme="dark"] {
   }
 }
 
-#main-content {
-  view-transition-name: main-content;
-}
-
 /* main-content 영역만 fade + slide-up 전환 */
 ::view-transition-old(main-content) {
   animation: 150ms ease-out both content-out;
