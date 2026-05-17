@@ -185,13 +185,30 @@ async function run(options: SyncOptions) {
     await fs.writeFile(absolutePath, updated, "utf8");
   }
 
+  // Read existing blog-side tags to preserve them across syncs
+  async function readExistingTags(destDir: string, slug: string): Promise<string[]> {
+    const filePath = path.join(destDir, `${slug}.md`);
+    try {
+      const raw = await fs.readFile(filePath, "utf8");
+      const { data } = (await import("gray-matter")).default(raw);
+      return Array.isArray(data.tags) ? (data.tags as unknown[]).map(String) : [];
+    } catch {
+      return [];
+    }
+  }
+
   // Pass 2: write
   const postSlugs = new Set<string>();
   for (const r of resolvedPosts) {
     postSlugs.add(r.slug);
     const links = extractWikilinks(r.body);
+    const existingTags = await readExistingTags(postsDest, r.slug);
+    const vaultTags = Array.isArray(r.item.frontmatter.tags)
+      ? (r.item.frontmatter.tags as unknown[]).map(String)
+      : [];
+    const mergedTags = [...new Set([...existingTags, ...vaultTags])];
     const frontmatter = normalizePostFrontmatter(
-      { ...r.item.frontmatter, links },
+      { ...r.item.frontmatter, links, tags: mergedTags.length ? mergedTags : undefined },
       r.item.category,
       r.slug
     );
