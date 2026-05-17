@@ -2,8 +2,8 @@
 import { PARENTS, parseCategory } from "@/utils/getCategories";
 
 interface Props {
-  activeCategory?: string;   // e.g. "thought"
-  activeTopic?: string;      // e.g. "work"
+  activeCategory?: string;   // e.g. "essay-thought"
+  activeTopic?: string;
   activePage?: string;       // "home" | "about"
 }
 
@@ -50,37 +50,54 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const { parent: activeParent } = activeCategory ? parseCategory(activeCategory) : { parent: "" };
     const isParentActive = activeParent === parentKey;
     return (
-      <div class="sidebar-category">
-        <!-- Parent label — links to parent overview page -->
-        <a
-          href={`/${parentKey}`}
+      <div class="sidebar-category" data-parent={parentKey}>
+        <!-- Toggle button + parent link -->
+        <div class="flex items-center gap-1">
+          <button
+            class="sidebar-toggle p-1 rounded hover:text-accent transition-colors shrink-0"
+            data-target={parentKey}
+            aria-expanded={isParentActive ? "true" : "false"}
+            style="color: var(--fg-faint);"
+          >
+            <svg
+              class:list={["size-[9px] transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            >
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+          <a
+            href={`/${parentKey}`}
+            class:list={[
+              "flex items-center gap-2 py-1.5 text-sm rounded transition-colors flex-1 hover:text-accent",
+              isParentActive ? "text-accent font-semibold" : "text-foreground",
+            ]}
+          >
+            <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+            {parentMeta.label}
+          </a>
+        </div>
+
+        <!-- Sub-categories (collapsible) -->
+        <ul
+          id={`sub-${parentKey}`}
           class:list={[
-            "flex items-center gap-2 py-1.5 text-sm rounded transition-colors w-full hover:text-accent",
-            isParentActive ? "text-accent font-semibold" : "text-foreground",
+            "mt-0.5 ml-[26px] flex flex-col gap-0.5 overflow-hidden transition-all duration-200",
+            isParentActive ? "" : "hidden",
           ]}
         >
-          <svg
-            class:list={["size-[9px] shrink-0 rotate-90"]}
-            style="color: var(--fg-faint);"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          >
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-          <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
-          {parentMeta.label}
-        </a>
-
-        <!-- Sub-categories (always visible) -->
-        <ul class="mt-0.5 ml-[18px] pl-2 border-l border-border flex flex-col gap-0.5">
           {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => {
             const catKey = `${parentKey}-${subKey}`;
             const isSubActive = activeCategory === catKey;
             return (
-              <li>
+              <li class:list={[
+                "border-l pl-2 transition-colors",
+                isSubActive ? "border-accent" : "border-border",
+              ]}>
                 <a
                   href={`/${parentKey}/${subKey}`}
                   class:list={[
-                    "block text-[12.5px] py-1 pl-3 rounded transition-colors hover:text-accent",
+                    "block text-[12.5px] py-1 pl-2 rounded transition-colors hover:text-accent",
                     isSubActive
                       ? "text-accent font-medium bg-accent/10"
                       : "text-[color:var(--fg-mute)]",
@@ -103,3 +120,24 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     <ul id="pinned-list" class="flex flex-col gap-2"></ul>
   </div>
 </aside>
+
+<script>
+  function initSidebar() {
+    const toggles = document.querySelectorAll<HTMLButtonElement>(".sidebar-toggle");
+    toggles.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.target!;
+        const ul = document.getElementById(`sub-${key}`);
+        const svg = btn.querySelector("svg");
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+
+        btn.setAttribute("aria-expanded", expanded ? "false" : "true");
+        ul?.classList.toggle("hidden", expanded);
+        svg?.classList.toggle("rotate-90", !expanded);
+      });
+    });
+  }
+
+  initSidebar();
+  document.addEventListener("astro:after-swap", initSidebar);
+</script>
