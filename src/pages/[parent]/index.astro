@@ -1,0 +1,97 @@
+---
+import { getCollection } from "astro:content";
+import BlogShell from "@/layouts/BlogShell.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { PARENTS } from "@/utils/getCategories";
+import { slugifyStr } from "@/utils/slugify";
+
+export async function getStaticPaths() {
+  return Object.keys(PARENTS).map(parent => ({ params: { parent } }));
+}
+
+const { parent } = Astro.params;
+const parentMeta = PARENTS[parent]!;
+
+const all = await getCollection("posts", ({ data }) =>
+  data.category.startsWith(`${parent}-`) && !data.draft
+);
+const posts = getSortedPosts(all);
+const subKeys = Object.keys(parentMeta.subs);
+---
+
+<BlogShell mode="discovery" rail="category" activeCategory={`${parent}-${subKeys[0]}`} title={parentMeta.label}>
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+      <span class="cat-dot" style={`background:${parentMeta.color}`} />
+      <p class="bd-overline">Category</p>
+    </div>
+    <h1 class="text-[28px] font-bold tracking-[-0.02em]">{parentMeta.label}</h1>
+  </header>
+
+  <!-- Sub-category filter tabs -->
+  <div id="sub-filter-row" class="flex gap-2 flex-wrap py-3 mb-4 border-b border-border overflow-x-auto">
+    <button
+      class="sub-filter-pill active-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+      data-sub="all"
+    >
+      모두 보기
+    </button>
+    {subKeys.map(subKey => (
+      <button
+        class="sub-filter-pill rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+        data-sub={`${parent}-${subKey}`}
+      >
+        {parentMeta.subs[subKey].label}
+      </button>
+    ))}
+  </div>
+
+  {posts.length > 0 ? (
+    <section>
+      <ul id="post-list" class="divide-y divide-border">
+        {posts.map(({ data, id }) => {
+          const [, sub] = data.category.split("-");
+          return (
+            <li data-category={data.category}>
+              <a
+                href={`/${parent}/${sub}/${slugifyStr(id.split("/").pop() ?? id)}`}
+                class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
+              >
+                <span class="text-xs text-foreground/40 tabular-nums self-center whitespace-nowrap">
+                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </span>
+                <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
+                  {data.title}
+                </span>
+                <span class="text-[11px] text-foreground/30 self-center whitespace-nowrap hidden sm:block">
+                  {parentMeta.subs[sub]?.label}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ) : (
+    <p class="pt-12 text-sm text-foreground/40 text-center">아직 글이 없습니다.</p>
+  )}
+
+  <script>
+    document.addEventListener("astro:page-load", () => {
+      const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".sub-filter-pill"));
+      const items = Array.from(document.querySelectorAll<HTMLElement>("#post-list li[data-category]"));
+      if (!pills.length) return;
+      function apply(key: string) {
+        items.forEach(el => {
+          el.classList.toggle("hidden", key !== "all" && el.dataset.category !== key);
+        });
+        pills.forEach(p => p.classList.toggle("active-pill", p.dataset.sub === key));
+      }
+      pills.forEach(p => p.addEventListener("click", () => apply(p.dataset.sub ?? "all")));
+    });
+  </script>
+</BlogShell>

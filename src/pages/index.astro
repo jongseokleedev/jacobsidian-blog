@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getPath } from "@/utils/getPath";
-import { allCategories, getCategoryMeta } from "@/utils/getCategories";
+import { PARENTS, getCategoryMeta, parseCategory } from "@/utils/getCategories";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
@@ -20,8 +20,9 @@ const allItems = posts.map(p => ({
 
 const total = allItems.length;
 
-const categoryCounts = allItems.reduce<Record<string, number>>((acc, item) => {
-  acc[item.category] = (acc[item.category] ?? 0) + 1;
+const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
+  const { parent } = parseCategory(item.category);
+  acc[parent] = (acc[parent] ?? 0) + 1;
   return acc;
 }, {});
 ---
@@ -48,15 +49,15 @@ const categoryCounts = allItems.reduce<Record<string, number>>((acc, item) => {
         All
         <span class="font-mono text-[11px] opacity-50">{total}</span>
       </button>
-      {allCategories().map(([key, meta]) => (
+      {Object.entries(PARENTS).map(([parentKey, parentMeta]) => (
         <button
           class="cat-filter-pill shrink-0 flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
-          data-cat={key}
-          style={`--pill-color:${meta.color}`}
+          data-cat={parentKey}
+          style={`--pill-color:${parentMeta.color}`}
         >
-          <span class="cat-dot shrink-0" style={`background:${meta.color}`} />
-          {meta.label}
-          <span class="font-mono text-[11px] opacity-50">{categoryCounts[key] ?? 0}</span>
+          <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+          {parentMeta.label}
+          <span class="font-mono text-[11px] opacity-50">{parentCounts[parentKey] ?? 0}</span>
         </button>
       ))}
     </div>
@@ -158,9 +159,11 @@ const categoryCounts = allItems.reduce<Record<string, number>>((acc, item) => {
     let shown = PAGE;
 
     function filteredItems() {
-      return [...items].filter(el =>
-        activeFilter === "all" || el.dataset.category === activeFilter
-      );
+      return [...items].filter(el => {
+        if (activeFilter === "all") return true;
+        const cat = el.dataset.category ?? "";
+        return cat === activeFilter || cat.startsWith(`${activeFilter}-`);
+      });
     }
 
     function updateLoadMore() {

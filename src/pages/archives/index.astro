@@ -5,7 +5,7 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getPath } from "@/utils/getPath";
-import { allCategories, getCategoryMeta } from "@/utils/getCategories";
+import { PARENTS, getCategoryMeta, parseCategory } from "@/utils/getCategories";
 import { SITE } from "@/config";
 
 if (!SITE.showArchives) {
@@ -16,15 +16,16 @@ const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 const posts = getSortedPosts(allPosts);
 
 const total = posts.length;
-const counts: Record<string, number> = { all: total };
+const parentCounts: Record<string, number> = { all: total };
 for (const post of posts) {
-  counts[post.data.category] = (counts[post.data.category] ?? 0) + 1;
+  const { parent } = parseCategory(post.data.category);
+  parentCounts[parent] = (parentCounts[parent] ?? 0) + 1;
 }
 
 const filters = [
   { key: "all", label: "All" },
-  ...allCategories().map(([key, meta]) => ({ key, label: meta.label })),
-].filter(f => f.key === "all" || counts[f.key]);
+  ...Object.entries(PARENTS).map(([key, meta]) => ({ key, label: meta.label })),
+].filter(f => f.key === "all" || parentCounts[f.key]);
 ---
 
 <Layout title={`모든 글 | ${SITE.title}`}>
@@ -47,7 +48,7 @@ const filters = [
           ]}
         >
           {f.label}
-          <span class="text-xs opacity-60">{counts[f.key]}</span>
+          <span class="text-xs opacity-60">{parentCounts[f.key]}</span>
         </button>
       ))}
     </div>
@@ -96,7 +97,8 @@ const filters = [
         btn.classList.toggle("text-foreground/60", !isActive);
       });
       items.forEach(item => {
-        const show = key === "all" || item.dataset.category === key;
+        const cat = item.dataset.category ?? "";
+        const show = key === "all" || cat === key || cat.startsWith(`${key}-`);
         item.style.display = show ? "" : "none";
       });
     }

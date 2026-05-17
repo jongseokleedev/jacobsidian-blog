@@ -51,10 +51,11 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const isParentActive = activeParent === parentKey;
     return (
       <div class="sidebar-category">
-        <!-- Parent label (not a link — expands to show subs) -->
-        <div
+        <!-- Parent label — links to parent overview page -->
+        <a
+          href={`/${parentKey}`}
           class:list={[
-            "flex items-center gap-2 py-1.5 text-sm rounded transition-colors w-full",
+            "flex items-center gap-2 py-1.5 text-sm rounded transition-colors w-full hover:text-accent",
             isParentActive ? "text-accent font-semibold" : "text-foreground",
           ]}
         >
@@ -67,7 +68,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
           </svg>
           <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
           {parentMeta.label}
-        </div>
+        </a>
 
         <!-- Sub-categories (always visible) -->
         <ul class="mt-0.5 ml-[18px] pl-2 border-l border-border flex flex-col gap-0.5">

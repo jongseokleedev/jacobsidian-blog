@@ -105,11 +105,11 @@ const isActive = (path: string) => {
     <div id="menu-items" class="overflow-hidden" style="max-height: 0; transition: max-height 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0;">
       <ul class="pb-4 px-6 flex flex-col gap-1 sm:hidden
         [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-2.5 [&>li>a]:text-sm [&>li>a]:font-medium [&>li>a]:hover:text-accent">
-        <li><a href="/thoughts" class:list={{ "active-nav": isActive("/thoughts") }}>Thoughts</a></li>
-        <li><a href="/writing"  class:list={{ "active-nav": isActive("/writing") }}>Writing</a></li>
-        <li><a href="/tech"     class:list={{ "active-nav": isActive("/tech") }}>Tech</a></li>
-        <li><a href="/books"    class:list={{ "active-nav": isActive("/books") }}>Books</a></li>
-        <li><a href="/about"    class:list={{ "active-nav": isActive("/about") }}>About</a></li>
+        <li><a href="/essay"   class:list={{ "active-nav": isActive("/essay") }}>Essay</a></li>
+        <li><a href="/tech"    class:list={{ "active-nav": isActive("/tech") }}>Tech</a></li>
+        <li><a href="/review"  class:list={{ "active-nav": isActive("/review") }}>Review</a></li>
+        <li><a href="/fiction" class:list={{ "active-nav": isActive("/fiction") }}>Fiction</a></li>
+        <li><a href="/about"   class:list={{ "active-nav": isActive("/about") }}>About</a></li>
       </ul>
     </div>
   </div>
