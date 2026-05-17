@@ -100,13 +100,24 @@ const nextPost =
     {catMeta?.label ?? catUrlPath}
   </a>
 
-  <!-- Title -->
-  <h1 class="block text-[28px] font-bold tracking-[-0.02em] leading-snug text-foreground mb-2">
-    {title}
-  </h1>
-    {post.data.category === "review-book" && (
-      <p class="mt-1 text-base text-foreground/50">{author}</p>
+  <!-- Cinema poster + title row -->
+  <div class:list={["flex gap-4", post.data.category === "review-cinema" && post.data.poster ? "items-start" : ""]}>
+    {post.data.category === "review-cinema" && post.data.poster && (
+      <img
+        src={post.data.poster}
+        alt={title}
+        class="shrink-0 rounded w-[80px] object-cover shadow-sm"
+        style="aspect-ratio: 2/3;"
+      />
     )}
+    <div class="flex-1 min-w-0">
+      <!-- Title -->
+      <h1 class="block text-[28px] font-bold tracking-[-0.02em] leading-snug text-foreground mb-2">
+        {title}
+      </h1>
+      {post.data.category === "review-book" && (
+        <p class="mt-1 text-base text-foreground/50">{author}</p>
+      )}
     {description && (
       <p class="mt-2 text-base text-foreground/60 leading-relaxed">{description}</p>
     )}
@@ -151,6 +162,8 @@ const nextPost =
         </button>
       </div>
     </div>
+    </div>
+  </div>
   <article
     id="article"
     class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"

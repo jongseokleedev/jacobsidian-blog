@@ -29,6 +29,7 @@ const posts = defineCollection({
       links: z.array(z.string()).default([]),
       ogImage: image().or(z.string()).optional(),
       description: z.string(),
+      poster: z.string().optional(),
       canonicalURL: z.string().optional(),
       hideEditPost: z.boolean().optional(),
       timezone: z.string().optional(),

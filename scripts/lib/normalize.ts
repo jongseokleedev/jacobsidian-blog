@@ -59,6 +59,7 @@ export interface NormalizedPost {
   pubDatetime: string;
   modDatetime?: string;
   description: string;
+  poster?: string;
   tags?: string[];
   featured?: boolean;
   draft?: boolean;
@@ -80,6 +81,8 @@ export function normalizePostFrontmatter(
 
   const mod = toIsoDate(fm.modified ?? fm.updated);
   if (mod) out.modDatetime = mod;
+
+  if (typeof fm.poster === "string" && fm.poster.trim()) out.poster = fm.poster.trim();
 
   if (Array.isArray(fm.tags)) {
     out.tags = (fm.tags as unknown[]).map(t => String(t));
