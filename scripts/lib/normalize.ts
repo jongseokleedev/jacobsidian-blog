@@ -111,7 +111,7 @@ export function normalizeBookFrontmatter(
   slug: string
 ): NormalizedBook {
   const out: NormalizedBook = {
-    title: String(fm.title ?? "Untitled"),
+    title: String(fm.title ?? "Untitled").replace(/^["']+|["']+$/g, ""),
     category: "book",
     slug,
     author: String(fm.author ?? ""),
