@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { getCategoryMeta, allCategories } from "@/utils/getCategories";
+import { getCategoryMeta, allCategories, parseCategory } from "@/utils/getCategories";
 import getSortedPosts from "@/utils/getSortedPosts";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 
@@ -46,11 +46,10 @@ const backlinks = postId
   : [];
 
 // Category URL helper
-const catUrl = (key: string) => {
-  if (key === "thought") return "/thoughts";
-  if (key === "book") return "/books";
-  return `/${key}`;
-};
+function catUrl(key: string) {
+  const { parent, sub } = parseCategory(key);
+  return `/${parent}/${sub}`;
+}
 
 // Post URL helper
 const postUrl = (post: (typeof allPosts)[number]) => {

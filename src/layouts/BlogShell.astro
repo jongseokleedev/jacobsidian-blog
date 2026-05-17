@@ -111,7 +111,8 @@ const {
 
           const dot = document.createElement("span");
           dot.className = "cat-dot shrink-0";
-          dot.style.background = `var(--cat-${p.category})`;
+          const catParent = p.category.includes("-") ? p.category.split("-")[0] : p.category;
+          dot.style.background = `var(--cat-${catParent})`;
 
           const text = document.createElement("span");
           text.className = "truncate";

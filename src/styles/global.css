@@ -34,6 +34,9 @@ html[data-theme="light"] {
   --cat-tech:       #2563eb;
   --cat-writing:    #059669;
   --cat-book:       #b45309;
+  --cat-essay:      #7c5cf0;
+  --cat-review:     #b45309;
+  --cat-fiction:    #059669;
 }
 html[data-theme="dark"] {
   --fg-mute:        rgba(232, 230, 227, 0.6);
@@ -46,6 +49,9 @@ html[data-theme="dark"] {
   --cat-tech:       #60a5fa;
   --cat-writing:    #34d399;
   --cat-book:       #fbbf24;
+  --cat-essay:      #a78bfa;
+  --cat-review:     #fbbf24;
+  --cat-fiction:    #34d399;
 }
 
 @utility bd-overline {

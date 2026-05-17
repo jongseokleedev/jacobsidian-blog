@@ -1,5 +1,5 @@
 ---
-import { allCategories } from "@/utils/getCategories";
+import { allCategories, parseCategory } from "@/utils/getCategories";
 
 interface Props {
   activeCategory?: string;   // e.g. "thought"
@@ -50,7 +50,8 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const isActive = activeCategory === key;
     const hasTopics = meta.topics.length > 0;
     // Resolve category URL path
-    const catPath = key === "thought" ? "/thoughts" : key === "book" ? "/books" : `/${key}`;
+    const { parent, sub } = parseCategory(key);
+    const catPath = `/${parent}/${sub}`;
     return (
       <div class="sidebar-category">
         <a

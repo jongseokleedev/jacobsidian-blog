@@ -3,25 +3,19 @@ import { getCollection } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getPath } from "@/utils/getPath";
-import { allCategories } from "@/utils/getCategories";
+import { allCategories, getCategoryMeta } from "@/utils/getCategories";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 const posts = getSortedPosts(allPosts);
-
-const CATEGORY_LABEL: Record<string, string> = {
-  thought: "Thoughts",
-  writing: "Writing",
-  tech: "Tech",
-  book: "Books",
-};
 
 const allItems = posts.map(p => ({
   href: getPath(p),
   date: new Date(p.data.pubDatetime),
   title: p.data.title,
   category: p.data.category,
-  label: CATEGORY_LABEL[p.data.category] ?? p.data.category,
+  label: getCategoryMeta(p.data.category)?.label ?? p.data.category,
+  color: getCategoryMeta(p.data.category)?.color ?? "var(--fg-faint)",
 }));
 
 const total = allItems.length;
@@ -107,7 +101,7 @@ const categoryCounts = allItems.reduce<Record<string, number>>((acc, item) => {
               </div>
               <!-- 제목 (모바일: 2행 전체 너비, 데스크탑: 중간 컬럼) -->
               <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
-                <span class="cat-dot shrink-0" style={`background: var(--cat-${item.category})`} />
+                <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
                 {item.title}
               </span>
               <!-- 카테고리 레이블: 데스크탑에서만 표시 -->
