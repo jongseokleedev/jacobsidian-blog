@@ -89,14 +89,20 @@ setThemeFeature();
 // Runs on view transitions navigation
 document.addEventListener("astro:after-swap", setThemeFeature);
 
-// Set theme-color value before page transition
-// to avoid navigation bar color flickering in Android dark mode
 document.addEventListener("astro:before-swap", event => {
   const astroEvent = event;
+
+  // Preserve data-theme on the incoming document to prevent a flash
+  // where <html> briefly has no data-theme and CSS vars revert to :root defaults
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  if (currentTheme) {
+    astroEvent.newDocument.documentElement.setAttribute("data-theme", currentTheme);
+  }
+
+  // Preserve theme-color meta to avoid Android navbar color flicker
   const bgColor = document
     .querySelector("meta[name='theme-color']")
     ?.getAttribute("content");
-
   if (bgColor) {
     astroEvent.newDocument
       .querySelector("meta[name='theme-color']")
