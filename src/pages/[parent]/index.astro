@@ -59,11 +59,11 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
   {posts.length > 0 ? (
     <section>
       <ul id="post-list" class="archives-list">
-        {posts.map(({ data, id }) => {
+        {posts.map(({ data, id }, i) => {
           const [, sub] = data.category.split("-");
           const subMeta = parentMeta.subs[sub];
           return (
-            <li data-category={data.category}>
+            <li data-category={data.category} class={i >= 10 ? "hidden" : ""}>
               <a
                 href={`/${parent}/${sub}/${slugifyStr(id.split("/").pop() ?? id)}`}
                 class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
@@ -89,6 +89,9 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
           );
         })}
       </ul>
+      <div id="load-sentinel" class="mt-4 flex justify-center" aria-hidden="true">
+        <div id="load-spinner" class="hidden h-4 w-4 rounded-full border-2 border-border border-t-accent animate-spin"></div>
+      </div>
     </section>
   ) : (
     <p class="pt-12 text-sm text-foreground/40 text-center">아직 글이 없습니다.</p>
@@ -98,27 +101,37 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
     document.addEventListener("astro:page-load", () => {
       const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".sub-filter-pill"));
       const items = Array.from(document.querySelectorAll<HTMLElement>("#post-list li[data-category]"));
-      if (!pills.length) return;
+      const sentinel = document.getElementById("load-sentinel");
+      const spinner = document.getElementById("load-spinner");
 
-      function apply(key: string) {
-        const toShow = items.filter(el => key === "all" || el.dataset.category === key);
+      const PAGE = 10;
+      let activeFilter = "all";
+      let shown = PAGE;
+      let loading = false;
+      let observer: IntersectionObserver | null = null;
+
+      function filteredItems() {
+        return items.filter(el => activeFilter === "all" || el.dataset.category === activeFilter);
+      }
+
+      function showItems() {
+        const toShow = filteredItems().slice(0, shown);
         const toShowSet = new Set(toShow);
-
         items.forEach(el => {
-          if (!el.classList.contains("hidden") && !toShowSet.has(el)) {
+          if (el.style.display !== "none" && !toShowSet.has(el)) {
             el.style.transition = "opacity 100ms ease";
             el.style.opacity = "0";
           }
         });
-
         setTimeout(() => {
           items.forEach(el => {
-            el.classList.add("hidden");
+            el.classList.remove("hidden");
+            el.style.display = "none";
             el.style.opacity = "0";
             el.style.transition = "";
           });
           toShow.forEach((el, i) => {
-            el.classList.remove("hidden");
+            el.style.display = "";
             requestAnimationFrame(() => {
               setTimeout(() => {
                 el.style.transition = "opacity 150ms ease";
@@ -126,11 +139,57 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
               }, i * 18);
             });
           });
-          pills.forEach(p => p.classList.toggle("active-pill", p.dataset.sub === key));
         }, 110);
       }
 
-      pills.forEach(p => p.addEventListener("click", () => apply(p.dataset.sub ?? "all")));
+      function appendItems(prevShown: number) {
+        filteredItems().slice(prevShown, shown).forEach((el, i) => {
+          el.classList.remove("hidden");
+          el.style.display = "";
+          el.style.opacity = "0";
+          el.style.transition = "";
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              el.style.transition = "opacity 150ms ease";
+              el.style.opacity = "1";
+            }, i * 18);
+          });
+        });
+      }
+
+      function loadMore() {
+        const total = filteredItems().length;
+        if (loading || shown >= total) return;
+        loading = true;
+        spinner?.classList.remove("hidden");
+        const prev = shown;
+        shown = Math.min(shown + PAGE, total);
+        setTimeout(() => {
+          appendItems(prev);
+          loading = false;
+          spinner?.classList.add("hidden");
+        }, 400);
+      }
+
+      function setupObserver() {
+        observer?.disconnect();
+        if (!sentinel) return;
+        observer = new IntersectionObserver(
+          entries => { if (entries[0].isIntersecting) loadMore(); },
+          { rootMargin: "0px", threshold: 0 }
+        );
+        observer.observe(sentinel);
+      }
+
+      function applyFilter(key: string) {
+        activeFilter = key;
+        shown = PAGE;
+        showItems();
+        pills.forEach(p => p.classList.toggle("active-pill", p.dataset.sub === key));
+      }
+
+      pills.forEach(p => p.addEventListener("click", () => applyFilter(p.dataset.sub ?? "all")));
+      setupObserver();
     });
   </script>
 </BlogShell>
