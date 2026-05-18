@@ -51,21 +51,8 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const isParentActive = activeParent === parentKey;
     return (
       <div class="sidebar-category" data-parent={parentKey}>
-        <!-- Toggle button + parent link -->
-        <div class="flex items-center gap-1">
-          <button
-            class="sidebar-toggle flex items-center justify-center rounded hover:text-accent transition-colors shrink-0"
-            style="width: 28px; height: 28px; color: var(--fg-faint);"
-            data-target={parentKey}
-            aria-expanded={isParentActive ? "true" : "false"}
-          >
-            <svg
-              class:list={["size-3 transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            >
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
+        <!-- Parent link + toggle button -->
+        <div class="flex items-center">
           <a
             href={`/${parentKey}`}
             class:list={[
@@ -76,6 +63,19 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
             <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
             {parentMeta.label}
           </a>
+          <button
+            class="sidebar-toggle flex items-center justify-center rounded hover:text-accent transition-colors shrink-0"
+            style="width: 32px; height: 32px; color: var(--fg-faint);"
+            data-target={parentKey}
+            aria-expanded={isParentActive ? "true" : "false"}
+          >
+            <svg
+              class:list={["size-3 transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            >
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
         </div>
 
         <!-- Sub-categories (collapsible) -->
