@@ -23,11 +23,31 @@ const totalLinks = rawPosts.reduce((sum, p) => sum + p.data.links.length, 0);
 const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 const thisWeekCount = allPosts.filter(p => new Date(p.data.pubDatetime) >= oneWeekAgo).length;
 const recentPosts = allPosts.slice(0, 4);
-const catMeta = categoryKey ? getCategoryMeta(categoryKey) : undefined;
+
+// categoryKey can be a parent key ("essay") or a full key ("essay-thought")
+const isParentKey = categoryKey ? !!PARENTS[categoryKey] && !categoryKey.includes("-") : false;
+const catParentKey = categoryKey
+  ? (isParentKey ? categoryKey : categoryKey.split("-")[0])
+  : undefined;
+const catMeta = categoryKey
+  ? (isParentKey ? PARENTS[categoryKey] : getCategoryMeta(categoryKey))
+  : undefined;
 const catPosts = categoryKey
-  ? allPosts.filter(p => p.data.category === categoryKey).slice(0, 4)
+  ? allPosts
+      .filter(p =>
+        isParentKey
+          ? p.data.category.startsWith(`${categoryKey}-`)
+          : p.data.category === categoryKey
+      )
+      .slice(0, 4)
   : recentPosts;
-const catPostCount = categoryKey ? allPosts.filter(p => p.data.category === categoryKey).length : 0;
+const catPostCount = categoryKey
+  ? allPosts.filter(p =>
+      isParentKey
+        ? p.data.category.startsWith(`${categoryKey}-`)
+        : p.data.category === categoryKey
+    ).length
+  : 0;
 const thisWeekPosts = variant === "category" ? catPosts : recentPosts;
 
 // For reading variant: related posts and backlinks
@@ -133,7 +153,7 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       <section>
         <p class="bd-overline mb-2">{catMeta.label} Graph</p>
         <div class="rounded border border-border overflow-hidden">
-          <GraphCanvas height={200} />
+          <GraphCanvas height={200} categoryFilter={catParentKey} />
         </div>
         <p class="font-mono text-[11px] text-[color:var(--fg-faint)] mt-1">
           {catPostCount} notes

@@ -2,8 +2,9 @@
 interface Props {
   focusId?: string;
   height?: number;
+  categoryFilter?: string;
 }
-const { focusId, height = 500 } = Astro.props;
+const { focusId, height = 500, categoryFilter } = Astro.props;
 const isMini = !!focusId;
 const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 ---
@@ -12,6 +13,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   id={containerId}
   data-focus-id={focusId ?? ""}
   data-is-mini={isMini ? "true" : "false"}
+  data-category-filter={categoryFilter ?? ""}
   style={`height: ${height}px; width: 100%;`}
   class="relative overflow-hidden bg-background"
 >
@@ -48,6 +50,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const focusId = containerEl.dataset.focusId || null;
     const isMini = containerEl.dataset.isMini === "true";
+    const initCategoryFilter = containerEl.dataset.categoryFilter || "all";
 
     const d3 = await import("https://cdn.jsdelivr.net/npm/d3@7/+esm");
 
@@ -135,7 +138,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     let hoveredNode = null;
     let pinnedNodes = new Set();
     let currentTransform = d3.zoomIdentity;
-    let categoryFilter = "all";
+    let categoryFilter = initCategoryFilter;
 
     // Hover animation state
     const hoverProgress = new Map(); // nodeId → 0..1  (label scale)
@@ -614,6 +617,11 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const themeObserver = new MutationObserver(draw);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+    if (initCategoryFilter !== "all") {
+      triggerCatFilter();
+      startAnim();
+    }
 
     document.addEventListener("graph:filter", event => {
       categoryFilter = event.detail?.category ?? "all";
