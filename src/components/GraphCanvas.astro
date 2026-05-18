@@ -343,11 +343,20 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         if (e.type === "tag") continue; // tag edges are for force clustering only
         const sid = e.source?.id ?? e.source;
         const tid = e.target?.id ?? e.target;
-        const isActive = !hop1 || (hop1.has(sid) && hop1.has(tid));
-        const baseOpacity = isActive ? 1 : (hop2?.has(sid) || hop2?.has(tid) ? 0.2 : 0.05);
-        const opacity = d < 0.01 ? 1 : isActive ? 1 : 1 - d * (1 - baseOpacity);
 
-        ctx.globalAlpha = opacity;
+        // During timelapse: only draw edge when both endpoints are born
+        if (timelapseActive) {
+          const sb = birthProgress.get(sid) ?? 0;
+          const tb = birthProgress.get(tid) ?? 0;
+          if (sb <= 0 || tb <= 0) continue;
+          ctx.globalAlpha = Math.min(sb, tb);
+        } else {
+          const isActive = !hop1 || (hop1.has(sid) && hop1.has(tid));
+          const baseOpacity = isActive ? 1 : (hop2?.has(sid) || hop2?.has(tid) ? 0.2 : 0.05);
+          ctx.globalAlpha = d < 0.01 ? 1 : isActive ? 1 : 1 - d * (1 - baseOpacity);
+        }
+
+        const isActive = !hop1 || (hop1.has(sid) && hop1.has(tid));
         ctx.beginPath();
         ctx.moveTo(e.source.x, e.source.y);
         ctx.lineTo(e.target.x, e.target.y);
@@ -373,10 +382,17 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         const pulse = catPulseMap.get(n.id);
         const pulseScale = pulse != null ? 1 + Math.sin(pulse * Math.PI) * 0.15 : 1;
 
+        // Birth scale: spring-like overshoot (0 → 1.35 → 1)
+        const birth = timelapseActive ? (birthProgress.get(n.id) ?? 0) : 1;
+        const birthScale = birth < 1
+          ? Math.sin(birth * Math.PI * 0.5) * 1.35
+          : 1;
+        const totalScale = pulseScale * birthScale;
+
         ctx.save();
-        if (pulseScale !== 1) {
+        if (totalScale !== 1) {
           ctx.translate(n.x, n.y);
-          ctx.scale(pulseScale, pulseScale);
+          ctx.scale(totalScale, totalScale);
           ctx.translate(-n.x, -n.y);
         }
 
@@ -568,8 +584,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         return new Date(a.pubDatetime).getTime() - new Date(b.pubDatetime).getTime();
       });
 
-      const BIRTH_SPEED = 0.09;
-      const STEP_MS = 150;
+      const BIRTH_SPEED = 0.12;
+      const STEP_MS = 140;
       let timelapsTimer = null;
 
       function tickBirth() {
