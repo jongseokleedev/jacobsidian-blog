@@ -221,18 +221,68 @@ const isActive = (path: string) => {
 
     if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
 
-    const MENU_HEIGHT = 220;
+    function getMenuScrollHeight(): number {
+      return menuItems!.scrollHeight;
+    }
 
     menuBtn.addEventListener("click", () => {
       const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
       const next = !isOpen;
       menuBtn.setAttribute("aria-expanded", next ? "true" : "false");
       menuBtn.setAttribute("aria-label", next ? "Close Menu" : "Open Menu");
-      menuItems.style.maxHeight = next ? `${MENU_HEIGHT}px` : "0";
+      menuItems.style.maxHeight = next ? `${getMenuScrollHeight()}px` : "0";
       menuItems.style.opacity = next ? "1" : "0";
       menuIcon.classList.toggle("hidden", next);
       closeIcon.classList.toggle("hidden", !next);
     }, { signal: controller.signal });
+
+    // 서브카테고리 아코디언 토글
+    document.querySelectorAll<HTMLButtonElement>(".mobile-cat-toggle").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.target!;
+        const wrap = document.getElementById(`mobile-sub-wrap-${key}`);
+        const svg = btn.querySelector("svg");
+        if (!wrap) return;
+        const isOpen = btn.getAttribute("aria-expanded") === "true";
+        if (isOpen) {
+          btn.setAttribute("aria-expanded", "false");
+          svg?.classList.remove("rotate-90");
+          wrap.style.maxHeight = "0";
+        } else {
+          // 다른 열린 아코디언 닫기
+          document.querySelectorAll<HTMLButtonElement>(".mobile-cat-toggle[aria-expanded='true']").forEach(other => {
+            if (other === btn) return;
+            const otherKey = other.dataset.target!;
+            const otherWrap = document.getElementById(`mobile-sub-wrap-${otherKey}`);
+            other.setAttribute("aria-expanded", "false");
+            other.querySelector("svg")?.classList.remove("rotate-90");
+            if (otherWrap) otherWrap.style.maxHeight = "0";
+          });
+          btn.setAttribute("aria-expanded", "true");
+          svg?.classList.add("rotate-90");
+          const inner = wrap.querySelector("ul");
+          wrap.style.maxHeight = inner ? `${inner.scrollHeight + 8}px` : "200px";
+        }
+        // 메뉴 전체 높이 재계산
+        setTimeout(() => {
+          if (menuItems && menuBtn.getAttribute("aria-expanded") === "true") {
+            menuItems.style.maxHeight = `${getMenuScrollHeight()}px`;
+          }
+        }, 10);
+      }, { signal: controller.signal });
+    });
+
+    // 서브카테고리 링크 클릭 시 메뉴 닫기
+    document.querySelectorAll<HTMLAnchorElement>(".mobile-cat-item a[href]").forEach(link => {
+      link.addEventListener("click", () => {
+        menuBtn.setAttribute("aria-expanded", "false");
+        menuBtn.setAttribute("aria-label", "Open Menu");
+        menuItems.style.maxHeight = "0";
+        menuItems.style.opacity = "0";
+        menuIcon.classList.remove("hidden");
+        closeIcon.classList.add("hidden");
+      }, { signal: controller.signal });
+    });
   }
 
   function syncThemeButtons() {
