@@ -13,8 +13,18 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
 <aside
   id="left-rail"
   class="hidden lg:block border-r border-border shrink-0"
-  style="width:232px; position:sticky; top:0; height:calc(100vh - 56px); overflow:hidden; transition:width 220ms ease; align-self:flex-start;"
+  style="width:232px; position:sticky; top:0; height:calc(100vh - 56px); overflow:visible; transition:width 220ms ease; align-self:flex-start; z-index:10;"
 >
+  <!-- 플로팅 토글 버튼 -->
+  <button
+    id="toggle-left-rail"
+    class="hidden lg:flex items-center justify-center absolute z-20 rounded-full border border-border bg-background hover:bg-muted hover:text-accent transition-colors"
+    style="width:20px; height:20px; top:20px; right:-10px; color:var(--fg-faint); box-shadow:0 1px 4px rgba(0,0,0,0.15);"
+    aria-label="왼쪽 사이드바 접기/펼치기"
+  >
+    <svg id="toggle-left-icon" class="size-2.5 transition-transform duration-220" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+<div style="height:100%; overflow:hidden;">
 <div style="width:232px; height:100%; overflow-y:auto; padding:28px 24px 28px 28px;" class="flex flex-col">
   <!-- Home -->
   <a
@@ -131,6 +141,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     <p class="bd-overline mb-2">Pinned</p>
     <ul id="pinned-list" class="flex flex-col gap-2"></ul>
   </div>
+</div>
 </div>
 </aside>
 

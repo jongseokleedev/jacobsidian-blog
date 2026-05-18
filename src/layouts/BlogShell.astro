@@ -57,16 +57,6 @@ const {
   <div id="shell-body" class="flex flex-1 min-h-0">
     <Sidebar {activeCategory} {activeTopic} {activePage} />
 
-    <!-- 좌측 토글 탭 -->
-    <button
-      id="toggle-left-rail"
-      class="hidden lg:flex items-center justify-center shrink-0 border-r border-border bg-background hover:text-accent hover:bg-muted/40 transition-colors"
-      style="width:14px; position:sticky; top:0; height:calc(100vh - 56px); align-self:flex-start; color:var(--fg-faint); z-index:10;"
-      aria-label="왼쪽 사이드바 접기/펼치기"
-    >
-      <svg id="toggle-left-icon" class="size-2.5 transition-transform duration-220" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-
     <main
       id="main-content"
       transition:name="main-content"
@@ -83,16 +73,6 @@ const {
         <slot />
       )}
     </main>
-
-    <!-- 우측 토글 탭 -->
-    <button
-      id="toggle-right-rail"
-      class="hidden lg:flex items-center justify-center shrink-0 border-l border-border bg-background hover:text-accent hover:bg-muted/40 transition-colors"
-      style="width:14px; position:sticky; top:0; height:calc(100vh - 56px); align-self:flex-start; color:var(--fg-faint); z-index:10;"
-      aria-label="오른쪽 사이드바 접기/펼치기"
-    >
-      <svg id="toggle-right-icon" class="size-2.5 transition-transform duration-220" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
 
     <RightRail
       variant={rail}

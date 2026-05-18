@@ -81,8 +81,18 @@ const postUrl = (post: (typeof allPosts)[number]) => {
 <aside
   id="right-rail"
   class="hidden lg:block border-l border-border shrink-0"
-  style="width:260px; position:sticky; top:0; height:calc(100vh - 56px); overflow:hidden; transition:width 220ms ease; align-self:flex-start;"
+  style="width:260px; position:sticky; top:0; height:calc(100vh - 56px); overflow:visible; transition:width 220ms ease; align-self:flex-start; z-index:10;"
 >
+  <!-- 플로팅 토글 버튼 -->
+  <button
+    id="toggle-right-rail"
+    class="hidden lg:flex items-center justify-center absolute z-20 rounded-full border border-border bg-background hover:bg-muted hover:text-accent transition-colors"
+    style="width:20px; height:20px; top:20px; left:-10px; color:var(--fg-faint); box-shadow:0 1px 4px rgba(0,0,0,0.15);"
+    aria-label="오른쪽 사이드바 접기/펼치기"
+  >
+    <svg id="toggle-right-icon" class="size-2.5 transition-transform duration-220" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+<div style="height:100%; overflow:hidden;">
 <div style="width:260px; height:100%; overflow-y:auto; padding:28px 24px; gap:26px;" class="flex flex-col">
   {variant === "discovery" && (
     <>
@@ -287,6 +297,7 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       )}
     </>
   )}
+</div>
 </div>
 </aside>
 
