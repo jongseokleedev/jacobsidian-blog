@@ -144,6 +144,16 @@
       ]
     },
     {
+      "id": "20260210-2216",
+      "title": "개발 일정 관리에 대한 단상",
+      "url": "/tech/work/20260210-2216",
+      "type": "post",
+      "category": "tech-work",
+      "tags": [
+        "post"
+      ]
+    },
+    {
       "id": "20260513-1350",
       "title": "왜 AI 시대의 협업 도구는 코드 기반이어야 하는가",
       "url": "/tech/it/20260513-1350",
@@ -553,6 +563,16 @@
       "type": "wikilink"
     },
     {
+      "source": "20240315-1014",
+      "target": "20260210-2216",
+      "type": "wikilink"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "20260210-2216",
+      "type": "wikilink"
+    },
+    {
       "source": "20240630-2308",
       "target": "20250117-2304",
       "type": "wikilink"
@@ -565,6 +585,11 @@
     {
       "source": "20241110-2232",
       "target": "20260514-1549",
+      "type": "wikilink"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "20260210-2216",
       "type": "wikilink"
     },
     {
@@ -603,6 +628,16 @@
       "type": "wikilink"
     },
     {
+      "source": "20260210-2216",
+      "target": "20240315-1014",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260210-2216",
+      "target": "20260513-1350",
+      "type": "wikilink"
+    },
+    {
       "source": "20260513-1350",
       "target": "20260514-1544",
       "type": "wikilink"
@@ -625,6 +660,11 @@
     {
       "source": "20260514-1200",
       "target": "20260517-1323",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "20260210-2216",
       "type": "wikilink"
     },
     {
@@ -919,6 +959,11 @@
     },
     {
       "source": "20250915-1014",
+      "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20260210-2216",
       "target": "tag:post",
       "type": "tag"
     },
