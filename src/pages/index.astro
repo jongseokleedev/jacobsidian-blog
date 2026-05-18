@@ -43,6 +43,7 @@ scoredPosts.sort((a, b) => b.score - a.score);
 const topPosts = scoredPosts.slice(0, 3).map(({ post }) => ({
   href: getPath(post),
   ogSrc: getPath(post) + "og.png",
+  poster: post.data.poster ?? null,
   title: post.data.title,
   description: post.data.description,
   date: new Date(post.data.pubDatetime),
@@ -64,6 +65,7 @@ const latestPosts = posts
   .map(post => ({
     href: getPath(post),
     ogSrc: getPath(post) + "og.png",
+    poster: post.data.poster ?? null,
     title: post.data.title,
     description: post.data.description,
     date: new Date(post.data.pubDatetime),
