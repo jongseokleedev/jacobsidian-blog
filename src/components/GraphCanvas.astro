@@ -623,6 +623,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         for (const n of nodesCopy) birthProgress.set(n.id, 1);
         // Restore catAlphaMap to normal
         for (const n of nodesCopy) catAlphaMap.set(n.id, targetCatAlpha(n));
+        // Fit camera now that all nodes are placed
+        d3.select(canvas).transition().duration(600).call(zoom.transform, computeFitTransform());
         draw();
       }
 
@@ -635,11 +637,9 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         // Hide all nodes
         for (const n of nodesCopy) birthProgress.set(n.id, 0);
 
-        // Camera fit + re-cluster
-        const fit = computeFitTransform();
-        d3.select(canvas).transition().duration(300).call(zoom.transform, fit);
-        const cx = (rect.width / 2 - fit.x) / fit.k;
-        const cy = (rect.height / 2 - fit.y) / fit.k;
+        // Re-cluster to canvas center (no camera transition yet — fit happens at the end)
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
         for (const n of nodesCopy) {
           n.fx = null; n.fy = null;
           n.x = cx + (Math.random() - 0.5) * 20;
@@ -647,6 +647,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           n.vx = 0; n.vy = 0;
         }
         pinnedNodes.clear();
+        // Reset camera to identity so simulation spreads visibly
+        d3.select(canvas).call(zoom.transform, d3.zoomIdentity);
         sim.alpha(1).restart();
 
         let i = 0;
