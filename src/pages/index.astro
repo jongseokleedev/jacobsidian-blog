@@ -126,26 +126,26 @@ const latestPosts = posts
       <div class="flex gap-2">
         <button
           class="featured-tab active-tab shrink-0 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
-          data-tab="core"
-        >Core</button>
-        <button
-          class="featured-tab shrink-0 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
           data-tab="latest"
         >Latest</button>
-      </div>
-    </div>
-
-    <!-- Core panel -->
-    <div id="featured-core" class="featured-panel">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-        {topPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
+        <button
+          class="featured-tab shrink-0 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
+          data-tab="core"
+        >Core</button>
       </div>
     </div>
 
     <!-- Latest panel -->
-    <div id="featured-latest" class="featured-panel hidden">
+    <div id="featured-latest" class="featured-panel">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
         {latestPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
+      </div>
+    </div>
+
+    <!-- Core panel -->
+    <div id="featured-core" class="featured-panel hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        {topPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
       </div>
     </div>
   </section>
