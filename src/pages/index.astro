@@ -27,6 +27,11 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
   return acc;
 }, {});
 
+function extractFirstImage(body: string): string | null {
+  const m = body.match(/!\[.*?\]\((https?:\/\/[^)]+)\)/);
+  return m ? m[1] : null;
+}
+
 // Featured: top 3 posts by graph connection score
 const scoredPosts = posts.map(post => {
   const outgoing = post.data.links?.length ?? 0;
@@ -43,7 +48,7 @@ scoredPosts.sort((a, b) => b.score - a.score);
 const topPosts = scoredPosts.slice(0, 3).map(({ post }) => ({
   href: getPath(post),
   ogSrc: getPath(post) + "og.png",
-  poster: post.data.poster ?? null,
+  poster: post.data.poster ?? extractFirstImage(post.body ?? "") ?? null,
   title: post.data.title,
   description: post.data.description,
   date: new Date(post.data.pubDatetime),
@@ -65,7 +70,7 @@ const latestPosts = posts
   .map(post => ({
     href: getPath(post),
     ogSrc: getPath(post) + "og.png",
-    poster: post.data.poster ?? null,
+    poster: post.data.poster ?? extractFirstImage(post.body ?? "") ?? null,
     title: post.data.title,
     description: post.data.description,
     date: new Date(post.data.pubDatetime),
