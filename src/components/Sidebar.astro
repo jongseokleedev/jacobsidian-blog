@@ -185,11 +185,6 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     wrap.style.maxHeight = "0";
   }
 
-  function getOpenKey(): string | null {
-    const btn = document.querySelector<HTMLButtonElement>(".sidebar-toggle[aria-expanded='true']");
-    return btn?.dataset.target ?? null;
-  }
-
   function initSidebar() {
     const sig = { signal: controller.signal };
 
@@ -201,26 +196,8 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
         if (isOpen) {
           closeCategory(key);
         } else {
-          const current = getOpenKey();
-          if (current && current !== key) closeCategory(current);
           openCategory(key);
         }
-      }, sig);
-    });
-
-    // Parent category links — animate accordion, then navigate
-    document.querySelectorAll<HTMLAnchorElement>(".sidebar-category > div > a").forEach(link => {
-      link.addEventListener("click", e => {
-        const catDiv = link.closest<HTMLElement>(".sidebar-category");
-        const key = catDiv?.dataset.parent ?? "";
-        if (!key) return;
-        const current = getOpenKey();
-        if (!current || current === key) return; // nothing to animate
-        e.preventDefault();
-        closeCategory(current);
-        openCategory(key);
-        const href = link.getAttribute("href")!;
-        setTimeout(() => { window.location.href = href; }, 160);
       }, sig);
     });
 

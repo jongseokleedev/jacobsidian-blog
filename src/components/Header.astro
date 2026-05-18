@@ -254,15 +254,6 @@ const isActive = (path: string) => {
             }
           }, 230);
         } else {
-          // 다른 열린 아코디언 닫기
-          document.querySelectorAll<HTMLButtonElement>(".mobile-cat-toggle[aria-expanded='true']").forEach(other => {
-            if (other === btn) return;
-            const otherKey = other.dataset.target!;
-            const otherWrap = document.getElementById(`mobile-sub-wrap-${otherKey}`);
-            other.setAttribute("aria-expanded", "false");
-            other.querySelector("svg")?.classList.remove("rotate-90");
-            if (otherWrap) otherWrap.style.maxHeight = "0";
-          });
           btn.setAttribute("aria-expanded", "true");
           svg?.classList.add("rotate-90");
           const inner = wrap.querySelector("ul");
