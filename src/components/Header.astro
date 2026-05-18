@@ -165,10 +165,11 @@ const isActive = (path: string) => {
         <a
           href="/about"
           class:list={[
-            "pl-[22px] pr-2 py-2.5 text-sm font-medium rounded transition-colors hover:text-accent",
+            "flex items-center gap-2 px-2 py-2.5 text-sm font-medium rounded transition-colors hover:text-accent",
             isActive("/about") ? "text-accent" : "",
           ]}
         >
+          <span class="w-1.5 h-1.5 rounded-full shrink-0 opacity-0" aria-hidden="true" />
           About
         </a>
       </nav>
