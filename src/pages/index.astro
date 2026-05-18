@@ -47,7 +47,6 @@ const scoredPosts = posts.map(post => {
 scoredPosts.sort((a, b) => b.score - a.score);
 const topPosts = scoredPosts.slice(0, 3).map(({ post }) => ({
   href: getPath(post),
-  ogSrc: getPath(post) + "og.png",
   poster: post.data.poster ?? extractFirstImage(post.body ?? "") ?? null,
   title: post.data.title,
   description: post.data.description,
