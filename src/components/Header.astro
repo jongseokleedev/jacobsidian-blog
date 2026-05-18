@@ -7,6 +7,7 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenu from "@/assets/icons/IconMenu.svg";
 import Logo from "./Logo.astro";
 import { SITE } from "@/config";
+import { PARENTS } from "@/utils/getCategories";
 
 const { pathname } = Astro.url;
 
@@ -102,15 +103,75 @@ const isActive = (path: string) => {
     </div>
 
     <!-- 모바일 드롭다운 메뉴 -->
-    <div id="menu-items" class="overflow-hidden" style="max-height: 0; transition: max-height 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0;">
-      <ul class="pb-4 px-6 flex flex-col gap-1 sm:hidden
-        [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-2.5 [&>li>a]:text-sm [&>li>a]:font-medium [&>li>a]:hover:text-accent">
-        <li><a href="/essay"   class:list={{ "active-nav": isActive("/essay") }}>Essay</a></li>
-        <li><a href="/tech"    class:list={{ "active-nav": isActive("/tech") }}>Tech</a></li>
-        <li><a href="/review"  class:list={{ "active-nav": isActive("/review") }}>Review</a></li>
-        <li><a href="/fiction" class:list={{ "active-nav": isActive("/fiction") }}>Fiction</a></li>
-        <li><a href="/about"   class:list={{ "active-nav": isActive("/about") }}>About</a></li>
-      </ul>
+    <div id="menu-items" class="overflow-hidden sm:hidden" style="max-height: 0; transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0;">
+      <nav class="pb-4 px-4 flex flex-col">
+        {Object.entries(PARENTS).map(([parentKey, parentMeta]) => {
+          const isParentActive = isActive(`/${parentKey}`);
+          return (
+            <div class="mobile-cat-item" data-parent={parentKey}>
+              <div class="flex items-center">
+                <a
+                  href={`/${parentKey}`}
+                  class:list={[
+                    "flex-1 flex items-center gap-2 px-2 py-2.5 text-sm font-medium rounded transition-colors hover:text-accent",
+                    isParentActive ? "text-accent" : "",
+                  ]}
+                >
+                  <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${parentMeta.color}`} />
+                  {parentMeta.label}
+                </a>
+                <button
+                  class="mobile-cat-toggle flex items-center justify-center rounded hover:text-accent transition-colors shrink-0"
+                  style="width:40px; height:40px; color: var(--fg-faint);"
+                  data-target={parentKey}
+                  aria-expanded={isParentActive ? "true" : "false"}
+                  aria-label={`${parentMeta.label} 서브카테고리 열기`}
+                >
+                  <svg
+                    class:list={["size-3.5 transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  >
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </button>
+              </div>
+              <div
+                id={`mobile-sub-wrap-${parentKey}`}
+                class="overflow-hidden"
+                style={`max-height: ${isParentActive ? "200px" : "0"}; transition: max-height 220ms cubic-bezier(0.4, 0, 0.2, 1);`}
+              >
+                <ul class="ml-4 mb-1 flex flex-col border-l border-border">
+                  {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => (
+                    <li>
+                      <a
+                        href={`/${parentKey}/${subKey}`}
+                        class:list={[
+                          "block text-[13px] py-2 pl-4 rounded-r transition-colors hover:text-accent",
+                          isActive(`/${parentKey}/${subKey}`)
+                            ? "text-accent font-medium"
+                            : "text-[color:var(--fg-mute)]",
+                        ]}
+                      >
+                        {subMeta.label}
+                        <span class="text-[11px] opacity-50 ml-1">{subMeta.desc}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          );
+        })}
+        <a
+          href="/about"
+          class:list={[
+            "px-2 py-2.5 text-sm font-medium rounded transition-colors hover:text-accent",
+            isActive("/about") ? "text-accent" : "",
+          ]}
+        >
+          About
+        </a>
+      </nav>
     </div>
   </div>
 </header>
