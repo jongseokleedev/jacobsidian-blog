@@ -53,14 +53,7 @@ const topPosts = scoredPosts.slice(0, 10).map(({ post }) => ({
 }));
 
 // Featured: latest 1 post per unique parent category, max 3
-const seenParents = new Set<string>();
 const latestPosts = posts
-  .filter(post => {
-    const { parent } = parseCategory(post.data.category);
-    if (seenParents.has(parent)) return false;
-    seenParents.add(parent);
-    return true;
-  })
   .slice(0, 10)
   .map(post => ({
     href: getPath(post),
@@ -250,16 +243,18 @@ const latestPosts = posts
     color: var(--accent);
   }
 
-  /* ── Carousel: full-bleed, left-aligned start ── */
-  /* --carousel-inset: distance from viewport left edge to content left edge
-     = max((100vw - 680px) / 2, 0px) + 16px (px-4) */
+  /* ── Carousel: main-area full-bleed, left-aligned start ── */
+  /* Matches discovery-shell padding: 20px mobile, 28px sm+ */
   .featured-carousel {
-    --carousel-inset: calc(max((100vw - 680px) / 2, 0px) + 16px);
+    --carousel-inset: 20px;
     margin-left: calc(-1 * var(--carousel-inset));
-    width: 100vw;
+    width: calc(100% + var(--carousel-inset) * 2);
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+  }
+  @media (min-width: 640px) {
+    .featured-carousel { --carousel-inset: 28px; }
   }
   .featured-carousel::-webkit-scrollbar {
     display: none;
@@ -275,9 +270,6 @@ const latestPosts = posts
     display: block;
     min-width: var(--carousel-inset);
     flex-shrink: 0;
-  }
-  .scroll-snap-align-start {
-    scroll-snap-align: start;
   }
 </style>
 
