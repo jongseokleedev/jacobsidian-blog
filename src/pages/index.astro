@@ -157,12 +157,33 @@ const latestPosts = posts
   <!-- Archives -->
   {allItems.length > 0 && (
     <section class="pt-10">
-      <div class="flex items-baseline justify-between mb-3">
+      <div class="flex items-start justify-between mb-4">
         <div>
           <div class="bd-overline mb-1">Latest</div>
           <h2 class="text-base font-semibold tracking-tight">Archives</h2>
         </div>
-        <span id="archives-count" class="font-mono text-[11px]" style="color: var(--fg-faint);">{total} records</span>
+        <span id="archives-count" class="font-mono text-[11px] mt-1" style="color: var(--fg-faint);">{total} records</span>
+      </div>
+
+      <div id="archives-filter-row" class="flex gap-2 flex-wrap mb-4">
+        <button
+          class="archives-filter-pill active-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+          data-parent="all"
+        >
+          All
+          <span class="font-mono text-[11px] opacity-50">{total}</span>
+        </button>
+        {Object.entries(PARENTS).map(([parentKey, parentMeta]) => (
+          <button
+            class="archives-filter-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+            data-parent={parentKey}
+            style={`--pill-color:${parentMeta.color}`}
+          >
+            <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+            {parentMeta.label}
+            <span class="font-mono text-[11px] opacity-50">{parentCounts[parentKey] ?? 0}</span>
+          </button>
+        ))}
       </div>
 
       <ul id="post-list" class="archives-list">
@@ -240,6 +261,7 @@ const latestPosts = posts
 
     const PAGE = 10;
     let activeFilter = "all";
+    let activeParent = "all";
     let shown = PAGE;
     let loading = false;
     let observer: IntersectionObserver | null = null;
@@ -248,9 +270,10 @@ const latestPosts = posts
 
     function filteredItems() {
       return [...items].filter(el => {
-        if (activeFilter === "all") return true;
         const cat = el.dataset.category ?? "";
-        return cat === activeFilter || cat.startsWith(`${activeFilter}-`);
+        const matchGraph = activeFilter === "all" || cat === activeFilter || cat.startsWith(`${activeFilter}-`);
+        const matchParent = activeParent === "all" || cat.startsWith(`${activeParent}-`);
+        return matchGraph && matchParent;
       });
     }
 
@@ -341,6 +364,18 @@ const latestPosts = posts
 
     pills.forEach(pill => {
       pill.addEventListener("click", () => applyFilter(pill.dataset.cat ?? "all"));
+    });
+
+    const archivesPills = document.querySelectorAll<HTMLButtonElement>(".archives-filter-pill");
+    archivesPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        activeParent = pill.dataset.parent ?? "all";
+        shown = PAGE;
+        showItems();
+        archivesPills.forEach(p => p.classList.toggle("active-pill", p.dataset.parent === activeParent));
+        const cnt = filteredItems().length;
+        if (countEl) countEl.textContent = `${cnt} records`;
+      });
     });
 
     setupObserver();
