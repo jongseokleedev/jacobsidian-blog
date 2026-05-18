@@ -248,6 +248,11 @@ const isActive = (path: string) => {
           btn.setAttribute("aria-expanded", "false");
           svg?.classList.remove("rotate-90");
           wrap.style.maxHeight = "0";
+          setTimeout(() => {
+            if (menuItems && menuBtn.getAttribute("aria-expanded") === "true") {
+              menuItems.style.maxHeight = `${getMenuScrollHeight()}px`;
+            }
+          }, 230);
         } else {
           // 다른 열린 아코디언 닫기
           document.querySelectorAll<HTMLButtonElement>(".mobile-cat-toggle[aria-expanded='true']").forEach(other => {
@@ -261,14 +266,16 @@ const isActive = (path: string) => {
           btn.setAttribute("aria-expanded", "true");
           svg?.classList.add("rotate-90");
           const inner = wrap.querySelector("ul");
-          wrap.style.maxHeight = inner ? `${inner.scrollHeight + 8}px` : "200px";
+          const innerH = inner ? inner.scrollHeight + 8 : 200;
+          wrap.style.maxHeight = `${innerH}px`;
+          // 외부 높이 즉시 확장 후 transition 완료 시점에 정확한 값으로 맞춤
+          if (menuItems) menuItems.style.maxHeight = `${getMenuScrollHeight() + innerH}px`;
+          setTimeout(() => {
+            if (menuItems && menuBtn.getAttribute("aria-expanded") === "true") {
+              menuItems.style.maxHeight = `${getMenuScrollHeight()}px`;
+            }
+          }, 230);
         }
-        // 메뉴 전체 높이 재계산
-        setTimeout(() => {
-          if (menuItems && menuBtn.getAttribute("aria-expanded") === "true") {
-            menuItems.style.maxHeight = `${getMenuScrollHeight()}px`;
-          }
-        }, 10);
       }, { signal: controller.signal });
     });
 
