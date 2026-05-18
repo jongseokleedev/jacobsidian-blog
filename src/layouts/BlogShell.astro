@@ -103,8 +103,7 @@ const {
       if (!animate) leftRail!.style.transition = "none";
       leftRail!.style.width = open ? LEFT_W : "0px";
       if (!animate) requestAnimationFrame(() => { leftRail!.style.transition = ""; });
-      // rotate chevron: open=pointing left(←), closed=pointing right(→)
-      leftIcon?.style.setProperty("transform", open ? "" : "rotate(180deg)");
+      leftBtn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
       localStorage.setItem("jb:sidebar-left", open ? "open" : "closed");
     }
 
@@ -112,7 +111,7 @@ const {
       if (!animate) rightRail!.style.transition = "none";
       rightRail!.style.width = open ? RIGHT_W : "0px";
       if (!animate) requestAnimationFrame(() => { rightRail!.style.transition = ""; });
-      rightIcon?.style.setProperty("transform", open ? "" : "rotate(180deg)");
+      rightBtn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
       localStorage.setItem("jb:sidebar-right", open ? "open" : "closed");
     }
 
