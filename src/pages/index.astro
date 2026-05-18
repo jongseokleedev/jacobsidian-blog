@@ -113,6 +113,94 @@ const latestPosts = posts
   </section>
 
 
+  <!-- Featured -->
+  <section class="py-10 border-b border-border">
+    <div class="flex items-end justify-between mb-5">
+      <div>
+        <div class="bd-overline mb-1">Curated</div>
+        <h2 class="text-base font-semibold tracking-tight">Featured</h2>
+      </div>
+      <div class="flex gap-2">
+        <button
+          class="featured-tab active-tab shrink-0 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
+          data-tab="core"
+        >Core</button>
+        <button
+          class="featured-tab shrink-0 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
+          data-tab="latest"
+        >Latest</button>
+      </div>
+    </div>
+
+    <!-- Core panel -->
+    <div id="featured-core" class="featured-panel">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        {topPosts.map((item, i) => (
+          <a
+            href={item.href}
+            class={`group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors${i === 2 ? " hidden lg:flex" : ""}`}
+          >
+            <div class="aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${item.color}22, ${item.color}08)`}>
+              <img
+                src={item.ogSrc}
+                alt={item.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.style.display='none'"
+              />
+            </div>
+            <div class="flex flex-col justify-between flex-1 p-3 gap-2">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-1.5 font-mono text-[11px]" style={`color: ${item.color}`}>
+                  <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
+                  {item.label}
+                </span>
+                <span class="font-mono text-[11px]" style="color: var(--fg-faint);">
+                  {item.date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                </span>
+              </div>
+              <p class="font-semibold text-[14px] line-clamp-2 group-hover:text-accent transition-colors">{item.title}</p>
+              <p class="text-[12.5px] line-clamp-2 min-h-[2.5em]" style="color: var(--fg-mute);">{item.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Latest panel -->
+    <div id="featured-latest" class="featured-panel hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        {latestPosts.map((item, i) => (
+          <a
+            href={item.href}
+            class={`group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors${i === 2 ? " hidden lg:flex" : ""}`}
+          >
+            <div class="aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${item.color}22, ${item.color}08)`}>
+              <img
+                src={item.ogSrc}
+                alt={item.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.style.display='none'"
+              />
+            </div>
+            <div class="flex flex-col justify-between flex-1 p-3 gap-2">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-1.5 font-mono text-[11px]" style={`color: ${item.color}`}>
+                  <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
+                  {item.label}
+                </span>
+                <span class="font-mono text-[11px]" style="color: var(--fg-faint);">
+                  {item.date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                </span>
+              </div>
+              <p class="font-semibold text-[14px] line-clamp-2 group-hover:text-accent transition-colors">{item.title}</p>
+              <p class="text-[12.5px] line-clamp-2 min-h-[2.5em]" style="color: var(--fg-mute);">{item.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- Archives -->
   {allItems.length > 0 && (
     <section>
@@ -180,6 +268,10 @@ const latestPosts = posts
     display: inline-block;
   }
   .active-pill {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .active-tab {
     border-color: var(--accent);
     color: var(--accent);
   }
@@ -302,12 +394,25 @@ const latestPosts = posts
     applyFilter("all");
   }
 
+  function initFeaturedTabs() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>(".featured-tab");
+    const panels = document.querySelectorAll<HTMLElement>(".featured-panel");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.tab;
+        tabs.forEach(t => t.classList.toggle("active-tab", t.dataset.tab === target));
+        panels.forEach(p => p.classList.toggle("hidden", p.id !== `featured-${target}`));
+      });
+    });
+  }
+
   function initIndexPage() {
     const mainContent = document.querySelector("#main-content") as HTMLElement | null;
     if (mainContent) {
       sessionStorage.setItem("backUrl", "/");
     }
     initCatFilter();
+    initFeaturedTabs();
   }
 
   document.addEventListener("astro:page-load", initIndexPage);
