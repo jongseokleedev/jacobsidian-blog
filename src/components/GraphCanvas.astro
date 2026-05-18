@@ -494,7 +494,23 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     if (!isMini) {
       fitBtn?.addEventListener("click", () => {
-        d3.select(canvas).transition().duration(400).call(zoom.transform, computeFitTransform());
+        const fit = computeFitTransform();
+        // Animate camera to fit view
+        d3.select(canvas).transition().duration(400).call(zoom.transform, fit);
+
+        // Unpin all nodes, re-cluster to center, restart simulation
+        const cx = (rect.width / 2 - fit.x) / fit.k;
+        const cy = (rect.height / 2 - fit.y) / fit.k;
+        for (const n of nodesCopy) {
+          n.fx = null;
+          n.fy = null;
+          n.x = cx + (Math.random() - 0.5) * 20;
+          n.y = cy + (Math.random() - 0.5) * 20;
+          n.vx = 0;
+          n.vy = 0;
+        }
+        pinnedNodes.clear();
+        sim.alpha(1).restart();
       });
     }
 
