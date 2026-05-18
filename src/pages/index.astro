@@ -29,10 +29,11 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
 // Featured: top 3 posts by graph connection score
 const scoredPosts = posts.map(post => {
   const outgoing = post.data.links?.length ?? 0;
+  const postBasename = post.id.split("/").pop()?.replace(/\.md$/, "") ?? post.id;
   const incoming = posts.filter(other =>
     other.id !== post.id &&
     (other.data.links ?? []).some(
-      l => l === post.id || l === post.data.title
+      l => l === postBasename || l === post.data.title
     )
   ).length;
   return { post, score: outgoing + incoming };
