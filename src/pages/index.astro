@@ -25,6 +25,50 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
   acc[parent] = (acc[parent] ?? 0) + 1;
   return acc;
 }, {});
+
+// Featured: top 3 posts by graph connection score
+const scoredPosts = posts.map(post => {
+  const outgoing = post.data.links?.length ?? 0;
+  const incoming = posts.filter(other =>
+    other.id !== post.id &&
+    (other.data.links ?? []).some(
+      l => l === post.id || l === post.data.title
+    )
+  ).length;
+  return { post, score: outgoing + incoming };
+});
+scoredPosts.sort((a, b) => b.score - a.score);
+const topPosts = scoredPosts.slice(0, 3).map(({ post }) => ({
+  href: getPath(post),
+  ogSrc: getPath(post) + "og.png",
+  title: post.data.title,
+  description: post.data.description,
+  date: new Date(post.data.pubDatetime),
+  category: post.data.category,
+  label: getCategoryMeta(post.data.category)?.label ?? post.data.category,
+  color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
+}));
+
+// Featured: latest 1 post per unique parent category, max 3
+const seenParents = new Set<string>();
+const latestPosts = posts
+  .filter(post => {
+    const { parent } = parseCategory(post.data.category);
+    if (seenParents.has(parent)) return false;
+    seenParents.add(parent);
+    return true;
+  })
+  .slice(0, 3)
+  .map(post => ({
+    href: getPath(post),
+    ogSrc: getPath(post) + "og.png",
+    title: post.data.title,
+    description: post.data.description,
+    date: new Date(post.data.pubDatetime),
+    category: post.data.category,
+    label: getCategoryMeta(post.data.category)?.label ?? post.data.category,
+    color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
+  }));
 ---
 
 <BlogShell mode="discovery" rail="discovery" activePage="home" data-layout="index">
