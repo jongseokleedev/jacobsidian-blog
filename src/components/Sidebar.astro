@@ -111,6 +111,9 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
                     ]}
                   >
                     {subMeta.label}
+                    {subMeta.desc && (
+                      <span class="block text-[11px] leading-tight mt-0.5" style="color: var(--fg-faint);">{subMeta.desc}</span>
+                    )}
                   </a>
                 </li>
               );
