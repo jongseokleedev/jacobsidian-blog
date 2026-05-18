@@ -33,8 +33,8 @@ export const PARENTS: Record<string, ParentMeta> = {
     label: "Essay",
     color: "var(--cat-essay)",
     subs: {
-      thought: { label: "Thought", desc: "사유의 파편", color: "var(--cat-essay)", topics: [] },
-      journal: { label: "Journal", desc: "일상의 단면", color: "var(--cat-essay)", topics: [] },
+      thought: { label: "Thought", desc: "생각의 조각들", color: "var(--cat-essay)", topics: [] },
+      journal: { label: "Journal", desc: "일상의 기록", color: "var(--cat-essay)", topics: [] },
     },
   },
   tech: {
@@ -59,7 +59,7 @@ export const PARENTS: Record<string, ParentMeta> = {
     color: "var(--cat-fiction)",
     subs: {
       novel: { label: "Novel", desc: "언젠가 완성될 소설", color: "var(--cat-fiction)", topics: [] },
-      tales: { label: "Tales", desc: "완결된 세계", color: "var(--cat-fiction)", topics: [] },
+      tales: { label: "Tales", desc: "짧은 이야기", color: "var(--cat-fiction)", topics: [] },
     },
   },
 };
