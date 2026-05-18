@@ -54,13 +54,13 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
         <!-- Toggle button + parent link -->
         <div class="flex items-center gap-1">
           <button
-            class="sidebar-toggle p-1 rounded hover:text-accent transition-colors shrink-0"
+            class="sidebar-toggle flex items-center justify-center rounded hover:text-accent transition-colors shrink-0"
+            style="width: 28px; height: 28px; color: var(--fg-faint);"
             data-target={parentKey}
             aria-expanded={isParentActive ? "true" : "false"}
-            style="color: var(--fg-faint);"
           >
             <svg
-              class:list={["size-[9px] transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
+              class:list={["size-3 transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
               xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             >
               <polyline points="9 18 15 12 9 6"/>
