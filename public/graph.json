@@ -39,7 +39,11 @@
       "url": "/review/cinema/20230817-2136",
       "type": "post",
       "category": "review-cinema",
-      "tags": []
+      "tags": [
+        "영화",
+        "감상",
+        "삶"
+      ]
     },
     {
       "id": "20230901-1323",
@@ -58,7 +62,11 @@
       "url": "/review/book/20230920-2210",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "심리",
+        "사회"
+      ]
     },
     {
       "id": "20240315-1014",
@@ -66,7 +74,11 @@
       "url": "/tech/work/20240315-1014",
       "type": "post",
       "category": "tech-work",
-      "tags": []
+      "tags": [
+        "커리어",
+        "개발",
+        "조직"
+      ]
     },
     {
       "id": "20240630-2308",
@@ -129,7 +141,11 @@
       "url": "/tech/work/20250515-1013",
       "type": "post",
       "category": "tech-work",
-      "tags": []
+      "tags": [
+        "커리어",
+        "프로덕트",
+        "브랜딩"
+      ]
     },
     {
       "id": "20250915-1014",
@@ -159,7 +175,11 @@
       "url": "/tech/it/20260513-1350",
       "type": "post",
       "category": "tech-it",
-      "tags": []
+      "tags": [
+        "AI",
+        "개발",
+        "커리어"
+      ]
     },
     {
       "id": "20260513-1439",
@@ -190,7 +210,11 @@
       "url": "/tech/it/20260514-1200",
       "type": "post",
       "category": "tech-it",
-      "tags": []
+      "tags": [
+        "개발",
+        "스마트워치",
+        "애플"
+      ]
     },
     {
       "id": "20260514-1544",
@@ -198,7 +222,11 @@
       "url": "/review/book/20260514-1544",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "AI",
+        "사회"
+      ]
     },
     {
       "id": "20260514-1548",
@@ -232,7 +260,11 @@
       "url": "/review/cinema/20260514-1919",
       "type": "post",
       "category": "review-cinema",
-      "tags": []
+      "tags": [
+        "영화",
+        "감상",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2111-2",
@@ -240,7 +272,11 @@
       "url": "/review/book/20260514-2111-2",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "사회",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2111",
@@ -248,7 +284,11 @@
       "url": "/review/book/20260514-2111",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "에세이",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2112-2",
@@ -256,7 +296,11 @@
       "url": "/review/book/20260514-2112-2",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "철학",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2112-3",
@@ -264,7 +308,11 @@
       "url": "/review/book/20260514-2112-3",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "비즈니스",
+        "커리어"
+      ]
     },
     {
       "id": "20260514-2112",
@@ -272,7 +320,11 @@
       "url": "/review/book/20260514-2112",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "심리",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2113-2",
@@ -280,7 +332,11 @@
       "url": "/review/book/20260514-2113-2",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "철학",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2113-3",
@@ -288,7 +344,11 @@
       "url": "/review/book/20260514-2113-3",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "AI",
+        "사회"
+      ]
     },
     {
       "id": "20260514-2113",
@@ -296,7 +356,11 @@
       "url": "/review/book/20260514-2113",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "에세이",
+        "삶"
+      ]
     },
     {
       "id": "20260514-2114",
@@ -315,7 +379,11 @@
       "url": "/tech/it/20260515-1013-2",
       "type": "post",
       "category": "tech-it",
-      "tags": []
+      "tags": [
+        "블록체인",
+        "비즈니스",
+        "개발"
+      ]
     },
     {
       "id": "20260515-1013",
@@ -323,7 +391,11 @@
       "url": "/essay/thought/20260515-1013",
       "type": "post",
       "category": "essay-thought",
-      "tags": []
+      "tags": [
+        "커리어",
+        "에세이",
+        "스타트업"
+      ]
     },
     {
       "id": "20260515-1017-2",
@@ -331,7 +403,11 @@
       "url": "/review/book/20260515-1017-2",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "개발",
+        "커리어"
+      ]
     },
     {
       "id": "20260515-1017",
@@ -339,7 +415,11 @@
       "url": "/review/book/20260515-1017",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "문학",
+        "역사"
+      ]
     },
     {
       "id": "20260516-1250-2",
@@ -372,7 +452,11 @@
       "url": "/review/book/20260517-1256",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "사회",
+        "삶"
+      ]
     },
     {
       "id": "20260517-1307",
@@ -388,7 +472,11 @@
       "url": "/review/book/20260517-1323",
       "type": "post",
       "category": "review-book",
-      "tags": []
+      "tags": [
+        "독서",
+        "비즈니스",
+        "애플"
+      ]
     },
     {
       "id": "20260517-1337",
@@ -438,9 +526,30 @@
       "tags": []
     },
     {
-      "id": "tag:개발",
-      "title": "개발",
-      "url": "/tags/개발",
+      "id": "tag:영화",
+      "title": "영화",
+      "url": "/tags/영화",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:감상",
+      "title": "감상",
+      "url": "/tags/감상",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:심리",
+      "title": "심리",
+      "url": "/tags/심리",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:사회",
+      "title": "사회",
+      "url": "/tags/사회",
       "type": "tag",
       "tags": []
     },
@@ -452,9 +561,58 @@
       "tags": []
     },
     {
+      "id": "tag:개발",
+      "title": "개발",
+      "url": "/tags/개발",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:조직",
+      "title": "조직",
+      "url": "/tags/조직",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:프로덕트",
+      "title": "프로덕트",
+      "url": "/tags/프로덕트",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:브랜딩",
+      "title": "브랜딩",
+      "url": "/tags/브랜딩",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:AI",
+      "title": "AI",
+      "url": "/tags/AI",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:에세이",
       "title": "에세이",
       "url": "/tags/에세이",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:스마트워치",
+      "title": "스마트워치",
+      "url": "/tags/스마트워치",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:애플",
+      "title": "애플",
+      "url": "/tags/애플",
       "type": "tag",
       "tags": []
     },
@@ -473,9 +631,37 @@
       "tags": []
     },
     {
-      "id": "tag:AI",
-      "title": "AI",
-      "url": "/tags/AI",
+      "id": "tag:철학",
+      "title": "철학",
+      "url": "/tags/철학",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:비즈니스",
+      "title": "비즈니스",
+      "url": "/tags/비즈니스",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:블록체인",
+      "title": "블록체인",
+      "url": "/tags/블록체인",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:스타트업",
+      "title": "스타트업",
+      "url": "/tags/스타트업",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:역사",
+      "title": "역사",
+      "url": "/tags/역사",
       "type": "tag",
       "tags": []
     },
@@ -490,13 +676,6 @@
       "id": "tag:기술",
       "title": "기술",
       "url": "/tags/기술",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:사회",
-      "title": "사회",
-      "url": "/tags/사회",
       "type": "tag",
       "tags": []
     }
@@ -888,6 +1067,21 @@
       "type": "tag"
     },
     {
+      "source": "20230817-2136",
+      "target": "tag:영화",
+      "type": "tag"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "tag:감상",
+      "type": "tag"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
       "source": "20230901-1323",
       "target": "tag:삶",
       "type": "tag"
@@ -895,6 +1089,36 @@
     {
       "source": "20230901-1323",
       "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "tag:심리",
+      "type": "tag"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20240315-1014",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20240315-1014",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20240315-1014",
+      "target": "tag:조직",
       "type": "tag"
     },
     {
@@ -948,6 +1172,21 @@
       "type": "tag"
     },
     {
+      "source": "20250515-1013",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20250515-1013",
+      "target": "tag:프로덕트",
+      "type": "tag"
+    },
+    {
+      "source": "20250515-1013",
+      "target": "tag:브랜딩",
+      "type": "tag"
+    },
+    {
       "source": "20250915-1014",
       "target": "tag:개발",
       "type": "tag"
@@ -965,6 +1204,21 @@
     {
       "source": "20260210-2216",
       "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1350",
+      "target": "tag:AI",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1350",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1350",
+      "target": "tag:커리어",
       "type": "tag"
     },
     {
@@ -990,6 +1244,36 @@
     {
       "source": "20260513-2148",
       "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "tag:스마트워치",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "tag:애플",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1544",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1544",
+      "target": "tag:AI",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1544",
+      "target": "tag:사회",
       "type": "tag"
     },
     {
@@ -1033,6 +1317,141 @@
       "type": "tag"
     },
     {
+      "source": "20260514-1919",
+      "target": "tag:영화",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "tag:감상",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111-2",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111-2",
+      "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111-2",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-2",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-2",
+      "target": "tag:철학",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-2",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-3",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-3",
+      "target": "tag:비즈니스",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-3",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "tag:심리",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-2",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-2",
+      "target": "tag:철학",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-2",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "tag:AI",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
       "source": "20260514-2114",
       "target": "tag:AI",
       "type": "tag"
@@ -1040,6 +1459,66 @@
     {
       "source": "20260514-2114",
       "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013-2",
+      "target": "tag:블록체인",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013-2",
+      "target": "tag:비즈니스",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013-2",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013",
+      "target": "tag:스타트업",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017-2",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017-2",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017-2",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "tag:문학",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "tag:역사",
       "type": "tag"
     },
     {
@@ -1075,6 +1554,36 @@
     {
       "source": "20260516-1250",
       "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1256",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1256",
+      "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1256",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1323",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1323",
+      "target": "tag:비즈니스",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1323",
+      "target": "tag:애플",
       "type": "tag"
     },
     {
