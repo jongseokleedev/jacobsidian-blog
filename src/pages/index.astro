@@ -114,7 +114,10 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
         ))}
       </ul>
 
-      <div id="load-sentinel" class="h-10 mt-4" aria-hidden="true"></div>
+      <div id="load-sentinel" class="mt-4 flex flex-col items-center gap-1" aria-hidden="true">
+        <div id="load-spinner" class="hidden h-4 w-4 rounded-full border-2 border-border border-t-accent animate-spin"></div>
+        <span id="load-debug" class="font-mono text-[10px]" style="color:var(--fg-faint)"></span>
+      </div>
     </section>
   )}
 </BlogShell>
@@ -149,7 +152,18 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
     const PAGE = 10;
     let activeFilter = "all";
     let shown = PAGE;
+    let loading = false;
     let observer: IntersectionObserver | null = null;
+
+    const spinner = document.getElementById("load-spinner");
+    const debugEl = document.getElementById("load-debug");
+
+    function dbg(msg: string) {
+      const ts = new Date().toISOString().slice(11, 23);
+      // eslint-disable-next-line no-console
+      console.log(`[scroll] ${ts} ${msg}`);
+      if (debugEl) debugEl.textContent = msg;
+    }
 
     function filteredItems() {
       return [...items].filter(el => {
@@ -193,6 +207,7 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
     // 무한 스크롤 시: 새 항목만 append
     function appendItems(prevShown: number) {
       const next = filteredItems().slice(prevShown, shown);
+      dbg(`appending ${next.length} items (${prevShown}→${shown})`);
       next.forEach((el, i) => {
         el.classList.remove("hidden");
         el.style.display = "";
@@ -209,26 +224,38 @@ const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
 
     function loadMore() {
       const total = filteredItems().length;
-      if (shown >= total) return;
+      dbg(`loadMore called — shown=${shown} total=${total} loading=${loading}`);
+      if (loading || shown >= total) {
+        if (shown >= total) dbg("all loaded");
+        return;
+      }
+      loading = true;
+      spinner?.classList.remove("hidden");
+
       const prev = shown;
-      shown += PAGE;
-      appendItems(prev);
-      // sentinel이 여전히 뷰포트 안에 있으면 계속 로드
-      requestAnimationFrame(() => {
-        if (sentinel && sentinel.getBoundingClientRect().top < window.innerHeight + 200) {
-          loadMore();
-        }
-      });
+      shown = Math.min(shown + PAGE, total);
+
+      setTimeout(() => {
+        appendItems(prev);
+        loading = false;
+        spinner?.classList.add("hidden");
+        dbg(`done — shown=${shown}/${total}`);
+      }, 400);
     }
 
     function setupObserver() {
       observer?.disconnect();
       if (!sentinel) return;
       observer = new IntersectionObserver(
-        entries => { if (entries[0].isIntersecting) loadMore(); },
-        { rootMargin: "200px" }
+        entries => {
+          const e = entries[0];
+          dbg(`observer fired — intersecting=${e.isIntersecting} ratio=${e.intersectionRatio.toFixed(2)}`);
+          if (e.isIntersecting) loadMore();
+        },
+        { rootMargin: "0px", threshold: 0 }
       );
       observer.observe(sentinel);
+      dbg("observer attached");
     }
 
     const countEl = document.getElementById("archives-count");
