@@ -37,14 +37,28 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
-      // Display warning inn dev mode
+      // Display warning in dev mode
       if (import.meta.env.DEV) {
-        pageFindSearch.innerHTML = `
-            <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
-              <p><strong>DEV mode Warning! </strong>You need to build the project at least once to see the search results during development.</p>
-              <code class="block bg-black text-white px-2 py-1 rounded">pnpm run build</code>
-            </div>
-          `;
+        const warning = document.createElement("div");
+        warning.className = "bg-muted/75 rounded p-4 space-y-4 mb-4";
+
+        const msg = document.createElement("p");
+        const bold = document.createElement("strong");
+        bold.textContent = "DEV mode Warning! ";
+        msg.appendChild(bold);
+        msg.appendChild(
+          document.createTextNode(
+            "You need to build the project at least once to see the search results during development."
+          )
+        );
+
+        const code = document.createElement("code");
+        code.className = "block bg-black text-white px-2 py-1 rounded";
+        code.textContent = "pnpm run build";
+
+        warning.appendChild(msg);
+        warning.appendChild(code);
+        pageFindSearch.prepend(warning);
       }
 
       // Init pagefind ui

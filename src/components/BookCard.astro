@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
+import { getPostImage } from "@/utils/getPostImage";
 
 type Props = CollectionEntry<"posts"> & { filterTags?: string[] };
 
@@ -10,17 +11,7 @@ const { data, body } = entry;
 const { title, author, ogImage } = data;
 const href = getPath(entry);
 
-// Try ogImage first, then extract first http image URL from body
-const imgSrc = (() => {
-  if (ogImage) {
-    return typeof ogImage === "string" ? ogImage : (ogImage as { src: string }).src;
-  }
-  if (body) {
-    const match = body.match(/!\[.*?\]\((https?:\/\/[^)]+)\)/);
-    if (match) return match[1];
-  }
-  return null;
-})();
+const imgSrc = getPostImage(ogImage, body);
 ---
 
 <li data-tags={JSON.stringify(filterTags ?? [])}>
@@ -32,7 +23,10 @@ const imgSrc = (() => {
       <img
         src={imgSrc}
         alt={title}
+        width="300"
+        height="450"
         class="w-full aspect-[2/3] object-cover"
+        loading="lazy"
       />
     ) : (
       <div class="w-full aspect-[2/3] bg-muted flex items-center justify-center p-4">

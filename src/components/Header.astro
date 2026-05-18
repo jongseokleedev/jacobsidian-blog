@@ -246,6 +246,7 @@ const isActive = (path: string) => {
         const isOpen = btn.getAttribute("aria-expanded") === "true";
         if (isOpen) {
           btn.setAttribute("aria-expanded", "false");
+          btn.setAttribute("aria-label", btn.getAttribute("aria-label")?.replace("닫기", "열기") ?? "");
           svg?.classList.remove("rotate-90");
           wrap.style.maxHeight = "0";
           setTimeout(() => {
@@ -255,6 +256,7 @@ const isActive = (path: string) => {
           }, 230);
         } else {
           btn.setAttribute("aria-expanded", "true");
+          btn.setAttribute("aria-label", btn.getAttribute("aria-label")?.replace("열기", "닫기") ?? "");
           svg?.classList.add("rotate-90");
           const inner = wrap.querySelector("ul");
           const innerH = inner ? inner.scrollHeight + 8 : 200;

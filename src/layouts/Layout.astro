@@ -79,8 +79,11 @@ const structuredData = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
+    <meta property="og:type" content={pubDatetime ? "article" : "website"} />
+    <meta property="og:locale" content="ko_KR" />
 
-    <!-- Article Published/Modified time -->
+    <!-- Article metadata -->
+    {pubDatetime && <meta property="article:author" content={author} />}
     {
       pubDatetime && (
         <meta

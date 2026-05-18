@@ -68,6 +68,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
             style="width: 32px; height: 32px; color: var(--fg-faint);"
             data-target={parentKey}
             aria-expanded={isParentActive ? "true" : "false"}
+            aria-label={`${parentMeta.label} 서브카테고리 열기`}
           >
             <svg
               class:list={["size-3 transition-transform duration-200", isParentActive ? "rotate-90" : ""]}
@@ -172,6 +173,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const ul = document.getElementById(`sub-${key}`);
     if (!btn || !wrap) return;
     btn.setAttribute("aria-expanded", "true");
+    btn.setAttribute("aria-label", btn.getAttribute("aria-label")?.replace("열기", "닫기") ?? "");
     btn.querySelector("svg")?.classList.add("rotate-90");
     wrap.style.maxHeight = ul ? `${ul.scrollHeight + 8}px` : "200px";
   }
@@ -181,6 +183,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     const wrap = document.getElementById(`sub-wrap-${key}`);
     if (!btn || !wrap) return;
     btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", btn.getAttribute("aria-label")?.replace("닫기", "열기") ?? "");
     btn.querySelector("svg")?.classList.remove("rotate-90");
     wrap.style.maxHeight = "0";
   }
