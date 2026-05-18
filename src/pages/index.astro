@@ -5,6 +5,7 @@ import getSortedPosts from "@/utils/getSortedPosts";
 import { getPath } from "@/utils/getPath";
 import { PARENTS, getCategoryMeta, parseCategory } from "@/utils/getCategories";
 import GraphCanvas from "@/components/GraphCanvas.astro";
+import FeaturedCard from "@/components/FeaturedCard.astro";
 
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 const posts = getSortedPosts(allPosts);
@@ -135,68 +136,14 @@ const latestPosts = posts
     <!-- Core panel -->
     <div id="featured-core" class="featured-panel">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-        {topPosts.map((item, i) => (
-          <a
-            href={item.href}
-            class={`group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors${i === 2 ? " hidden lg:flex" : ""}`}
-          >
-            <div class="aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${item.color}22, ${item.color}08)`}>
-              <img
-                src={item.ogSrc}
-                alt={item.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onerror="this.style.display='none'"
-              />
-            </div>
-            <div class="flex flex-col justify-between flex-1 p-3 gap-2">
-              <div class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5 font-mono text-[11px]" style={`color: ${item.color}`}>
-                  <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
-                  {item.label}
-                </span>
-                <span class="font-mono text-[11px]" style="color: var(--fg-faint);">
-                  {item.date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
-                </span>
-              </div>
-              <p class="font-semibold text-[14px] line-clamp-2 group-hover:text-accent transition-colors">{item.title}</p>
-              <p class="text-[12.5px] line-clamp-2 min-h-[2.5em]" style="color: var(--fg-mute);">{item.description}</p>
-            </div>
-          </a>
-        ))}
+        {topPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
       </div>
     </div>
 
     <!-- Latest panel -->
     <div id="featured-latest" class="featured-panel hidden">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-        {latestPosts.map((item, i) => (
-          <a
-            href={item.href}
-            class={`group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors${i === 2 ? " hidden lg:flex" : ""}`}
-          >
-            <div class="aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${item.color}22, ${item.color}08)`}>
-              <img
-                src={item.ogSrc}
-                alt={item.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onerror="this.style.display='none'"
-              />
-            </div>
-            <div class="flex flex-col justify-between flex-1 p-3 gap-2">
-              <div class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5 font-mono text-[11px]" style={`color: ${item.color}`}>
-                  <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
-                  {item.label}
-                </span>
-                <span class="font-mono text-[11px]" style="color: var(--fg-faint);">
-                  {item.date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
-                </span>
-              </div>
-              <p class="font-semibold text-[14px] line-clamp-2 group-hover:text-accent transition-colors">{item.title}</p>
-              <p class="text-[12.5px] line-clamp-2 min-h-[2.5em]" style="color: var(--fg-mute);">{item.description}</p>
-            </div>
-          </a>
-        ))}
+        {latestPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
       </div>
     </div>
   </section>

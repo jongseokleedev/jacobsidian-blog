@@ -1,0 +1,48 @@
+---
+interface Props {
+  item: {
+    href: string;
+    ogSrc: string;
+    title: string;
+    description: string;
+    date: Date;
+    label: string;
+    color: string;
+  };
+  index: number;
+}
+const { item, index } = Astro.props;
+---
+<a
+  href={item.href}
+  class:list={[
+    "group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors",
+    index === 2 && "hidden lg:flex",
+  ]}
+>
+  <div
+    class="aspect-video overflow-hidden"
+    style={`background: linear-gradient(135deg, ${item.color}22, ${item.color}08)`}
+  >
+    <img
+      src={item.ogSrc}
+      alt={item.title}
+      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+      onerror="this.style.display='none'"
+      loading="lazy"
+    />
+  </div>
+  <div class="flex flex-col justify-between flex-1 p-3 gap-2">
+    <div class="flex items-center justify-between">
+      <span class="flex items-center gap-1.5 font-mono text-[11px]" style={`color: ${item.color}`}>
+        <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
+        {item.label}
+      </span>
+      <span class="font-mono text-[11px]" style="color: var(--fg-faint);">
+        {item.date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+      </span>
+    </div>
+    <p class="font-semibold text-[14px] leading-snug line-clamp-2 group-hover:text-accent transition-colors">{item.title}</p>
+    <p class="text-[12.5px] leading-snug line-clamp-2 min-h-[2.5em]" style="color: var(--fg-mute);">{item.description}</p>
+  </div>
+</a>
