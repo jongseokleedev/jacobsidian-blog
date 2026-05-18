@@ -14,16 +14,13 @@ interface Props {
 }
 const { item, index } = Astro.props;
 const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
+const hiddenClass = index === 2 ? "hidden lg:flex" : "";
 ---
 
 {item.poster ? (
-  <!-- poster 있음: 가로 레이아웃 (포스터 좌측 portrait + 텍스트 우측) -->
   <a
     href={item.href}
-    class:list={[
-      "group flex flex-row rounded-lg border border-border overflow-hidden hover:border-accent transition-colors h-[140px]",
-      index === 2 && "hidden lg:flex",
-    ]}
+    class={`group flex flex-row rounded-lg border border-border overflow-hidden hover:border-accent transition-colors h-[140px] ${hiddenClass}`}
   >
     <div
       class="w-[90px] shrink-0 overflow-hidden"
@@ -49,13 +46,9 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
     </div>
   </a>
 ) : (
-  <!-- poster 없음: 세로 레이아웃 (OG 이미지 상단 16:9 + 텍스트 하단) -->
   <a
     href={item.href}
-    class:list={[
-      "group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors",
-      index === 2 && "hidden lg:flex",
-    ]}
+    class={`group flex flex-col rounded-lg border border-border overflow-hidden hover:border-accent transition-colors ${hiddenClass}`}
   >
     <div
       class="aspect-video overflow-hidden"
