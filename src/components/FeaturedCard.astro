@@ -24,7 +24,7 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
 >
   <div
     class="w-[100px] shrink-0 overflow-hidden"
-    style={`background: linear-gradient(135deg, ${item.color}33, ${item.color}0a)`}
+    style={`background: linear-gradient(135deg, color-mix(in srgb, ${item.color} 25%, transparent), color-mix(in srgb, ${item.color} 6%, transparent))`}
   >
     {item.poster && (
       <img
