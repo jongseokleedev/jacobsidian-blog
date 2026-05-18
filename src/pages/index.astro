@@ -41,7 +41,7 @@ const scoredPosts = posts.map(post => {
   return { post, score: outgoing + incoming };
 });
 scoredPosts.sort((a, b) => b.score - a.score);
-const topPosts = scoredPosts.slice(0, 3).map(({ post }) => ({
+const topPosts = scoredPosts.slice(0, 10).map(({ post }) => ({
   href: getPath(post),
   poster: getPostImage(post.data.poster, post.body),
   title: post.data.title,
@@ -61,7 +61,7 @@ const latestPosts = posts
     seenParents.add(parent);
     return true;
   })
-  .slice(0, 3)
+  .slice(0, 10)
   .map(post => ({
     href: getPath(post),
     ogSrc: getPath(post) + "og.png",
@@ -137,15 +137,19 @@ const latestPosts = posts
 
     <!-- Latest panel -->
     <div id="featured-latest" class="featured-panel">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-        {latestPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
+      <div class="featured-carousel">
+        <div class="featured-carousel-track">
+          {latestPosts.map((item) => <FeaturedCard item={item} carousel />)}
+        </div>
       </div>
     </div>
 
     <!-- Core panel -->
     <div id="featured-core" class="featured-panel hidden">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-        {topPosts.map((item, i) => <FeaturedCard item={item} index={i} />)}
+      <div class="featured-carousel">
+        <div class="featured-carousel-track">
+          {topPosts.map((item) => <FeaturedCard item={item} carousel />)}
+        </div>
       </div>
     </div>
   </section>
@@ -244,6 +248,36 @@ const latestPosts = posts
   .active-tab {
     border-color: var(--accent);
     color: var(--accent);
+  }
+
+  /* ── Carousel: full-bleed, left-aligned start ── */
+  /* --carousel-inset: distance from viewport left edge to content left edge
+     = max((100vw - 680px) / 2, 0px) + 16px (px-4) */
+  .featured-carousel {
+    --carousel-inset: calc(max((100vw - 680px) / 2, 0px) + 16px);
+    margin-left: calc(-1 * var(--carousel-inset));
+    width: 100vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .featured-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  .featured-carousel-track {
+    display: flex;
+    gap: 12px;
+    padding-left: var(--carousel-inset);
+    scroll-snap-type: x mandatory;
+  }
+  .featured-carousel-track::after {
+    content: "";
+    display: block;
+    min-width: var(--carousel-inset);
+    flex-shrink: 0;
+  }
+  .scroll-snap-align-start {
+    scroll-snap-align: start;
   }
 </style>
 
