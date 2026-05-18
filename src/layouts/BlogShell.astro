@@ -35,21 +35,12 @@ const {
 ---
 
 <Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
-  <!-- FOUC 방지: 사이드바 상태를 paint 전에 적용 -->
+  <!-- FOUC 방지: 사이드바 상태를 paint 전에 CSS 변수로 적용 -->
   <script is:inline>
     (function () {
-      const L = localStorage.getItem("jb:sidebar-left");
-      const R = localStorage.getItem("jb:sidebar-right");
-      if (L === "closed") {
-        document.documentElement.style.setProperty("--left-rail-w", "0px");
-      } else {
-        document.documentElement.style.setProperty("--left-rail-w", "232px");
-      }
-      if (R === "closed") {
-        document.documentElement.style.setProperty("--right-rail-w", "0px");
-      } else {
-        document.documentElement.style.setProperty("--right-rail-w", "260px");
-      }
+      const open = localStorage.getItem("jb:sidebar-left") !== "closed";
+      document.documentElement.style.setProperty("--left-rail-w", open ? "232px" : "0px");
+      document.documentElement.style.setProperty("--right-rail-w", open ? "260px" : "0px");
     })();
   </script>
 
@@ -87,45 +78,30 @@ const {
 <script>
   // ── 사이드바 접기/펼치기 ──────────────────────────────────────
   function initRailToggles() {
-    const leftRail  = document.getElementById("left-rail") as HTMLElement | null;
+    const leftRail = document.getElementById("left-rail") as HTMLElement | null;
     const rightRail = document.getElementById("right-rail") as HTMLElement | null;
-    const leftBtn   = document.getElementById("toggle-left-rail") as HTMLElement | null;
-    const rightBtn  = document.getElementById("toggle-right-rail") as HTMLElement | null;
-    const leftIcon  = document.getElementById("toggle-left-icon") as HTMLElement | null;
-    const rightIcon = document.getElementById("toggle-right-icon") as HTMLElement | null;
+    const btn = document.getElementById("toggle-both-rails") as HTMLElement | null;
 
     if (!leftRail || !rightRail) return;
 
     const LEFT_W  = "232px";
     const RIGHT_W = "260px";
 
-    function applyLeft(open: boolean, animate = true) {
-      if (!animate) leftRail!.style.transition = "none";
-      leftRail!.style.width = open ? LEFT_W : "0px";
-      if (!animate) requestAnimationFrame(() => { leftRail!.style.transition = ""; });
-      leftBtn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
+    function applyBoth(open: boolean) {
+      document.documentElement.style.setProperty("--left-rail-w", open ? LEFT_W : "0px");
+      document.documentElement.style.setProperty("--right-rail-w", open ? RIGHT_W : "0px");
+      btn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
       localStorage.setItem("jb:sidebar-left", open ? "open" : "closed");
-    }
-
-    function applyRight(open: boolean, animate = true) {
-      if (!animate) rightRail!.style.transition = "none";
-      rightRail!.style.width = open ? RIGHT_W : "0px";
-      if (!animate) requestAnimationFrame(() => { rightRail!.style.transition = ""; });
-      rightBtn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
       localStorage.setItem("jb:sidebar-right", open ? "open" : "closed");
     }
 
-    // 초기 상태 (FOUC 없이) — transition 없이 즉시 적용
-    const leftOpen  = localStorage.getItem("jb:sidebar-left")  !== "closed";
-    const rightOpen = localStorage.getItem("jb:sidebar-right") !== "closed";
-    applyLeft(leftOpen, false);
-    applyRight(rightOpen, false);
+    // 초기 상태 — FOUC 스크립트가 이미 CSS 변수 설정함, 버튼 색상만 동기화
+    const open = localStorage.getItem("jb:sidebar-left") !== "closed";
+    btn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
 
-    leftBtn?.addEventListener("click", () => {
-      applyLeft(leftRail!.style.width === "0px");
-    });
-    rightBtn?.addEventListener("click", () => {
-      applyRight(rightRail!.style.width === "0px");
+    btn?.addEventListener("click", () => {
+      const currentW = getComputedStyle(leftRail!).width;
+      applyBoth(currentW === "0px" || parseFloat(currentW) < 10);
     });
   }
 

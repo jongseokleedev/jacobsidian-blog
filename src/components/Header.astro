@@ -35,22 +35,7 @@ const isActive = (path: string) => {
     class="border-b border-border w-full bg-background/90 backdrop-blur-sm"
   >
     <div class="flex items-center justify-between px-6 py-0" style="height:56px;">
-      <div class="flex items-center gap-3">
-        <!-- 좌측 패널 토글 (데스크탑) -->
-        <button
-          id="toggle-left-rail"
-          class="hidden lg:flex items-center justify-center rounded p-1.5 hover:bg-muted hover:text-accent transition-colors"
-          style="color:var(--fg-faint);"
-          aria-label="왼쪽 사이드바 접기/펼치기"
-          title="왼쪽 패널 토글"
-        >
-          <svg id="toggle-left-icon" class="size-4 transition-transform duration-220" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <path d="M9 3v18"/>
-          </svg>
-        </button>
-        <Logo size={20} />
-      </div>
+      <Logo size={20} />
 
       <!-- 데스크탑: 검색 pill + 테마 + RSS + 우측 패널 토글 -->
       <div class="hidden sm:flex items-center gap-3">
@@ -80,16 +65,17 @@ const isActive = (path: string) => {
           <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
           <span class="sr-only">RSS</span>
         </a>
-        <!-- 우측 패널 토글 (데스크탑) -->
+        <!-- 양쪽 패널 동시 토글 (데스크탑) -->
         <button
-          id="toggle-right-rail"
+          id="toggle-both-rails"
           class="hidden lg:flex items-center justify-center rounded p-1.5 hover:bg-muted hover:text-accent transition-colors"
           style="color:var(--fg-faint);"
-          aria-label="오른쪽 사이드바 접기/펼치기"
-          title="오른쪽 패널 토글"
+          aria-label="패널 접기/펼치기"
+          title="패널 토글"
         >
-          <svg id="toggle-right-icon" class="size-4 transition-transform duration-220" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
             <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M9 3v18"/>
             <path d="M15 3v18"/>
           </svg>
         </button>
