@@ -12,9 +12,10 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
 
 <aside
   id="left-rail"
-  class="hidden lg:flex flex-col border-r border-border shrink-0"
-  style="width:232px; padding: 28px 24px 28px 28px; overflow-y:auto;"
+  class="hidden lg:block border-r border-border shrink-0"
+  style="width:232px; position:sticky; top:0; height:calc(100vh - 56px); overflow:hidden; transition:width 220ms ease; align-self:flex-start;"
 >
+<div style="width:232px; height:100%; overflow-y:auto; padding:28px 24px 28px 28px;" class="flex flex-col">
   <!-- Home -->
   <a
     href="/"
@@ -130,6 +131,7 @@ const { activeCategory, activeTopic, activePage } = Astro.props;
     <p class="bd-overline mb-2">Pinned</p>
     <ul id="pinned-list" class="flex flex-col gap-2"></ul>
   </div>
+</div>
 </aside>
 
 <script>
