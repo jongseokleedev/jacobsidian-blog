@@ -5,6 +5,7 @@ export interface GraphNode {
   type: "post" | "book" | "tag";
   category?: string;
   tags: string[];
+  pubDatetime?: string;
 }
 
 export interface GraphEdge {
@@ -27,6 +28,7 @@ interface InputNode {
   url: string;
   type: "post" | "book";
   category?: string;
+  pubDatetime?: string;
 }
 
 export function buildGraphData(items: InputNode[]): GraphData {
@@ -36,7 +38,7 @@ export function buildGraphData(items: InputNode[]): GraphData {
   const slugToId = new Map<string, string>();
 
   for (const item of items) {
-    nodes.push({ id: item.id, title: item.title, url: item.url, type: item.type, category: item.category, tags: item.tags });
+    nodes.push({ id: item.id, title: item.title, url: item.url, type: item.type, category: item.category, tags: item.tags, pubDatetime: item.pubDatetime });
     slugToId.set(item.slug, item.id);
     slugToId.set(item.title, item.id);
     slugToId.set(item.id, item.id);

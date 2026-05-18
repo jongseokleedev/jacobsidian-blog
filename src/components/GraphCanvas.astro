@@ -20,15 +20,40 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   <canvas style="width: 100%; height: 100%;"></canvas>
   <!-- Zoom-to-fit button (full graph only) -->
   {!isMini && (
-    <button
-      class="fit-btn absolute bottom-3 right-3 size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
-      title="Fit view"
-      aria-label="Fit graph to view"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-      </svg>
-    </button>
+    <div class="absolute bottom-3 right-3 flex gap-1.5">
+      <!-- Animate (timelapse) button -->
+      <button
+        class="animate-btn size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
+        title="Animate — timelapse by date"
+        aria-label="Animate graph timelapse"
+      >
+        <!-- Play icon (default) -->
+        <svg class="animate-icon-play size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+        <!-- Stop icon (shown while playing) -->
+        <svg class="animate-icon-stop size-3.5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+        </svg>
+      </button>
+      <!-- Fit view button -->
+      <button
+        class="fit-btn size-7 flex items-center justify-center rounded border border-border bg-background/80 text-foreground/40 hover:text-accent hover:border-accent transition-colors backdrop-blur-sm"
+        title="Fit view"
+        aria-label="Fit graph to view"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
+      </button>
+    </div>
+  )}
+  <!-- Timelapse date overlay -->
+  {!isMini && (
+    <div
+      class="animate-date-overlay absolute top-3 left-3 font-mono text-[11px] pointer-events-none opacity-0 transition-opacity duration-300"
+      style="color: var(--fg-faint);"
+    ></div>
   )}
   <!-- Node bottom bar -->
   <div
@@ -146,6 +171,11 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     let lastHop1 = null;
     let lastHop2 = null;
     let animFrameId = null;
+
+    // Timelapse birth state — 0: hidden, 1: fully visible
+    const birthProgress = new Map(); // nodeId → 0..1
+    let timelapseActive = false;
+    for (const n of nodesCopy) birthProgress.set(n.id, 1); // start fully visible
 
     // Category filter animation state
     const catAlphaMap = new Map();  // nodeId → current alpha (0.18..1)
@@ -271,6 +301,15 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     function draw() {
+      // Apply birth progress: multiply catAlphaMap by birth factor during timelapse
+      if (timelapseActive) {
+        for (const n of nodesCopy) {
+          const birth = birthProgress.get(n.id) ?? 0;
+          const cat = targetCatAlpha(n);
+          catAlphaMap.set(n.id, cat * birth);
+        }
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.scale(dpr, dpr);
@@ -511,6 +550,98 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         }
         pinnedNodes.clear();
         sim.alpha(1).restart();
+      });
+    }
+
+    // ── Timelapse animation ──────────────────────────────────────
+    if (!isMini) {
+      const animateBtn = containerEl.querySelector(".animate-btn");
+      const animIconPlay = containerEl.querySelector(".animate-icon-play");
+      const animIconStop = containerEl.querySelector(".animate-icon-stop");
+      const dateOverlay = containerEl.querySelector(".animate-date-overlay");
+
+      // Sort post nodes by pubDatetime; tag/undated nodes appear last
+      const timelapseSorted = [...nodesCopy].sort((a, b) => {
+        if (!a.pubDatetime && !b.pubDatetime) return 0;
+        if (!a.pubDatetime) return 1;
+        if (!b.pubDatetime) return -1;
+        return new Date(a.pubDatetime).getTime() - new Date(b.pubDatetime).getTime();
+      });
+
+      const BIRTH_SPEED = 0.09;
+      const STEP_MS = 150;
+      let timelapsTimer = null;
+
+      function tickBirth() {
+        let anyChanging = false;
+        for (const n of nodesCopy) {
+          const cur = birthProgress.get(n.id) ?? 0;
+          if (cur > 0 && cur < 1) {
+            birthProgress.set(n.id, Math.min(1, cur + BIRTH_SPEED));
+            anyChanging = true;
+          }
+        }
+        draw();
+        if (anyChanging) requestAnimationFrame(tickBirth);
+      }
+
+      function stopTimelapse() {
+        timelapseActive = false;
+        clearTimeout(timelapsTimer);
+        timelapsTimer = null;
+        animIconPlay?.classList.remove("hidden");
+        animIconStop?.classList.add("hidden");
+        if (dateOverlay) dateOverlay.style.opacity = "0";
+        for (const n of nodesCopy) birthProgress.set(n.id, 1);
+        // Restore catAlphaMap to normal
+        for (const n of nodesCopy) catAlphaMap.set(n.id, targetCatAlpha(n));
+        draw();
+      }
+
+      function startTimelapse() {
+        timelapseActive = true;
+        animIconPlay?.classList.add("hidden");
+        animIconStop?.classList.remove("hidden");
+        if (dateOverlay) dateOverlay.style.opacity = "1";
+
+        // Hide all nodes
+        for (const n of nodesCopy) birthProgress.set(n.id, 0);
+
+        // Camera fit + re-cluster
+        const fit = computeFitTransform();
+        d3.select(canvas).transition().duration(300).call(zoom.transform, fit);
+        const cx = (rect.width / 2 - fit.x) / fit.k;
+        const cy = (rect.height / 2 - fit.y) / fit.k;
+        for (const n of nodesCopy) {
+          n.fx = null; n.fy = null;
+          n.x = cx + (Math.random() - 0.5) * 20;
+          n.y = cy + (Math.random() - 0.5) * 20;
+          n.vx = 0; n.vy = 0;
+        }
+        pinnedNodes.clear();
+        sim.alpha(1).restart();
+
+        let i = 0;
+        function step() {
+          if (!timelapseActive || i >= timelapseSorted.length) {
+            stopTimelapse();
+            return;
+          }
+          const n = timelapseSorted[i++];
+          birthProgress.set(n.id, 0.01); // trigger birth animation
+          if (dateOverlay && n.pubDatetime) {
+            const d = new Date(n.pubDatetime);
+            dateOverlay.textContent = d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit" });
+          }
+          tickBirth();
+          timelapsTimer = setTimeout(step, STEP_MS);
+        }
+        step();
+      }
+
+      animateBtn?.addEventListener("click", () => {
+        if (timelapseActive) stopTimelapse();
+        else startTimelapse();
       });
     }
 

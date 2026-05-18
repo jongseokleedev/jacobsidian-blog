@@ -18,6 +18,8 @@ async function loadItems(dir: string) {
       const category = data.category as string | undefined;
       const [parent, sub] = (category ?? "").split("-");
       const url = parent && sub ? `/${parent}/${sub}/${id}` : `/tech/${id}`;
+      const rawDate = data.pubDatetime as string | Date | undefined;
+      const pubDatetime = rawDate ? new Date(rawDate).toISOString() : undefined;
       return {
         id,
         slug: id,
@@ -27,6 +29,7 @@ async function loadItems(dir: string) {
         url,
         type: "post" as const,
         category,
+        pubDatetime,
       };
     })
   );
