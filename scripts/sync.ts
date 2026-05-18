@@ -249,6 +249,7 @@ async function run(options: SyncOptions) {
     const git = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT, stdio: "inherit" });
     const gitOut = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT }).toString().trim();
     try {
+      execFileSync("tsx", ["scripts/generateGraph.ts"], { cwd: PROJECT_ROOT, stdio: "inherit" });
       git(["add", "src/data/", "public/images/", "public/graph.json"]);
       const diff = gitOut(["diff", "--cached", "--name-only"]);
       if (!diff) {
