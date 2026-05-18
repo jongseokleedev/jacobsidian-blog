@@ -20,7 +20,7 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
   href={item.href}
   style={carousel ? "scroll-snap-align: start;" : undefined}
   class:list={[
-    "group flex flex-row rounded-lg border border-border overflow-hidden hover:border-accent transition-colors",
+    "group flex flex-row rounded-lg border border-border overflow-hidden hover:border-accent transition-colors outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2",
     carousel
       ? "shrink-0 w-[200px] h-[120px] sm:w-[280px] sm:h-[140px]"
       : ["h-[140px]", index === 2 && "hidden lg:flex"],
