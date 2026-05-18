@@ -382,11 +382,23 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         const pulse = catPulseMap.get(n.id);
         const pulseScale = pulse != null ? 1 + Math.sin(pulse * Math.PI) * 0.15 : 1;
 
-        // Birth scale: spring-like overshoot (0 → 1.35 → 1)
+        // Birth scale: elastic pop — fast burst → overshoot → bounce → settle
         const birth = timelapseActive ? (birthProgress.get(n.id) ?? 0) : 1;
-        const birthScale = birth < 1
-          ? Math.sin(birth * Math.PI * 0.5) * 1.35
-          : 1;
+        let birthScale = 1;
+        if (birth < 1) {
+          if (birth < 0.35) {
+            birthScale = (birth / 0.35) * 1.9;          // 0 → 1.9x (fast burst)
+          } else if (birth < 0.60) {
+            const p = (birth - 0.35) / 0.25;
+            birthScale = 1.9 - p * (1.9 - 0.75);        // 1.9x → 0.75x (snap back)
+          } else if (birth < 0.82) {
+            const p = (birth - 0.60) / 0.22;
+            birthScale = 0.75 + p * (1.18 - 0.75);      // 0.75x → 1.18x (bounce up)
+          } else {
+            const p = (birth - 0.82) / 0.18;
+            birthScale = 1.18 - p * 0.18;               // 1.18x → 1.0x (settle)
+          }
+        }
         const totalScale = pulseScale * birthScale;
 
         ctx.save();
@@ -584,7 +596,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         return new Date(a.pubDatetime).getTime() - new Date(b.pubDatetime).getTime();
       });
 
-      const BIRTH_SPEED = 0.12;
+      const BIRTH_SPEED = 0.16;
       const STEP_MS = 140;
       let timelapsTimer = null;
 
