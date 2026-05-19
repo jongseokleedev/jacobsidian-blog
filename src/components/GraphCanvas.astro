@@ -86,7 +86,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   </div>
 </div>
 
-<script define:vars={{ containerId }}>
+<script is:inline define:vars={{ containerId }}>
   async function initGraph(containerEl) {
     if (!containerEl) return;
 
@@ -113,11 +113,17 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const canvas = containerEl.querySelector("canvas");
     const fitBtn = containerEl.querySelector(".fit-btn");
-    const rect = containerEl.getBoundingClientRect();
+    let rect = containerEl.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      rect = containerEl.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+    }
 
     const getVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
@@ -335,7 +341,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
       const fg = getVar("--foreground") || "#e2e2e2";
       const accent = getVar("--accent") || "#f97316";
-      const muted = getVar("--muted") || "#555";
+
 
       drawDotGrid(fg);
 
@@ -882,6 +888,14 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     const themeObserver = new MutationObserver(draw);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
+    // Refit on sidebar toggle (main-content margin transition ends)
+    // Refit instantly whenever container size changes (sidebar toggle, window resize)
+    new ResizeObserver(() => {
+      resizeCanvas();
+      d3.select(canvas).call(zoom.transform, computeFitTransform());
+      draw();
+    }).observe(containerEl);
+
     if (initCategoryFilter !== "all") {
       triggerCatFilter();
       startAnim();
@@ -895,6 +909,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   }
 
   function setup() {
+    // @ts-ignore -- containerId injected by define:vars
     const container = document.getElementById(containerId);
     if (!container) return;
     if (container.offsetWidth === 0) {

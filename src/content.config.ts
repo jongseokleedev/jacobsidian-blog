@@ -1,4 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "zod";
 import { glob } from "astro/loaders";
 
 export const POSTS_PATH = "src/data/posts";
