@@ -8,7 +8,9 @@
       "category": "essay-thought",
       "tags": [
         "독서",
-        "post"
+        "글쓰기",
+        "에세이",
+        "책"
       ],
       "pubDatetime": "2021-08-17T00:00:00.000Z"
     },
@@ -20,7 +22,9 @@
       "category": "essay-thought",
       "tags": [
         "삶",
-        "post"
+        "반려동물",
+        "에세이",
+        "죽음"
       ],
       "pubDatetime": "2022-01-30T00:00:00.000Z"
     },
@@ -32,9 +36,10 @@
       "category": "review-book",
       "tags": [
         "문학",
-        "book",
+        "독서",
         "하루키",
-        "소설"
+        "소설",
+        "일본문학"
       ],
       "pubDatetime": "2023-08-12T00:00:00.000Z"
     },
@@ -47,7 +52,10 @@
       "tags": [
         "영화",
         "감상",
-        "삶"
+        "삶",
+        "이민자",
+        "정체성",
+        "픽사"
       ],
       "pubDatetime": "2023-08-17T00:00:00.000Z"
     },
@@ -59,7 +67,10 @@
       "category": "review-book",
       "tags": [
         "삶",
-        "book"
+        "죽음",
+        "독서",
+        "의학",
+        "과학"
       ],
       "pubDatetime": "2023-09-01T00:00:00.000Z"
     },
@@ -73,7 +84,8 @@
         "독서",
         "심리",
         "사회",
-        "book"
+        "인간관계",
+        "행동경제학"
       ],
       "pubDatetime": "2023-09-20T00:00:00.000Z"
     },
@@ -86,7 +98,10 @@
       "tags": [
         "커리어",
         "개발",
-        "조직"
+        "조직",
+        "회의",
+        "협업",
+        "조직문화"
       ],
       "pubDatetime": "2024-03-15T00:00:00.000Z"
     },
@@ -98,7 +113,10 @@
       "category": "tech-dev",
       "tags": [
         "개발",
-        "post"
+        "QA",
+        "testing",
+        "소프트웨어품질",
+        "개발프로세스"
       ],
       "pubDatetime": "2024-06-30T00:00:00.000Z"
     },
@@ -110,7 +128,10 @@
       "category": "essay-thought",
       "tags": [
         "독서",
-        "post"
+        "에세이",
+        "책",
+        "아날로그",
+        "일상"
       ],
       "pubDatetime": "2024-09-11T00:00:00.000Z"
     },
@@ -122,7 +143,10 @@
       "category": "essay-journal",
       "tags": [
         "커리어",
-        "post"
+        "에세이",
+        "이직",
+        "회고",
+        "성장"
       ],
       "pubDatetime": "2024-11-10T00:00:00.000Z"
     },
@@ -134,7 +158,10 @@
       "category": "tech-dev",
       "tags": [
         "개발",
-        "post"
+        "보안",
+        "security",
+        "웹개발",
+        "개발프로세스"
       ],
       "pubDatetime": "2025-01-17T00:00:00.000Z"
     },
@@ -146,7 +173,10 @@
       "category": "tech-dev",
       "tags": [
         "개발",
-        "post"
+        "데이터베이스",
+        "데이터모델링",
+        "DB설계",
+        "개발프로세스"
       ],
       "pubDatetime": "2025-02-20T00:00:00.000Z"
     },
@@ -159,7 +189,9 @@
       "tags": [
         "커리어",
         "프로덕트",
-        "브랜딩"
+        "브랜딩",
+        "네이밍",
+        "마케팅"
       ],
       "pubDatetime": "2025-05-15T00:00:00.000Z"
     },
@@ -172,7 +204,9 @@
       "tags": [
         "개발",
         "커리어",
-        "post"
+        "이슈분석",
+        "디버깅",
+        "개발프로세스"
       ],
       "pubDatetime": "2025-09-15T00:00:00.000Z"
     },
@@ -183,7 +217,11 @@
       "type": "post",
       "category": "tech-work",
       "tags": [
-        "post"
+        "개발",
+        "커리어",
+        "개발일정",
+        "매니저",
+        "리더십"
       ],
       "pubDatetime": "2026-02-10T00:00:00.000Z"
     },
@@ -196,7 +234,10 @@
       "tags": [
         "AI",
         "개발",
-        "커리어"
+        "커리어",
+        "협업",
+        "디자인",
+        "Figma"
       ],
       "pubDatetime": "2026-05-15T00:00:00.000Z"
     },
@@ -208,8 +249,10 @@
       "category": "review-book",
       "tags": [
         "삶",
-        "book",
-        "에세이"
+        "에세이",
+        "독서",
+        "성장",
+        "자기계발"
       ],
       "pubDatetime": "2026-05-13T00:00:00.000Z"
     },
@@ -221,7 +264,10 @@
       "category": "fiction-tales",
       "tags": [
         "문학",
-        "post"
+        "소설",
+        "단편소설",
+        "가족",
+        "육아"
       ],
       "pubDatetime": "2026-05-13T00:00:00.000Z"
     },
@@ -232,9 +278,11 @@
       "type": "post",
       "category": "tech-it",
       "tags": [
-        "개발",
         "스마트워치",
-        "애플"
+        "애플",
+        "삼성",
+        "웨어러블",
+        "하드웨어"
       ],
       "pubDatetime": "2026-05-15T00:00:00.000Z"
     },
@@ -248,7 +296,8 @@
         "독서",
         "AI",
         "사회",
-        "book"
+        "미래",
+        "기술비판"
       ],
       "pubDatetime": "2025-01-16T00:00:00.000Z"
     },
@@ -260,7 +309,10 @@
       "category": "review-book",
       "tags": [
         "커리어",
-        "book"
+        "독서",
+        "디자인",
+        "브랜딩",
+        "창의성"
       ],
       "pubDatetime": "2025-11-30T00:00:00.000Z"
     },
@@ -273,10 +325,10 @@
       "tags": [
         "커리어",
         "삶",
-        "book",
         "자기계발",
         "창업",
-        "에세이"
+        "에세이",
+        "실패"
       ],
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
@@ -289,7 +341,10 @@
       "tags": [
         "영화",
         "감상",
-        "삶"
+        "삶",
+        "디즈니",
+        "자유",
+        "욕망"
       ],
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
@@ -302,7 +357,10 @@
       "tags": [
         "독서",
         "사회",
-        "삶"
+        "삶",
+        "사회자본",
+        "계층",
+        "자기계발"
       ],
       "pubDatetime": "2026-04-30T00:00:00.000Z"
     },
@@ -315,7 +373,9 @@
       "tags": [
         "독서",
         "에세이",
-        "삶"
+        "삶",
+        "패션",
+        "일상"
       ],
       "pubDatetime": "2025-01-04T00:00:00.000Z"
     },
@@ -328,7 +388,9 @@
       "tags": [
         "독서",
         "철학",
-        "삶"
+        "삶",
+        "스토아",
+        "자기계발"
       ],
       "pubDatetime": "2025-03-01T00:00:00.000Z"
     },
@@ -341,7 +403,9 @@
       "tags": [
         "독서",
         "비즈니스",
-        "커리어"
+        "커리어",
+        "브랜딩",
+        "마케팅"
       ],
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
@@ -354,7 +418,9 @@
       "tags": [
         "독서",
         "심리",
-        "삶"
+        "삶",
+        "완벽주의",
+        "자아"
       ],
       "pubDatetime": "2025-02-14T00:00:00.000Z"
     },
@@ -367,7 +433,9 @@
       "tags": [
         "독서",
         "철학",
-        "삶"
+        "삶",
+        "죽음",
+        "존재"
       ],
       "pubDatetime": "2025-08-14T00:00:00.000Z"
     },
@@ -381,8 +449,8 @@
         "독서",
         "AI",
         "사회",
-        "book",
-        "소설"
+        "조직",
+        "리더십"
       ],
       "pubDatetime": "2026-05-10T00:00:00.000Z"
     },
@@ -396,7 +464,9 @@
         "독서",
         "에세이",
         "삶",
-        "book"
+        "심리",
+        "자아",
+        "성장"
       ],
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
@@ -408,7 +478,10 @@
       "category": "essay-thought",
       "tags": [
         "AI",
-        "post"
+        "에세이",
+        "질문",
+        "사랑",
+        "인간성"
       ],
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
@@ -421,7 +494,9 @@
       "tags": [
         "블록체인",
         "비즈니스",
-        "개발"
+        "NFT",
+        "암호화폐",
+        "기술트렌드"
       ],
       "pubDatetime": "2023-01-15T00:00:00.000Z"
     },
@@ -434,7 +509,9 @@
       "tags": [
         "커리어",
         "에세이",
-        "스타트업"
+        "스타트업",
+        "성장",
+        "회고"
       ],
       "pubDatetime": "2025-03-15T00:00:00.000Z"
     },
@@ -447,7 +524,9 @@
       "tags": [
         "독서",
         "개발",
-        "커리어"
+        "커리어",
+        "프로그래밍",
+        "소프트웨어공학"
       ],
       "pubDatetime": "2025-12-02T00:00:00.000Z"
     },
@@ -460,7 +539,10 @@
       "tags": [
         "독서",
         "문학",
-        "역사"
+        "역사",
+        "소설",
+        "한강",
+        "5.18"
       ],
       "pubDatetime": "2024-02-14T00:00:00.000Z"
     },
@@ -472,9 +554,11 @@
       "category": "review-book",
       "tags": [
         "개발",
-        "book",
         "프로그래밍",
-        "기술"
+        "기술",
+        "독서",
+        "커리어",
+        "book"
       ],
       "pubDatetime": "2026-01-30T00:00:00.000Z"
     },
@@ -487,6 +571,10 @@
       "tags": [
         "사회",
         "AI",
+        "독서",
+        "미래",
+        "트렌드",
+        "문명",
         "book"
       ],
       "pubDatetime": "2024-06-17T00:00:00.000Z"
@@ -501,7 +589,9 @@
         "독서",
         "사회",
         "삶",
-        "book"
+        "집중력",
+        "SNS",
+        "테크"
       ],
       "pubDatetime": "2024-06-17T00:00:00.000Z"
     },
@@ -512,8 +602,12 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book",
-        "개발"
+        "독서",
+        "개발",
+        "커리어",
+        "리더십",
+        "매니저",
+        "테크리드"
       ],
       "pubDatetime": "2024-07-18T00:00:00.000Z"
     },
@@ -526,7 +620,10 @@
       "tags": [
         "독서",
         "비즈니스",
-        "애플"
+        "애플",
+        "리더십",
+        "팀쿡",
+        "스티브잡스"
       ],
       "pubDatetime": "2026-05-17T00:00:00.000Z"
     },
@@ -539,7 +636,9 @@
       "tags": [
         "삶",
         "커리어",
-        "post"
+        "에세이",
+        "퇴사",
+        "성장"
       ],
       "pubDatetime": "2022-10-02T00:00:00.000Z"
     },
@@ -550,9 +649,12 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "book",
+        "독서",
+        "문학",
         "하루키",
-        "소설"
+        "소설",
+        "청춘",
+        "상실"
       ],
       "pubDatetime": "2026-05-19T00:00:00.000Z"
     },
@@ -564,9 +666,23 @@
       "tags": []
     },
     {
-      "id": "tag:post",
-      "title": "post",
-      "url": "/tags/post",
+      "id": "tag:글쓰기",
+      "title": "글쓰기",
+      "url": "/tags/글쓰기",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:에세이",
+      "title": "에세이",
+      "url": "/tags/에세이",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:책",
+      "title": "책",
+      "url": "/tags/책",
       "type": "tag",
       "tags": []
     },
@@ -578,16 +694,23 @@
       "tags": []
     },
     {
-      "id": "tag:문학",
-      "title": "문학",
-      "url": "/tags/문학",
+      "id": "tag:반려동물",
+      "title": "반려동물",
+      "url": "/tags/반려동물",
       "type": "tag",
       "tags": []
     },
     {
-      "id": "tag:book",
-      "title": "book",
-      "url": "/tags/book",
+      "id": "tag:죽음",
+      "title": "죽음",
+      "url": "/tags/죽음",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:문학",
+      "title": "문학",
+      "url": "/tags/문학",
       "type": "tag",
       "tags": []
     },
@@ -606,6 +729,13 @@
       "tags": []
     },
     {
+      "id": "tag:일본문학",
+      "title": "일본문학",
+      "url": "/tags/일본문학",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:영화",
       "title": "영화",
       "url": "/tags/영화",
@@ -620,6 +750,41 @@
       "tags": []
     },
     {
+      "id": "tag:이민자",
+      "title": "이민자",
+      "url": "/tags/이민자",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:정체성",
+      "title": "정체성",
+      "url": "/tags/정체성",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:픽사",
+      "title": "픽사",
+      "url": "/tags/픽사",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:의학",
+      "title": "의학",
+      "url": "/tags/의학",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:과학",
+      "title": "과학",
+      "url": "/tags/과학",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:심리",
       "title": "심리",
       "url": "/tags/심리",
@@ -630,6 +795,20 @@
       "id": "tag:사회",
       "title": "사회",
       "url": "/tags/사회",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:인간관계",
+      "title": "인간관계",
+      "url": "/tags/인간관계",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:행동경제학",
+      "title": "행동경제학",
+      "url": "/tags/행동경제학",
       "type": "tag",
       "tags": []
     },
@@ -655,6 +834,132 @@
       "tags": []
     },
     {
+      "id": "tag:회의",
+      "title": "회의",
+      "url": "/tags/회의",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:협업",
+      "title": "협업",
+      "url": "/tags/협업",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:조직문화",
+      "title": "조직문화",
+      "url": "/tags/조직문화",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:QA",
+      "title": "QA",
+      "url": "/tags/QA",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:testing",
+      "title": "testing",
+      "url": "/tags/testing",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:소프트웨어품질",
+      "title": "소프트웨어품질",
+      "url": "/tags/소프트웨어품질",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:개발프로세스",
+      "title": "개발프로세스",
+      "url": "/tags/개발프로세스",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:아날로그",
+      "title": "아날로그",
+      "url": "/tags/아날로그",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:일상",
+      "title": "일상",
+      "url": "/tags/일상",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:이직",
+      "title": "이직",
+      "url": "/tags/이직",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:회고",
+      "title": "회고",
+      "url": "/tags/회고",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:성장",
+      "title": "성장",
+      "url": "/tags/성장",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:보안",
+      "title": "보안",
+      "url": "/tags/보안",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:security",
+      "title": "security",
+      "url": "/tags/security",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:웹개발",
+      "title": "웹개발",
+      "url": "/tags/웹개발",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:데이터베이스",
+      "title": "데이터베이스",
+      "url": "/tags/데이터베이스",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:데이터모델링",
+      "title": "데이터모델링",
+      "url": "/tags/데이터모델링",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:DB설계",
+      "title": "DB설계",
+      "url": "/tags/DB설계",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:프로덕트",
       "title": "프로덕트",
       "url": "/tags/프로덕트",
@@ -669,6 +974,55 @@
       "tags": []
     },
     {
+      "id": "tag:네이밍",
+      "title": "네이밍",
+      "url": "/tags/네이밍",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:마케팅",
+      "title": "마케팅",
+      "url": "/tags/마케팅",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:이슈분석",
+      "title": "이슈분석",
+      "url": "/tags/이슈분석",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:디버깅",
+      "title": "디버깅",
+      "url": "/tags/디버깅",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:개발일정",
+      "title": "개발일정",
+      "url": "/tags/개발일정",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:매니저",
+      "title": "매니저",
+      "url": "/tags/매니저",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:리더십",
+      "title": "리더십",
+      "url": "/tags/리더십",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:AI",
       "title": "AI",
       "url": "/tags/AI",
@@ -676,9 +1030,44 @@
       "tags": []
     },
     {
-      "id": "tag:에세이",
-      "title": "에세이",
-      "url": "/tags/에세이",
+      "id": "tag:디자인",
+      "title": "디자인",
+      "url": "/tags/디자인",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:Figma",
+      "title": "Figma",
+      "url": "/tags/Figma",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:자기계발",
+      "title": "자기계발",
+      "url": "/tags/자기계발",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:단편소설",
+      "title": "단편소설",
+      "url": "/tags/단편소설",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:가족",
+      "title": "가족",
+      "url": "/tags/가족",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:육아",
+      "title": "육아",
+      "url": "/tags/육아",
       "type": "tag",
       "tags": []
     },
@@ -697,9 +1086,44 @@
       "tags": []
     },
     {
-      "id": "tag:자기계발",
-      "title": "자기계발",
-      "url": "/tags/자기계발",
+      "id": "tag:삼성",
+      "title": "삼성",
+      "url": "/tags/삼성",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:웨어러블",
+      "title": "웨어러블",
+      "url": "/tags/웨어러블",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:하드웨어",
+      "title": "하드웨어",
+      "url": "/tags/하드웨어",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:미래",
+      "title": "미래",
+      "url": "/tags/미래",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:기술비판",
+      "title": "기술비판",
+      "url": "/tags/기술비판",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:창의성",
+      "title": "창의성",
+      "url": "/tags/창의성",
       "type": "tag",
       "tags": []
     },
@@ -711,9 +1135,65 @@
       "tags": []
     },
     {
+      "id": "tag:실패",
+      "title": "실패",
+      "url": "/tags/실패",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:디즈니",
+      "title": "디즈니",
+      "url": "/tags/디즈니",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:자유",
+      "title": "자유",
+      "url": "/tags/자유",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:욕망",
+      "title": "욕망",
+      "url": "/tags/욕망",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:사회자본",
+      "title": "사회자본",
+      "url": "/tags/사회자본",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:계층",
+      "title": "계층",
+      "url": "/tags/계층",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:패션",
+      "title": "패션",
+      "url": "/tags/패션",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:철학",
       "title": "철학",
       "url": "/tags/철학",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:스토아",
+      "title": "스토아",
+      "url": "/tags/스토아",
       "type": "tag",
       "tags": []
     },
@@ -725,9 +1205,72 @@
       "tags": []
     },
     {
+      "id": "tag:완벽주의",
+      "title": "완벽주의",
+      "url": "/tags/완벽주의",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:자아",
+      "title": "자아",
+      "url": "/tags/자아",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:존재",
+      "title": "존재",
+      "url": "/tags/존재",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:질문",
+      "title": "질문",
+      "url": "/tags/질문",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:사랑",
+      "title": "사랑",
+      "url": "/tags/사랑",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:인간성",
+      "title": "인간성",
+      "url": "/tags/인간성",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:블록체인",
       "title": "블록체인",
       "url": "/tags/블록체인",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:NFT",
+      "title": "NFT",
+      "url": "/tags/NFT",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:암호화폐",
+      "title": "암호화폐",
+      "url": "/tags/암호화폐",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:기술트렌드",
+      "title": "기술트렌드",
+      "url": "/tags/기술트렌드",
       "type": "tag",
       "tags": []
     },
@@ -739,13 +1282,6 @@
       "tags": []
     },
     {
-      "id": "tag:역사",
-      "title": "역사",
-      "url": "/tags/역사",
-      "type": "tag",
-      "tags": []
-    },
-    {
       "id": "tag:프로그래밍",
       "title": "프로그래밍",
       "url": "/tags/프로그래밍",
@@ -753,9 +1289,121 @@
       "tags": []
     },
     {
+      "id": "tag:소프트웨어공학",
+      "title": "소프트웨어공학",
+      "url": "/tags/소프트웨어공학",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:역사",
+      "title": "역사",
+      "url": "/tags/역사",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:한강",
+      "title": "한강",
+      "url": "/tags/한강",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:5.18",
+      "title": "5.18",
+      "url": "/tags/5.18",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:기술",
       "title": "기술",
       "url": "/tags/기술",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:book",
+      "title": "book",
+      "url": "/tags/book",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:트렌드",
+      "title": "트렌드",
+      "url": "/tags/트렌드",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:문명",
+      "title": "문명",
+      "url": "/tags/문명",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:집중력",
+      "title": "집중력",
+      "url": "/tags/집중력",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:SNS",
+      "title": "SNS",
+      "url": "/tags/SNS",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:테크",
+      "title": "테크",
+      "url": "/tags/테크",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:테크리드",
+      "title": "테크리드",
+      "url": "/tags/테크리드",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:팀쿡",
+      "title": "팀쿡",
+      "url": "/tags/팀쿡",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:스티브잡스",
+      "title": "스티브잡스",
+      "url": "/tags/스티브잡스",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:퇴사",
+      "title": "퇴사",
+      "url": "/tags/퇴사",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:청춘",
+      "title": "청춘",
+      "url": "/tags/청춘",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:상실",
+      "title": "상실",
+      "url": "/tags/상실",
       "type": "tag",
       "tags": []
     }
@@ -1123,7 +1771,17 @@
     },
     {
       "source": "20210817-1336",
-      "target": "tag:post",
+      "target": "tag:글쓰기",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20210817-1336",
+      "target": "tag:책",
       "type": "tag"
     },
     {
@@ -1133,7 +1791,17 @@
     },
     {
       "source": "20220130-1335",
-      "target": "tag:post",
+      "target": "tag:반려동물",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20220130-1335",
+      "target": "tag:죽음",
       "type": "tag"
     },
     {
@@ -1143,7 +1811,7 @@
     },
     {
       "source": "20230812-1256",
-      "target": "tag:book",
+      "target": "tag:독서",
       "type": "tag"
     },
     {
@@ -1154,6 +1822,11 @@
     {
       "source": "20230812-1256",
       "target": "tag:소설",
+      "type": "tag"
+    },
+    {
+      "source": "20230812-1256",
+      "target": "tag:일본문학",
       "type": "tag"
     },
     {
@@ -1172,13 +1845,43 @@
       "type": "tag"
     },
     {
+      "source": "20230817-2136",
+      "target": "tag:이민자",
+      "type": "tag"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "tag:정체성",
+      "type": "tag"
+    },
+    {
+      "source": "20230817-2136",
+      "target": "tag:픽사",
+      "type": "tag"
+    },
+    {
       "source": "20230901-1323",
       "target": "tag:삶",
       "type": "tag"
     },
     {
       "source": "20230901-1323",
-      "target": "tag:book",
+      "target": "tag:죽음",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "tag:의학",
+      "type": "tag"
+    },
+    {
+      "source": "20230901-1323",
+      "target": "tag:과학",
       "type": "tag"
     },
     {
@@ -1198,7 +1901,12 @@
     },
     {
       "source": "20230920-2210",
-      "target": "tag:book",
+      "target": "tag:인간관계",
+      "type": "tag"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "tag:행동경제학",
       "type": "tag"
     },
     {
@@ -1217,13 +1925,43 @@
       "type": "tag"
     },
     {
+      "source": "20240315-1014",
+      "target": "tag:회의",
+      "type": "tag"
+    },
+    {
+      "source": "20240315-1014",
+      "target": "tag:협업",
+      "type": "tag"
+    },
+    {
+      "source": "20240315-1014",
+      "target": "tag:조직문화",
+      "type": "tag"
+    },
+    {
       "source": "20240630-2308",
       "target": "tag:개발",
       "type": "tag"
     },
     {
       "source": "20240630-2308",
-      "target": "tag:post",
+      "target": "tag:QA",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "tag:testing",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "tag:소프트웨어품질",
+      "type": "tag"
+    },
+    {
+      "source": "20240630-2308",
+      "target": "tag:개발프로세스",
       "type": "tag"
     },
     {
@@ -1233,7 +1971,22 @@
     },
     {
       "source": "20240911-2226",
-      "target": "tag:post",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "tag:책",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "tag:아날로그",
+      "type": "tag"
+    },
+    {
+      "source": "20240911-2226",
+      "target": "tag:일상",
       "type": "tag"
     },
     {
@@ -1243,7 +1996,22 @@
     },
     {
       "source": "20241110-2232",
-      "target": "tag:post",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "tag:이직",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "tag:회고",
+      "type": "tag"
+    },
+    {
+      "source": "20241110-2232",
+      "target": "tag:성장",
       "type": "tag"
     },
     {
@@ -1253,7 +2021,22 @@
     },
     {
       "source": "20250117-2304",
-      "target": "tag:post",
+      "target": "tag:보안",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "tag:security",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "tag:웹개발",
+      "type": "tag"
+    },
+    {
+      "source": "20250117-2304",
+      "target": "tag:개발프로세스",
       "type": "tag"
     },
     {
@@ -1263,7 +2046,22 @@
     },
     {
       "source": "20250220-2310",
-      "target": "tag:post",
+      "target": "tag:데이터베이스",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "tag:데이터모델링",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "tag:DB설계",
+      "type": "tag"
+    },
+    {
+      "source": "20250220-2310",
+      "target": "tag:개발프로세스",
       "type": "tag"
     },
     {
@@ -1282,6 +2080,16 @@
       "type": "tag"
     },
     {
+      "source": "20250515-1013",
+      "target": "tag:네이밍",
+      "type": "tag"
+    },
+    {
+      "source": "20250515-1013",
+      "target": "tag:마케팅",
+      "type": "tag"
+    },
+    {
       "source": "20250915-1014",
       "target": "tag:개발",
       "type": "tag"
@@ -1293,12 +2101,42 @@
     },
     {
       "source": "20250915-1014",
-      "target": "tag:post",
+      "target": "tag:이슈분석",
+      "type": "tag"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "tag:디버깅",
+      "type": "tag"
+    },
+    {
+      "source": "20250915-1014",
+      "target": "tag:개발프로세스",
       "type": "tag"
     },
     {
       "source": "20260210-2216",
-      "target": "tag:post",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260210-2216",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260210-2216",
+      "target": "tag:개발일정",
+      "type": "tag"
+    },
+    {
+      "source": "20260210-2216",
+      "target": "tag:매니저",
+      "type": "tag"
+    },
+    {
+      "source": "20260210-2216",
+      "target": "tag:리더십",
       "type": "tag"
     },
     {
@@ -1317,18 +2155,43 @@
       "type": "tag"
     },
     {
+      "source": "20260513-1350",
+      "target": "tag:협업",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1350",
+      "target": "tag:디자인",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1350",
+      "target": "tag:Figma",
+      "type": "tag"
+    },
+    {
       "source": "20260513-1439",
       "target": "tag:삶",
       "type": "tag"
     },
     {
       "source": "20260513-1439",
-      "target": "tag:book",
+      "target": "tag:에세이",
       "type": "tag"
     },
     {
       "source": "20260513-1439",
-      "target": "tag:에세이",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1439",
+      "target": "tag:성장",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-1439",
+      "target": "tag:자기계발",
       "type": "tag"
     },
     {
@@ -1338,12 +2201,22 @@
     },
     {
       "source": "20260513-2148",
-      "target": "tag:post",
+      "target": "tag:소설",
       "type": "tag"
     },
     {
-      "source": "20260514-1200",
-      "target": "tag:개발",
+      "source": "20260513-2148",
+      "target": "tag:단편소설",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-2148",
+      "target": "tag:가족",
+      "type": "tag"
+    },
+    {
+      "source": "20260513-2148",
+      "target": "tag:육아",
       "type": "tag"
     },
     {
@@ -1354,6 +2227,21 @@
     {
       "source": "20260514-1200",
       "target": "tag:애플",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "tag:삼성",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "tag:웨어러블",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1200",
+      "target": "tag:하드웨어",
       "type": "tag"
     },
     {
@@ -1373,7 +2261,12 @@
     },
     {
       "source": "20260514-1544",
-      "target": "tag:book",
+      "target": "tag:미래",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1544",
+      "target": "tag:기술비판",
       "type": "tag"
     },
     {
@@ -1383,7 +2276,22 @@
     },
     {
       "source": "20260514-1548",
-      "target": "tag:book",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1548",
+      "target": "tag:디자인",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1548",
+      "target": "tag:브랜딩",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1548",
+      "target": "tag:창의성",
       "type": "tag"
     },
     {
@@ -1394,11 +2302,6 @@
     {
       "source": "20260514-1549",
       "target": "tag:삶",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1549",
-      "target": "tag:book",
       "type": "tag"
     },
     {
@@ -1417,6 +2320,11 @@
       "type": "tag"
     },
     {
+      "source": "20260514-1549",
+      "target": "tag:실패",
+      "type": "tag"
+    },
+    {
       "source": "20260514-1919",
       "target": "tag:영화",
       "type": "tag"
@@ -1429,6 +2337,21 @@
     {
       "source": "20260514-1919",
       "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "tag:디즈니",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "tag:자유",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-1919",
+      "target": "tag:욕망",
       "type": "tag"
     },
     {
@@ -1447,6 +2370,21 @@
       "type": "tag"
     },
     {
+      "source": "20260514-2111-2",
+      "target": "tag:사회자본",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111-2",
+      "target": "tag:계층",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111-2",
+      "target": "tag:자기계발",
+      "type": "tag"
+    },
+    {
       "source": "20260514-2111",
       "target": "tag:독서",
       "type": "tag"
@@ -1459,6 +2397,16 @@
     {
       "source": "20260514-2111",
       "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:패션",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:일상",
       "type": "tag"
     },
     {
@@ -1477,6 +2425,16 @@
       "type": "tag"
     },
     {
+      "source": "20260514-2112-2",
+      "target": "tag:스토아",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-2",
+      "target": "tag:자기계발",
+      "type": "tag"
+    },
+    {
       "source": "20260514-2112-3",
       "target": "tag:독서",
       "type": "tag"
@@ -1489,6 +2447,16 @@
     {
       "source": "20260514-2112-3",
       "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-3",
+      "target": "tag:브랜딩",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112-3",
+      "target": "tag:마케팅",
       "type": "tag"
     },
     {
@@ -1507,6 +2475,16 @@
       "type": "tag"
     },
     {
+      "source": "20260514-2112",
+      "target": "tag:완벽주의",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2112",
+      "target": "tag:자아",
+      "type": "tag"
+    },
+    {
       "source": "20260514-2113-2",
       "target": "tag:독서",
       "type": "tag"
@@ -1519,6 +2497,16 @@
     {
       "source": "20260514-2113-2",
       "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-2",
+      "target": "tag:죽음",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-2",
+      "target": "tag:존재",
       "type": "tag"
     },
     {
@@ -1538,12 +2526,12 @@
     },
     {
       "source": "20260514-2113-3",
-      "target": "tag:book",
+      "target": "tag:조직",
       "type": "tag"
     },
     {
       "source": "20260514-2113-3",
-      "target": "tag:소설",
+      "target": "tag:리더십",
       "type": "tag"
     },
     {
@@ -1563,7 +2551,17 @@
     },
     {
       "source": "20260514-2113",
-      "target": "tag:book",
+      "target": "tag:심리",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "tag:자아",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "tag:성장",
       "type": "tag"
     },
     {
@@ -1573,7 +2571,22 @@
     },
     {
       "source": "20260514-2114",
-      "target": "tag:post",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2114",
+      "target": "tag:질문",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2114",
+      "target": "tag:사랑",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2114",
+      "target": "tag:인간성",
       "type": "tag"
     },
     {
@@ -1588,7 +2601,17 @@
     },
     {
       "source": "20260515-1013-2",
-      "target": "tag:개발",
+      "target": "tag:NFT",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013-2",
+      "target": "tag:암호화폐",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013-2",
+      "target": "tag:기술트렌드",
       "type": "tag"
     },
     {
@@ -1607,6 +2630,16 @@
       "type": "tag"
     },
     {
+      "source": "20260515-1013",
+      "target": "tag:성장",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1013",
+      "target": "tag:회고",
+      "type": "tag"
+    },
+    {
       "source": "20260515-1017-2",
       "target": "tag:독서",
       "type": "tag"
@@ -1619,6 +2652,16 @@
     {
       "source": "20260515-1017-2",
       "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017-2",
+      "target": "tag:프로그래밍",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017-2",
+      "target": "tag:소프트웨어공학",
       "type": "tag"
     },
     {
@@ -1637,13 +2680,23 @@
       "type": "tag"
     },
     {
-      "source": "20260516-1250-2",
-      "target": "tag:개발",
+      "source": "20260515-1017",
+      "target": "tag:소설",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "tag:한강",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "tag:5.18",
       "type": "tag"
     },
     {
       "source": "20260516-1250-2",
-      "target": "tag:book",
+      "target": "tag:개발",
       "type": "tag"
     },
     {
@@ -1657,6 +2710,21 @@
       "type": "tag"
     },
     {
+      "source": "20260516-1250-2",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250-2",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250-2",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
       "source": "20260516-1250",
       "target": "tag:사회",
       "type": "tag"
@@ -1664,6 +2732,26 @@
     {
       "source": "20260516-1250",
       "target": "tag:AI",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:미래",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:트렌드",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:문명",
       "type": "tag"
     },
     {
@@ -1688,17 +2776,47 @@
     },
     {
       "source": "20260517-1256",
-      "target": "tag:book",
+      "target": "tag:집중력",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1256",
+      "target": "tag:SNS",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1256",
+      "target": "tag:테크",
       "type": "tag"
     },
     {
       "source": "20260517-1307",
-      "target": "tag:book",
+      "target": "tag:독서",
       "type": "tag"
     },
     {
       "source": "20260517-1307",
       "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1307",
+      "target": "tag:커리어",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1307",
+      "target": "tag:리더십",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1307",
+      "target": "tag:매니저",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1307",
+      "target": "tag:테크리드",
       "type": "tag"
     },
     {
@@ -1717,6 +2835,21 @@
       "type": "tag"
     },
     {
+      "source": "20260517-1323",
+      "target": "tag:리더십",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1323",
+      "target": "tag:팀쿡",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1323",
+      "target": "tag:스티브잡스",
+      "type": "tag"
+    },
+    {
       "source": "20260517-1337",
       "target": "tag:삶",
       "type": "tag"
@@ -1728,12 +2861,27 @@
     },
     {
       "source": "20260517-1337",
-      "target": "tag:post",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1337",
+      "target": "tag:퇴사",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1337",
+      "target": "tag:성장",
       "type": "tag"
     },
     {
       "source": "20260519-0845",
-      "target": "tag:book",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "tag:문학",
       "type": "tag"
     },
     {
@@ -1744,6 +2892,16 @@
     {
       "source": "20260519-0845",
       "target": "tag:소설",
+      "type": "tag"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "tag:청춘",
+      "type": "tag"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "tag:상실",
       "type": "tag"
     }
   ]
