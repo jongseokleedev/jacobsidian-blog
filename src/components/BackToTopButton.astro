@@ -38,18 +38,26 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
     });
 
     // Handle button visibility according to scroll position
+    const articleEl = document.getElementById("article");
+
+    function getArticleScrollEnd() {
+      if (!articleEl) return rootElement.scrollHeight - rootElement.clientHeight;
+      return window.scrollY + articleEl.getBoundingClientRect().bottom - window.innerHeight;
+    }
+
     let lastVisible = null;
     function handleScroll() {
-      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
       const scrollTop = rootElement.scrollTop;
-      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+      const articleEnd = getArticleScrollEnd();
+      const scrollPercent = articleEnd > 0 ? Math.min(100, Math.floor((scrollTop / articleEnd) * 100)) : 0;
+      const pastArticle = scrollTop >= articleEnd;
 
       progressIndicator.style.setProperty(
         "background-image",
         `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
       );
 
-      const isVisible = scrollTop / scrollTotal > 0.3;
+      const isVisible = scrollTop / (rootElement.scrollHeight - rootElement.clientHeight) > 0.1 && !pastArticle;
 
       if (isVisible !== lastVisible) {
         btnContainer.classList.toggle("opacity-100", isVisible);

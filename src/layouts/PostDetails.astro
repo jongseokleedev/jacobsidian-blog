@@ -416,8 +416,8 @@ const nextPost =
     const url = window.location.pathname;
 
     function getScrollPct() {
-      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      return h > 0 ? Math.round((window.scrollY / h) * 100) : 0;
+      const articleEnd = article!.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+      return articleEnd > 0 ? Math.min(100, Math.round((window.scrollY / articleEnd) * 100)) : 0;
     }
 
     function save() {
