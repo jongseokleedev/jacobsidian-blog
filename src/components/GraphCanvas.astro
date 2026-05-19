@@ -600,6 +600,44 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const STEP_MS = 100;
       let timelapsTimer = null;
 
+      // Slot-machine digit transition for date overlay
+      function setDateAnimated(newText) {
+        if (!dateOverlay) return;
+        const oldText = dateOverlay.dataset.cur ?? "";
+        if (oldText === newText) return;
+        dateOverlay.dataset.cur = newText;
+        const children = [];
+        for (let ci = 0; ci < newText.length; ci++) {
+          const nc = newText[ci] ?? "";
+          const oc = oldText[ci] ?? "";
+          if (!/\d/.test(nc) || nc === oc) {
+            const s = document.createElement("span");
+            s.textContent = nc;
+            children.push(s);
+          } else {
+            const slot = document.createElement("span");
+            slot.style.cssText = "display:inline-block;overflow:hidden;height:1em;vertical-align:bottom;position:relative;";
+            const track = document.createElement("span");
+            track.style.cssText = "display:flex;flex-direction:column;will-change:transform;";
+            const prev = document.createElement("span");
+            prev.textContent = oc || nc;
+            prev.style.cssText = "display:block;height:1em;line-height:1em;";
+            const next = document.createElement("span");
+            next.textContent = nc;
+            next.style.cssText = "display:block;height:1em;line-height:1em;";
+            track.appendChild(prev);
+            track.appendChild(next);
+            slot.appendChild(track);
+            children.push(slot);
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+              track.style.transition = "transform 220ms cubic-bezier(0.4,0,0.2,1)";
+              track.style.transform = "translateY(-1em)";
+            }));
+          }
+        }
+        dateOverlay.replaceChildren(...children);
+      }
+
       function tickBirth() {
         let anyChanging = false;
         for (const n of nodesCopy) {
@@ -674,9 +712,9 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
             .duration(STEP_MS * 1.5)
             .ease(d3.easeLinear)
             .call(zoom.transform, computeFitTransform());
-          if (dateOverlay && n.pubDatetime) {
+          if (n.pubDatetime) {
             const d = new Date(n.pubDatetime);
-            dateOverlay.textContent = d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit" });
+            setDateAnimated(d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit" }));
           }
           tickBirth();
           timelapsTimer = setTimeout(step, STEP_MS);
