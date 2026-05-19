@@ -556,11 +556,12 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       if (!xs.length) return d3.zoomIdentity;
       const minX = Math.min(...xs), maxX = Math.max(...xs);
       const minY = Math.min(...ys), maxY = Math.max(...ys);
-      const pad = 48;
+      const pad = isMini ? 36 : 48;
+      const maxK = isMini ? 0.85 : 2;
       const k = Math.min(
         (rect.width - pad * 2) / (maxX - minX || 1),
         (rect.height - pad * 2) / (maxY - minY || 1),
-        2
+        maxK
       );
       const tx = rect.width / 2 - k * (minX + maxX) / 2;
       const ty = rect.height / 2 - k * (minY + maxY) / 2;
