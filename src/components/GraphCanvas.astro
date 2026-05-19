@@ -294,8 +294,10 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     function drawDotGrid(fg) {
+      if (rect.width === 0 || rect.height === 0) return;
       const spacing = 28;
       const dotR = 0.8 / currentTransform.k;
+      if (dotR <= 0) return;
       const t = currentTransform;
       const x0 = -t.x / t.k;
       const y0 = -t.y / t.k;
@@ -324,6 +326,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     function draw() {
+      if (canvas.width === 0 || canvas.height === 0) return;
       // Apply birth progress: multiply catAlphaMap by birth factor during timelapse
       if (timelapseActive) {
         for (const n of nodesCopy) {
@@ -570,11 +573,13 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const minY = Math.min(...ys), maxY = Math.max(...ys);
       const pad = isMini ? 36 : 48;
       const maxK = isMini ? 0.85 : 2;
+      if (rect.width === 0 || rect.height === 0) return d3.zoomIdentity;
       const k = Math.min(
         (rect.width - pad * 2) / (maxX - minX || 1),
         (rect.height - pad * 2) / (maxY - minY || 1),
         maxK
       );
+      if (k <= 0) return d3.zoomIdentity;
       const tx = rect.width / 2 - k * (minX + maxX) / 2;
       const ty = rect.height / 2 - k * (minY + maxY) / 2;
       return d3.zoomIdentity.translate(tx, ty).scale(k);
@@ -891,6 +896,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     // Refit on sidebar toggle (main-content margin transition ends)
     // Refit instantly whenever container size changes (sidebar toggle, window resize)
     new ResizeObserver(() => {
+      if (containerEl.offsetWidth === 0 || containerEl.offsetHeight === 0) return;
       resizeCanvas();
       d3.select(canvas).call(zoom.transform, computeFitTransform());
       draw();
