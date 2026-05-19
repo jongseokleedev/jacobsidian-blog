@@ -32,7 +32,9 @@
       "category": "review-book",
       "tags": [
         "문학",
-        "book"
+        "book",
+        "하루키",
+        "소설"
       ],
       "pubDatetime": "2023-08-12T00:00:00.000Z"
     },
@@ -70,7 +72,8 @@
       "tags": [
         "독서",
         "심리",
-        "사회"
+        "사회",
+        "book"
       ],
       "pubDatetime": "2023-09-20T00:00:00.000Z"
     },
@@ -244,7 +247,8 @@
       "tags": [
         "독서",
         "AI",
-        "사회"
+        "사회",
+        "book"
       ],
       "pubDatetime": "2025-01-16T00:00:00.000Z"
     },
@@ -376,7 +380,9 @@
       "tags": [
         "독서",
         "AI",
-        "사회"
+        "사회",
+        "book",
+        "소설"
       ],
       "pubDatetime": "2026-05-10T00:00:00.000Z"
     },
@@ -389,7 +395,8 @@
       "tags": [
         "독서",
         "에세이",
-        "삶"
+        "삶",
+        "book"
       ],
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
@@ -493,7 +500,8 @@
       "tags": [
         "독서",
         "사회",
-        "삶"
+        "삶",
+        "book"
       ],
       "pubDatetime": "2024-06-17T00:00:00.000Z"
     },
@@ -503,7 +511,10 @@
       "url": "/review/book/20260517-1307",
       "type": "post",
       "category": "review-book",
-      "tags": [],
+      "tags": [
+        "book",
+        "개발"
+      ],
       "pubDatetime": "2024-07-18T00:00:00.000Z"
     },
     {
@@ -538,7 +549,11 @@
       "url": "/review/book/20260519-0845",
       "type": "post",
       "category": "review-book",
-      "tags": [],
+      "tags": [
+        "book",
+        "하루키",
+        "소설"
+      ],
       "pubDatetime": "2026-05-19T00:00:00.000Z"
     },
     {
@@ -573,6 +588,20 @@
       "id": "tag:book",
       "title": "book",
       "url": "/tags/book",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:하루키",
+      "title": "하루키",
+      "url": "/tags/하루키",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:소설",
+      "title": "소설",
+      "url": "/tags/소설",
       "type": "tag",
       "tags": []
     },
@@ -1118,6 +1147,16 @@
       "type": "tag"
     },
     {
+      "source": "20230812-1256",
+      "target": "tag:하루키",
+      "type": "tag"
+    },
+    {
+      "source": "20230812-1256",
+      "target": "tag:소설",
+      "type": "tag"
+    },
+    {
       "source": "20230817-2136",
       "target": "tag:영화",
       "type": "tag"
@@ -1155,6 +1194,11 @@
     {
       "source": "20230920-2210",
       "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20230920-2210",
+      "target": "tag:book",
       "type": "tag"
     },
     {
@@ -1328,6 +1372,11 @@
       "type": "tag"
     },
     {
+      "source": "20260514-1544",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
       "source": "20260514-1548",
       "target": "tag:커리어",
       "type": "tag"
@@ -1488,6 +1537,16 @@
       "type": "tag"
     },
     {
+      "source": "20260514-2113-3",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113-3",
+      "target": "tag:소설",
+      "type": "tag"
+    },
+    {
       "source": "20260514-2113",
       "target": "tag:독서",
       "type": "tag"
@@ -1500,6 +1559,11 @@
     {
       "source": "20260514-2113",
       "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2113",
+      "target": "tag:book",
       "type": "tag"
     },
     {
@@ -1623,6 +1687,21 @@
       "type": "tag"
     },
     {
+      "source": "20260517-1256",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1307",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260517-1307",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
       "source": "20260517-1323",
       "target": "tag:독서",
       "type": "tag"
@@ -1650,6 +1729,21 @@
     {
       "source": "20260517-1337",
       "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "tag:하루키",
+      "type": "tag"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "tag:소설",
       "type": "tag"
     }
   ]
