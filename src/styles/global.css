@@ -185,11 +185,6 @@ html[data-theme="dark"] {
   to   { opacity: 1; }
 }
 
-/* Safari 스와이프 뒤로가기 충돌 방지 — traverse 시 애니메이션 즉시 처리 */
-.no-page-transition ::view-transition-old(main-content),
-.no-page-transition ::view-transition-new(main-content) {
-  animation: none;
-}
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(main-content),

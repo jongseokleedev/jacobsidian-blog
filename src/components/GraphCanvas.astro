@@ -48,6 +48,18 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       </button>
     </div>
   )}
+  <!-- Timelapse progress bar (full-width top) -->
+  {!isMini && (
+    <div
+      class="animate-progress-track absolute top-0 left-0 right-0 pointer-events-none opacity-0 transition-opacity duration-300 z-10"
+      style="height:3px; background: var(--border);"
+    >
+      <div
+        class="animate-progress-bar h-full"
+        style="width:0%; background: var(--accent); transition: width 120ms linear;"
+      ></div>
+    </div>
+  )}
   <!-- Timelapse date overlay -->
   {!isMini && (
     <div
@@ -55,15 +67,9 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       style="min-width: 7em;"
     >
       <div
-        class="animate-date-text font-mono text-[13px] white-space-nowrap"
+        class="animate-date-text font-mono text-[13px] whitespace-nowrap"
         style="color: var(--fg-mute);"
       ></div>
-      <div class="mt-1 h-[2px] rounded-full overflow-hidden" style="background: var(--border);">
-        <div
-          class="animate-progress-bar h-full rounded-full"
-          style="width:0%; background: var(--fg-mute); transition: width 120ms linear;"
-        ></div>
-      </div>
     </div>
   )}
   <!-- Node bottom bar -->
@@ -601,6 +607,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const dateOverlay = containerEl.querySelector(".animate-date-overlay");
       const dateText = containerEl.querySelector(".animate-date-text");
       const progressBar = containerEl.querySelector(".animate-progress-bar");
+      const progressTrack = containerEl.querySelector(".animate-progress-track");
 
       // Sort post nodes by pubDatetime; tag/undated nodes appear last
       const timelapseSorted = [...nodesCopy]
@@ -697,6 +704,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         animIconPlay?.classList.add("hidden");
         animIconStop?.classList.remove("hidden");
         if (dateOverlay) dateOverlay.style.opacity = "1";
+        if (progressTrack) progressTrack.style.opacity = "1";
         if (progressBar) progressBar.style.width = "0%";
         if (dateText) { dateText.dataset.cur = ""; dateText.replaceChildren(); }
 
