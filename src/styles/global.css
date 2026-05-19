@@ -99,10 +99,36 @@ html[data-theme="dark"] {
   a,
   button {
     @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+    touch-action: manipulation;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+
+  /* 필터 pill 버튼: 시각적 변경 없이 터치 타겟 확장 */
+  .cat-filter-pill,
+  .archives-filter-pill,
+  .sub-filter-pill,
+  .topic-pill,
+  .featured-tab {
+    position: relative;
+  }
+  .cat-filter-pill::after,
+  .archives-filter-pill::after,
+  .sub-filter-pill::after,
+  .topic-pill::after,
+  .featured-tab::after {
+    content: "";
+    position: absolute;
+    inset: -8px -2px;
+  }
+
+  /* 가로 스크롤 필터 컨테이너: pan-x 명시로 탭/스크롤 판단 즉시화 */
+  #cat-filter-row,
+  #sub-filter-row,
+  #topic-filter-row {
+    touch-action: pan-x;
   }
 
   /* Prose link underline grow animation (left → right) */
