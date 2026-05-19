@@ -533,6 +533,15 @@
       "pubDatetime": "2022-10-02T00:00:00.000Z"
     },
     {
+      "id": "20260519-0845",
+      "title": "노르웨이의 숲",
+      "url": "/review/book/20260519-0845",
+      "type": "post",
+      "category": "review-book",
+      "tags": [],
+      "pubDatetime": "2026-05-19T00:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -1071,6 +1080,11 @@
     {
       "source": "20260517-1337",
       "target": "20260514-2113-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260519-0845",
+      "target": "20230812-1256",
       "type": "wikilink"
     },
     {
