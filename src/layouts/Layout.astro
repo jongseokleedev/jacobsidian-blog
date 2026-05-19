@@ -149,6 +149,18 @@ const structuredData = {
     }
 
     <ClientRouter />
+    <script is:inline>
+      // traverse(뒤로/앞으로) 네비게이션에서 Astro view transition 애니메이션 비활성화
+      // Safari 스와이프 뒤로가기의 네이티브 애니메이션과 충돌 방지
+      document.addEventListener('astro:before-preparation', function(e) {
+        if (e.navigationType === 'traverse') {
+          document.documentElement.classList.add('no-page-transition');
+        }
+      });
+      document.addEventListener('astro:after-swap', function() {
+        document.documentElement.classList.remove('no-page-transition');
+      });
+    </script>
 
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
     <script is:inline>
