@@ -885,6 +885,42 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       if (!found || found.id !== barNode.id) hideBar();
     });
 
+    // ── Touch: hover highlight + tap-to-bar (mobile only) ────────
+    // mousemove never fires on touch devices, so hoveredNode stays null.
+    // touchstart sets it with a wider hit radius (35px vs 20px for mouse).
+    // touchmove clears it when the gesture becomes a pan/zoom.
+    if (window.matchMedia("(hover: none)").matches) {
+      let touchOrigin = { x: 0, y: 0 };
+
+      canvas.addEventListener("touchstart", event => {
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const offsetX = touch.clientX - rect.left;
+        const offsetY = touch.clientY - rect.top;
+        touchOrigin = { x: offsetX, y: offsetY };
+
+        const t = currentTransform;
+        const nearest = sim.find((offsetX - t.x) / t.k, (offsetY - t.y) / t.k, 35) ?? null;
+        const found = nearest?.type === "tag" ? null : nearest;
+
+        if (found?.id !== hoveredNode?.id) {
+          hoveredNode = found;
+          startAnim();
+        }
+      }, { passive: true });
+
+      canvas.addEventListener("touchmove", event => {
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const dx = touch.clientX - rect.left - touchOrigin.x;
+        const dy = touch.clientY - rect.top - touchOrigin.y;
+        if (Math.sqrt(dx * dx + dy * dy) > 8 && hoveredNode) {
+          hoveredNode = null;
+          startAnim();
+        }
+      }, { passive: true });
+    }
+
     document.addEventListener("click", event => {
       if (!barNode) return;
       if (containerEl.contains(event.target)) return;
