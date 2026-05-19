@@ -407,6 +407,77 @@ const nextPost =
     });
   }
 
+  // ── Now Reading 위치 복구 토스트 ─────────────────────────────
+  function initResumeReading() {
+    const article = document.getElementById("article");
+    if (!article) return;
+    const currentPostId = article.dataset.postId;
+
+    let saved: { postId: string; progress: number } | null = null;
+    try { saved = JSON.parse(localStorage.getItem("jb:now-reading") ?? "null"); } catch { /* empty */ }
+    if (!saved || saved.postId !== currentPostId || saved.progress < 5) return;
+
+    const pct = saved.progress;
+
+    const toast = document.createElement("div");
+    toast.id = "resume-toast";
+    toast.setAttribute("style", [
+      "position:fixed", "top:12px", "right:16px", "z-index:50",
+      "display:flex", "align-items:center", "gap:10px",
+      "padding:8px 14px",
+      "background:var(--background)", "border:1px solid var(--border)",
+      "border-radius:8px", "font-size:13px", "color:var(--foreground)",
+      "box-shadow:0 4px 16px rgba(0,0,0,0.18)",
+      "opacity:0", "transform:translateY(-8px)",
+      "transition:opacity 200ms ease,transform 200ms ease",
+    ].join(";"));
+
+    const label = document.createElement("span");
+    label.style.color = "var(--fg-mute)";
+    label.textContent = `${pct}% 읽었습니다`;
+
+    const resumeBtn = document.createElement("button");
+    resumeBtn.id = "resume-btn";
+    resumeBtn.style.cssText = "color:var(--accent);font-weight:500;white-space:nowrap;cursor:pointer;";
+    resumeBtn.textContent = "이어서 읽기 →";
+
+    const dismissBtn = document.createElement("button");
+    dismissBtn.id = "resume-dismiss";
+    dismissBtn.style.cssText = "color:var(--fg-faint);cursor:pointer;padding:0 2px;font-size:16px;line-height:1;";
+    dismissBtn.setAttribute("aria-label", "닫기");
+    dismissBtn.textContent = "×";
+
+    toast.appendChild(label);
+    toast.appendChild(resumeBtn);
+    toast.appendChild(dismissBtn);
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      toast.style.opacity = "1";
+      toast.style.transform = "translateY(0)";
+    }));
+
+    function dismiss() {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(-8px)";
+      setTimeout(() => toast.remove(), 200);
+    }
+
+    resumeBtn.addEventListener("click", () => {
+      const art = document.getElementById("article");
+      if (art) {
+        const articleEnd = art.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+        window.scrollTo({ top: Math.round((pct / 100) * articleEnd), behavior: "smooth" });
+      }
+      clearTimeout(timer);
+      dismiss();
+    }, { once: true });
+
+    dismissBtn.addEventListener("click", () => { clearTimeout(timer); dismiss(); }, { once: true });
+
+    const timer = setTimeout(dismiss, 8000);
+  }
+
   // ── Now Reading 자동 추적 (모든 콘텐츠) ──────────────────────
   function initNowReadingTracker() {
     const article = document.getElementById("article");
@@ -439,9 +510,11 @@ const nextPost =
     });
   }
 
+  initResumeReading();
   initPinButton();
   initNowReadingTracker();
   document.addEventListener("astro:after-swap", () => {
+    initResumeReading();
     initPinButton();
     initNowReadingTracker();
   });
