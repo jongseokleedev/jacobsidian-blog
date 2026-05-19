@@ -51,9 +51,20 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   <!-- Timelapse date overlay -->
   {!isMini && (
     <div
-      class="animate-date-overlay absolute top-3 left-3 font-mono text-[11px] pointer-events-none opacity-0 transition-opacity duration-300"
-      style="color: var(--fg-faint);"
-    ></div>
+      class="animate-date-overlay absolute top-3 left-3 pointer-events-none opacity-0 transition-opacity duration-300"
+      style="min-width: 7em;"
+    >
+      <div
+        class="animate-date-text font-mono text-[13px] white-space-nowrap"
+        style="color: var(--fg-mute);"
+      ></div>
+      <div class="mt-1 h-[2px] rounded-full overflow-hidden" style="background: var(--border);">
+        <div
+          class="animate-progress-bar h-full rounded-full"
+          style="width:0%; background: var(--fg-mute); transition: width 120ms linear;"
+        ></div>
+      </div>
+    </div>
   )}
   <!-- Node bottom bar -->
   <div
@@ -587,6 +598,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const animIconPlay = containerEl.querySelector(".animate-icon-play");
       const animIconStop = containerEl.querySelector(".animate-icon-stop");
       const dateOverlay = containerEl.querySelector(".animate-date-overlay");
+      const dateText = containerEl.querySelector(".animate-date-text");
+      const progressBar = containerEl.querySelector(".animate-progress-bar");
 
       // Sort post nodes by pubDatetime; tag/undated nodes appear last
       const timelapseSorted = [...nodesCopy].sort((a, b) => {
@@ -597,26 +610,27 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       });
 
       const BIRTH_SPEED = 0.16;
-      const STEP_MS = 100;
+      const STEP_MS = 120;
       let timelapsTimer = null;
 
-      // Slot-machine digit transition for date overlay
+      // Slot-machine digit transition for date text
       function setDateAnimated(newText) {
-        if (!dateOverlay) return;
-        const oldText = dateOverlay.dataset.cur ?? "";
+        if (!dateText) return;
+        const oldText = dateText.dataset.cur ?? "";
         if (oldText === newText) return;
-        dateOverlay.dataset.cur = newText;
+        dateText.dataset.cur = newText;
         const children = [];
         for (let ci = 0; ci < newText.length; ci++) {
           const nc = newText[ci] ?? "";
           const oc = oldText[ci] ?? "";
           if (!/\d/.test(nc) || nc === oc) {
             const s = document.createElement("span");
+            s.style.cssText = "display:inline-block;vertical-align:middle;";
             s.textContent = nc;
             children.push(s);
           } else {
             const slot = document.createElement("span");
-            slot.style.cssText = "display:inline-block;overflow:hidden;height:1em;vertical-align:bottom;position:relative;";
+            slot.style.cssText = "display:inline-block;overflow:hidden;height:1em;vertical-align:middle;position:relative;";
             const track = document.createElement("span");
             track.style.cssText = "display:flex;flex-direction:column;will-change:transform;";
             const prev = document.createElement("span");
@@ -635,7 +649,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
             }));
           }
         }
-        dateOverlay.replaceChildren(...children);
+        dateText.replaceChildren(...children);
       }
 
       function tickBirth() {
@@ -658,6 +672,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         animIconPlay?.classList.remove("hidden");
         animIconStop?.classList.add("hidden");
         if (dateOverlay) dateOverlay.style.opacity = "0";
+        if (progressBar) progressBar.style.width = "0%";
         for (const n of nodesCopy) birthProgress.set(n.id, 1);
         // Restore catAlphaMap and alphaDecay
         for (const n of nodesCopy) catAlphaMap.set(n.id, targetCatAlpha(n));
@@ -715,6 +730,9 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           if (n.pubDatetime) {
             const d = new Date(n.pubDatetime);
             setDateAnimated(d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit" }));
+          }
+          if (progressBar) {
+            progressBar.style.width = `${(i / timelapseSorted.length) * 100}%`;
           }
           tickBirth();
           timelapsTimer = setTimeout(step, STEP_MS);
