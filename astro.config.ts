@@ -41,6 +41,10 @@ export default defineConfig({
       external: ["@resvg/resvg-js"],
     },
   },
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: "hover",
+  },
   image: {
     responsiveStyles: true,
     layout: "constrained",

@@ -1,5 +1,4 @@
 ---
-import "@pagefind/default-ui/css/ui.css";
 import IconX from "@/assets/icons/IconX.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
@@ -325,6 +324,13 @@ const isActive = (path: string) => {
       if (import.meta.env.DEV) {
         document.querySelector("#search-dev-warning")?.classList.remove("hidden");
         return;
+      }
+
+      if (!document.querySelector('link[href*="pagefind/pagefind-ui"]')) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "/pagefind/pagefind-ui.css";
+        document.head.appendChild(link);
       }
 
       // @ts-expect-error — Missing types for @pagefind/default-ui

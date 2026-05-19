@@ -109,6 +109,9 @@ devDependencies:
   vitest:
     specifier: ^4.1.6
     version: 4.1.6(@types/node@25.7.0)(vite@8.0.13)
+  zod:
+    specifier: ^4.4.3
+    version: 4.4.3
 
 packages:
 
@@ -5646,7 +5649,6 @@ packages:
 
   /zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
