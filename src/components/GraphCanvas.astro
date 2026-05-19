@@ -597,7 +597,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       });
 
       const BIRTH_SPEED = 0.16;
-      const STEP_MS = 140;
+      const STEP_MS = 100;
       let timelapsTimer = null;
 
       function tickBirth() {
@@ -621,10 +621,15 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         animIconStop?.classList.add("hidden");
         if (dateOverlay) dateOverlay.style.opacity = "0";
         for (const n of nodesCopy) birthProgress.set(n.id, 1);
-        // Restore catAlphaMap to normal
+        // Restore catAlphaMap and alphaDecay
         for (const n of nodesCopy) catAlphaMap.set(n.id, targetCatAlpha(n));
-        // Fit camera now that all nodes are placed
-        d3.select(canvas).transition().duration(600).call(zoom.transform, computeFitTransform());
+        sim.alphaDecay(0.0228);
+        // Final snap to exact fit
+        d3.select(canvas)
+          .transition()
+          .duration(150)
+          .ease(d3.easeCubicOut)
+          .call(zoom.transform, computeFitTransform());
         draw();
       }
 
@@ -637,7 +642,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         // Hide all nodes
         for (const n of nodesCopy) birthProgress.set(n.id, 0);
 
-        // Re-cluster to canvas center (no camera transition yet — fit happens at the end)
+        // Re-cluster to canvas center
         const cx = rect.width / 2;
         const cy = rect.height / 2;
         for (const n of nodesCopy) {
@@ -649,6 +654,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         pinnedNodes.clear();
         // Reset camera to identity so simulation spreads visibly
         d3.select(canvas).call(zoom.transform, d3.zoomIdentity);
+        // Slow decay so layout is still settling when last node appears
+        sim.alphaDecay(0.011);
         sim.alpha(1).restart();
 
         let i = 0;
@@ -659,6 +666,14 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           }
           const n = timelapseSorted[i++];
           birthProgress.set(n.id, 0.01); // trigger birth animation
+          // Reheat simulation so layout keeps adjusting as nodes appear
+          if (sim.alpha() < 0.2) sim.alpha(0.2).restart();
+          // Progressively move camera toward current fit as nodes spread
+          d3.select(canvas)
+            .transition()
+            .duration(STEP_MS * 1.5)
+            .ease(d3.easeLinear)
+            .call(zoom.transform, computeFitTransform());
           if (dateOverlay && n.pubDatetime) {
             const d = new Date(n.pubDatetime);
             dateOverlay.textContent = d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit" });
