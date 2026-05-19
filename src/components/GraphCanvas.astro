@@ -673,8 +673,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         timelapsTimer = null;
         animIconPlay?.classList.remove("hidden");
         animIconStop?.classList.add("hidden");
-        if (dateOverlay) dateOverlay.style.opacity = "0";
-        if (progressBar) progressBar.style.width = "0%";
+        // Keep date overlay and progress bar visible after completion
         for (const n of nodesCopy) birthProgress.set(n.id, 1);
         // Restore catAlphaMap and alphaDecay
         for (const n of nodesCopy) catAlphaMap.set(n.id, targetCatAlpha(n));
@@ -697,6 +696,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         animIconPlay?.classList.add("hidden");
         animIconStop?.classList.remove("hidden");
         if (dateOverlay) dateOverlay.style.opacity = "1";
+        if (progressBar) progressBar.style.width = "0%";
+        if (dateText) { dateText.dataset.cur = ""; dateText.replaceChildren(); }
 
         // Hide all nodes
         for (const n of nodesCopy) birthProgress.set(n.id, 0);
