@@ -87,6 +87,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 </div>
 
 <script is:inline define:vars={{ containerId }}>
+  // @ts-nocheck
   async function initGraph(containerEl) {
     if (!containerEl) return;
 
