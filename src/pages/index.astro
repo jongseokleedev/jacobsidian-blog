@@ -130,19 +130,35 @@ const latestPosts = posts
 
     <!-- Latest panel -->
     <div id="featured-latest" class="featured-panel">
-      <div class="featured-carousel">
-        <div class="featured-carousel-track">
-          {latestPosts.map((item) => <FeaturedCard item={item} carousel />)}
+      <div class="featured-carousel-wrap">
+        <button class="carousel-nav carousel-prev" aria-label="이전 카드">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="featured-carousel">
+          <div class="featured-carousel-track">
+            {latestPosts.map((item) => <FeaturedCard item={item} carousel />)}
+          </div>
         </div>
+        <button class="carousel-nav carousel-next" aria-label="다음 카드">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
     </div>
 
     <!-- Core panel -->
     <div id="featured-core" class="featured-panel hidden">
-      <div class="featured-carousel">
-        <div class="featured-carousel-track">
-          {topPosts.map((item) => <FeaturedCard item={item} carousel />)}
+      <div class="featured-carousel-wrap">
+        <button class="carousel-nav carousel-prev" aria-label="이전 카드">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="featured-carousel">
+          <div class="featured-carousel-track">
+            {topPosts.map((item) => <FeaturedCard item={item} carousel />)}
+          </div>
         </div>
+        <button class="carousel-nav carousel-next" aria-label="다음 카드">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
     </div>
   </section>
@@ -244,7 +260,9 @@ const latestPosts = posts
   }
 
   /* ── Carousel: main-area full-bleed, left-aligned start ── */
-  /* Matches discovery-shell padding: 20px mobile, 28px sm+ */
+  .featured-carousel-wrap {
+    position: relative;
+  }
   .featured-carousel {
     --carousel-inset: 20px;
     margin-left: calc(-1 * var(--carousel-inset));
@@ -252,6 +270,7 @@ const latestPosts = posts
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
   }
   @media (min-width: 640px) {
     .featured-carousel { --carousel-inset: 28px; }
@@ -263,13 +282,39 @@ const latestPosts = posts
     display: flex;
     gap: 12px;
     padding-left: var(--carousel-inset);
-    scroll-snap-type: x mandatory;
   }
   .featured-carousel-track::after {
     content: "";
     display: block;
     min-width: var(--carousel-inset);
     flex-shrink: 0;
+  }
+  /* ── Carousel nav buttons ── */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: var(--background);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: opacity 150ms, color 150ms, border-color 150ms;
+  }
+  .carousel-nav:hover { color: var(--accent); border-color: var(--accent); }
+  .carousel-prev { left: 2px; }
+  .carousel-next { right: 2px; }
+  /* 모바일: 스크롤 엣지일 때 숨김 (JS로 제어), 기본 표시 */
+  .carousel-nav[data-hidden] { opacity: 0; pointer-events: none; }
+  /* 데스크탑: 기본 숨김 → wrap hover 시 표시 */
+  @media (min-width: 640px) {
+    .carousel-nav { opacity: 0; pointer-events: none; }
+    .featured-carousel-wrap:hover .carousel-nav:not([data-hidden]) {
+      opacity: 1; pointer-events: auto;
+    }
   }
 </style>
 
@@ -433,6 +478,31 @@ const latestPosts = posts
     });
   }
 
+  function initCarouselNav() {
+    document.querySelectorAll<HTMLElement>(".featured-carousel-wrap").forEach(wrap => {
+      const carousel = wrap.querySelector<HTMLElement>(".featured-carousel");
+      const prev = wrap.querySelector<HTMLButtonElement>(".carousel-prev");
+      const next = wrap.querySelector<HTMLButtonElement>(".carousel-next");
+      if (!carousel || !prev || !next) return;
+
+      const cardWidth = () => {
+        const first = carousel.querySelector<HTMLElement>(".featured-carousel-track > *");
+        return first ? first.offsetWidth + 12 : 220;
+      };
+
+      const updateEdge = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = carousel;
+        scrollLeft < 8 ? prev.setAttribute("data-hidden", "") : prev.removeAttribute("data-hidden");
+        scrollLeft > scrollWidth - clientWidth - 8 ? next.setAttribute("data-hidden", "") : next.removeAttribute("data-hidden");
+      };
+
+      prev.addEventListener("click", () => carousel.scrollBy({ left: -cardWidth(), behavior: "smooth" }));
+      next.addEventListener("click", () => carousel.scrollBy({ left:  cardWidth(), behavior: "smooth" }));
+      carousel.addEventListener("scroll", updateEdge, { passive: true });
+      updateEdge();
+    });
+  }
+
   function initIndexPage() {
     const mainContent = document.querySelector("#main-content") as HTMLElement | null;
     if (mainContent) {
@@ -440,6 +510,7 @@ const latestPosts = posts
     }
     initCatFilter();
     initFeaturedTabs();
+    initCarouselNav();
   }
 
   document.addEventListener("astro:page-load", initIndexPage);
