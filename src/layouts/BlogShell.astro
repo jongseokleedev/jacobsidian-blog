@@ -35,6 +35,7 @@ const {
 ---
 
 <Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage}>
+  <slot name="head" slot="head" />
   <!-- FOUC 방지: 사이드바 상태를 paint 전에 CSS 변수로 적용 -->
   <script is:inline>
     (function () {
