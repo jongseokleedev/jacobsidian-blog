@@ -602,12 +602,14 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
       const progressBar = containerEl.querySelector(".animate-progress-bar");
 
       // Sort post nodes by pubDatetime; tag/undated nodes appear last
-      const timelapseSorted = [...nodesCopy].sort((a, b) => {
-        if (!a.pubDatetime && !b.pubDatetime) return 0;
-        if (!a.pubDatetime) return 1;
-        if (!b.pubDatetime) return -1;
-        return new Date(a.pubDatetime).getTime() - new Date(b.pubDatetime).getTime();
-      });
+      const timelapseSorted = [...nodesCopy]
+        .filter(n => n.type !== "tag")
+        .sort((a, b) => {
+          if (!a.pubDatetime && !b.pubDatetime) return 0;
+          if (!a.pubDatetime) return 1;
+          if (!b.pubDatetime) return -1;
+          return new Date(a.pubDatetime).getTime() - new Date(b.pubDatetime).getTime();
+        });
 
       const BIRTH_SPEED = 0.16;
       const STEP_MS = 120;
@@ -677,12 +679,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         // Restore catAlphaMap and alphaDecay
         for (const n of nodesCopy) catAlphaMap.set(n.id, targetCatAlpha(n));
         sim.alphaDecay(0.0228);
-        // Final snap to exact fit
+        // Freeze layout and snap camera to fit
+        sim.stop();
+        const finalFit = computeFitTransform();
+        d3.select(canvas).interrupt();
         d3.select(canvas)
           .transition()
-          .duration(150)
+          .duration(250)
           .ease(d3.easeCubicOut)
-          .call(zoom.transform, computeFitTransform());
+          .call(zoom.transform, finalFit)
+          .on("end", () => sim.restart());
         draw();
       }
 
