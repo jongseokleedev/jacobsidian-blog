@@ -104,8 +104,8 @@ const {
     btn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
 
     btn?.addEventListener("click", () => {
-      const currentTx = getComputedStyle(document.documentElement).getPropertyValue("--left-rail-tx").trim();
-      applyBoth(currentTx === "" || currentTx === "0px");
+      const currentlyOpen = localStorage.getItem("jb:sidebar-left") !== "closed";
+      applyBoth(!currentlyOpen);
     });
   }
 
