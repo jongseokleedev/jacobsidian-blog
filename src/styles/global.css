@@ -178,6 +178,15 @@ html[data-theme="dark"] {
   @apply mx-auto w-full max-w-app px-4;
 }
 
+/* 고정 사이드바 여백: lg+ 에서만 CSS 변수로 margin 적용 */
+@media (min-width: 1024px) {
+  #main-content {
+    margin-left: var(--left-rail-w, 232px);
+    margin-right: var(--right-rail-w, 260px);
+    transition: margin-left 280ms cubic-bezier(0.4,0,0.2,1), margin-right 280ms cubic-bezier(0.4,0,0.2,1);
+  }
+}
+
 @utility reading-shell {
   padding: 20px 20px;
 
