@@ -12,7 +12,6 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import GraphCanvas from "@/components/GraphCanvas.astro";
-import graphData from "../../public/graph.json";
 
 type Entry = CollectionEntry<"posts">;
 
@@ -38,7 +37,10 @@ const {
 const { Content, headings } = await render(post);
 
 const seeAlsoLinks = (post.data.links ?? [])
-  .map(title => graphData.nodes.find((n: { title: string; url: string }) => n.title === title))
+  .map(linkTitle => {
+    const found = posts.find(p => p.data.title === linkTitle);
+    return found ? { title: linkTitle, url: getPath(found) } : null;
+  })
   .filter(Boolean) as { title: string; url: string }[];
 
 const readingTime = Math.max(1, Math.ceil((post.body ?? "").split(/\s+/).length / 200));
