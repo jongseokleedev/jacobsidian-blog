@@ -41,6 +41,8 @@ const {
       const open = localStorage.getItem("jb:sidebar-left") !== "closed";
       document.documentElement.style.setProperty("--left-rail-w", open ? "232px" : "0px");
       document.documentElement.style.setProperty("--right-rail-w", open ? "260px" : "0px");
+      document.documentElement.style.setProperty("--left-rail-tx", open ? "0px" : "-232px");
+      document.documentElement.style.setProperty("--right-rail-tx", open ? "0px" : "260px");
     })();
   </script>
 
@@ -90,6 +92,8 @@ const {
     function applyBoth(open: boolean) {
       document.documentElement.style.setProperty("--left-rail-w", open ? LEFT_W : "0px");
       document.documentElement.style.setProperty("--right-rail-w", open ? RIGHT_W : "0px");
+      document.documentElement.style.setProperty("--left-rail-tx", open ? "0px" : "-232px");
+      document.documentElement.style.setProperty("--right-rail-tx", open ? "0px" : "260px");
       btn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
       localStorage.setItem("jb:sidebar-left", open ? "open" : "closed");
       localStorage.setItem("jb:sidebar-right", open ? "open" : "closed");
@@ -100,12 +104,31 @@ const {
     btn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
 
     btn?.addEventListener("click", () => {
-      const currentW = getComputedStyle(leftRail!).width;
-      applyBoth(currentW === "0px" || parseFloat(currentW) < 10);
+      const currentTx = getComputedStyle(document.documentElement).getPropertyValue("--left-rail-tx").trim();
+      applyBoth(currentTx === "" || currentTx === "0px");
     });
   }
 
   document.addEventListener("astro:page-load", initRailToggles);
+
+  // ── 뷰 전환 중 사이드바 상태 보존 ─────────────────────────────
+  document.addEventListener("astro:after-swap", () => {
+    const open = localStorage.getItem("jb:sidebar-left") !== "closed";
+    document.documentElement.style.setProperty("--left-rail-w", open ? "232px" : "0px");
+    document.documentElement.style.setProperty("--right-rail-w", open ? "260px" : "0px");
+    document.documentElement.style.setProperty("--left-rail-tx", open ? "0px" : "-232px");
+    document.documentElement.style.setProperty("--right-rail-tx", open ? "0px" : "260px");
+
+    // 스왑 직후 transition 일시 비활성화 → 폴백값으로 인한 애니메이션 방지
+    const leftRail = document.getElementById("left-rail") as HTMLElement | null;
+    const rightRail = document.getElementById("right-rail") as HTMLElement | null;
+    const mainContent = document.getElementById("main-content") as HTMLElement | null;
+    const els = [leftRail, rightRail, mainContent];
+    els.forEach(el => { if (el) el.style.transitionDuration = "0s"; });
+    requestAnimationFrame(() => {
+      els.forEach(el => { if (el) el.style.transitionDuration = ""; });
+    });
+  });
 
   // ── localStorage hydration: Now Reading + Pinned ─────────────
   let lastPinnedKey: string | null = null;
