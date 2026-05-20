@@ -659,6 +659,17 @@
       "pubDatetime": "2026-05-19T00:00:00.000Z"
     },
     {
+      "id": "20260520-2334",
+      "title": "내가 다섯 번째로 좋아하는 영화",
+      "url": "/essay/thought/20260520-2334",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "post"
+      ],
+      "pubDatetime": "2026-05-20T00:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -1404,6 +1415,13 @@
       "id": "tag:상실",
       "title": "상실",
       "url": "/tags/상실",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:post",
+      "title": "post",
+      "url": "/tags/post",
       "type": "tag",
       "tags": []
     }
@@ -2902,6 +2920,11 @@
     {
       "source": "20260519-0845",
       "target": "tag:상실",
+      "type": "tag"
+    },
+    {
+      "source": "20260520-2334",
+      "target": "tag:post",
       "type": "tag"
     }
   ]
