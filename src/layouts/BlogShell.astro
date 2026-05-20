@@ -14,6 +14,7 @@ interface Props {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   tags?: string[];
+  breadcrumbs?: { name: string; url: string }[];
   mode?: "discovery" | "reading";
   rail?: RailVariant;
   activeCategory?: string;
@@ -30,6 +31,7 @@ const {
   pubDatetime,
   modDatetime,
   tags,
+  breadcrumbs,
   mode = "discovery",
   rail = "discovery",
   activeCategory,
@@ -40,7 +42,7 @@ const {
 } = Astro.props;
 ---
 
-<Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage} {pubDatetime} {modDatetime} {tags}>
+<Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage} {pubDatetime} {modDatetime} {tags} {breadcrumbs}>
   <slot name="head" slot="head" />
   <!-- FOUC 방지: 사이드바 상태를 paint 전에 CSS 변수로 적용 -->
   <script is:inline>

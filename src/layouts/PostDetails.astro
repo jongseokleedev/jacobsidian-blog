@@ -7,7 +7,7 @@ import EditPost from "@/components/EditPost.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
-import { getCategoryMeta } from "@/utils/getCategories";
+import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
@@ -71,6 +71,15 @@ const catMeta = getCategoryMeta(categoryKey);
 const [catParent, catSub] = categoryKey.split("-");
 const catUrlPath = `${catParent}/${catSub}`;
 
+/* ========== Breadcrumbs ========== */
+const parentMeta = PARENTS[catParent];
+const breadcrumbs = [
+  { name: "Home", url: new URL("/", Astro.url.origin).href },
+  { name: parentMeta?.label ?? catParent, url: new URL(`/${catParent}/`, Astro.url.origin).href },
+  { name: catMeta?.label ?? catSub, url: new URL(`/${catUrlPath}/`, Astro.url.origin).href },
+  { name: title, url: new URL(getPath(post), Astro.url.origin).href },
+];
+
 /* ========== Prev/Next Posts ========== */
 
 const currentPostIndex = posts.findIndex(a => a.id === post.id);
@@ -94,6 +103,7 @@ const nextPost =
   pubDatetime={pubDatetime}
   modDatetime={modDatetime}
   tags={tags}
+  breadcrumbs={breadcrumbs}
 >
   <!-- Back link -->
   <a

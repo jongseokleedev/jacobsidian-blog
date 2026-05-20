@@ -14,6 +14,7 @@ type Props = {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   tags?: string[];
+  breadcrumbs?: { name: string; url: string }[];
   scrollSmooth?: boolean;
 };
 
@@ -27,8 +28,22 @@ const {
   pubDatetime,
   modDatetime,
   tags,
+  breadcrumbs,
   scrollSmooth = false,
 } = Astro.props;
+
+const breadcrumbLD = breadcrumbs?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumbs.map((crumb, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: crumb.name,
+        item: crumb.url,
+      })),
+    }
+  : null;
 
 const socialImageURL = new URL(ogImage, Astro.url);
 
@@ -131,11 +146,10 @@ const structuredData = pubDatetime
     <meta property="twitter:image" content={socialImageURL} />
 
     <!-- Google JSON-LD Structured data -->
-    <script
-      type="application/ld+json"
-      is:inline
-      set:html={JSON.stringify(structuredData)}
-    />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+    {breadcrumbLD && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLD)} />
+    )}
 
     <!-- Enable RSS feed auto-discovery  -->
     <!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery -->
