@@ -1,9 +1,5 @@
-interface Env {
-  ASSETS: Fetcher;
-}
-
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: { ASSETS: { fetch: (r: Request) => Promise<Response> } }): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname.startsWith("/books/")) {
