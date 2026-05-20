@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "jacobsidian",
   "compatibility_date": "2025-01-01",
+  "main": "src/worker.ts",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
