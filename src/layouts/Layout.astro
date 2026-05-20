@@ -13,6 +13,7 @@ type Props = {
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  tags?: string[];
   scrollSmooth?: boolean;
 };
 
@@ -25,6 +26,7 @@ const {
   canonicalURL = new URL(Astro.url.pathname, Astro.url),
   pubDatetime,
   modDatetime,
+  tags,
   scrollSmooth = false,
 } = Astro.props;
 
@@ -115,6 +117,11 @@ const structuredData = pubDatetime
         />
       )
     }
+
+    <!-- Article tags -->
+    {pubDatetime && tags?.filter(t => t !== "others").map(tag => (
+      <meta property="article:tag" content={tag} />
+    ))}
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
