@@ -14,6 +14,7 @@ type Props = {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   tags?: string[];
+  keywords?: string[];
   breadcrumbs?: { name: string; url: string }[];
   scrollSmooth?: boolean;
 };
@@ -28,9 +29,14 @@ const {
   pubDatetime,
   modDatetime,
   tags,
+  keywords,
   breadcrumbs,
   scrollSmooth = false,
 } = Astro.props;
+
+const keywordsMeta = keywords?.length
+  ? keywords.join(", ")
+  : tags?.filter(t => t !== "others").join(", ");
 
 const breadcrumbLD = breadcrumbs?.length
   ? {
@@ -69,6 +75,14 @@ const structuredData = pubDatetime
       name: title,
       url: `${canonicalURL}`,
     };
+
+const organizationLD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: SITE.author,
+  url: SITE.website,
+  description: SITE.desc,
+};
 ---
 
 <!doctype html>
@@ -104,6 +118,7 @@ const structuredData = pubDatetime
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
+    {keywordsMeta && <meta name="keywords" content={keywordsMeta} />}
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Open Graph / Facebook -->
@@ -147,6 +162,7 @@ const structuredData = pubDatetime
 
     <!-- Google JSON-LD Structured data -->
     <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationLD)} />
     {breadcrumbLD && (
       <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLD)} />
     )}
