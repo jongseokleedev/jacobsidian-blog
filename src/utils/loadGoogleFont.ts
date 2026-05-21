@@ -13,12 +13,16 @@ const cache = new Map<string, ArrayBuffer>();
 
 async function loadGoogleFont(
   font: string,
-  weight: number
+  weight: number,
+  extraChars = ""
 ): Promise<ArrayBuffer> {
-  const key = `${font}:${weight}`;
+  const chars = extraChars
+    ? [...new Set([...OG_CHARS, ...extraChars])].join("")
+    : OG_CHARS;
+  const key = `${font}:${weight}:${chars}`;
   if (cache.has(key)) return cache.get(key)!;
 
-  const API = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(OG_CHARS)}`;
+  const API = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(chars)}`;
 
   const css = await (
     await fetch(API, {
@@ -45,19 +49,19 @@ async function loadGoogleFont(
   return data;
 }
 
-async function loadGoogleFonts(): Promise<
-  Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>
-> {
+async function loadGoogleFonts(
+  extraChars = ""
+): Promise<Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>> {
   const fontsConfig = [
-    { name: "Inter",        font: "Inter",        weight: 300, style: "normal" },
-    { name: "Inter",        font: "Inter",        weight: 800, style: "normal" },
-    { name: "Noto Sans KR", font: "Noto+Sans+KR", weight: 400, style: "normal" },
-    { name: "Noto Sans KR", font: "Noto+Sans+KR", weight: 700, style: "normal" },
+    { name: "Inter",        font: "Inter",        weight: 300, style: "normal", extra: "" },
+    { name: "Inter",        font: "Inter",        weight: 800, style: "normal", extra: "" },
+    { name: "Noto Sans KR", font: "Noto+Sans+KR", weight: 400, style: "normal", extra: extraChars },
+    { name: "Noto Sans KR", font: "Noto+Sans+KR", weight: 700, style: "normal", extra: extraChars },
   ];
 
   return Promise.all(
-    fontsConfig.map(async ({ name, font, weight, style }) => {
-      const data = await loadGoogleFont(font, weight);
+    fontsConfig.map(async ({ name, font, weight, style, extra }) => {
+      const data = await loadGoogleFont(font, weight, extra);
       return { name, data, weight, style };
     })
   );
