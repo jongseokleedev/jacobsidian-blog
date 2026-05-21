@@ -665,9 +665,23 @@
       "type": "post",
       "category": "essay-thought",
       "tags": [
-        "post"
+        "post",
+        "에세이",
+        "일상"
       ],
       "pubDatetime": "2026-05-20T00:00:00.000Z"
+    },
+    {
+      "id": "20260521-2308",
+      "title": "내가 모른다는 것을 나도 모를 때",
+      "url": "/essay/thought/20260521-2308",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "에세이",
+        "일상"
+      ],
+      "pubDatetime": "2026-05-21T00:00:00.000Z"
     },
     {
       "id": "tag:독서",
@@ -1780,6 +1794,16 @@
     {
       "source": "20260519-0845",
       "target": "20230812-1256",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260521-2308",
+      "target": "20260520-2334",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260521-2308",
+      "target": "20260514-2111-2",
       "type": "wikilink"
     },
     {
@@ -2925,6 +2949,26 @@
     {
       "source": "20260520-2334",
       "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20260520-2334",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260520-2334",
+      "target": "tag:일상",
+      "type": "tag"
+    },
+    {
+      "source": "20260521-2308",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260521-2308",
+      "target": "tag:일상",
       "type": "tag"
     }
   ]
