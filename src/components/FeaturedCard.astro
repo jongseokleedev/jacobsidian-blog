@@ -36,7 +36,7 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
         alt={item.title}
         width="100"
         height="150"
-        class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+        class="w-full h-full object-cover object-top"
         loading="lazy"
       />
     ) : (
@@ -58,10 +58,10 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
     <div class="flex flex-col gap-y-0.5">
       {carousel ? (
         /* 모바일: 닷 + 날짜 한 줄, 라벨은 sm 이상에서만 */
-        <span class="flex items-center gap-1.5 font-mono text-[11px]" style="color: var(--fg-faint);">
+        <span class="flex items-center gap-1 font-mono text-[10px] sm:text-[11px] whitespace-nowrap overflow-hidden" style="color: var(--fg-faint);">
           <span class="cat-dot shrink-0 size-1.5" style={`background: ${item.color}`} />
-          <span class="hidden sm:inline" style={`color: ${item.color}`}>{item.label}&ensp;</span>
-          {dateStr}
+          <span class="hidden sm:inline shrink-0" style={`color: ${item.color}`}>{item.label}&ensp;</span>
+          <span class="shrink-0">{dateStr}</span>
         </span>
       ) : (
         <>

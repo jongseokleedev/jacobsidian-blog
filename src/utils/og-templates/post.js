@@ -210,7 +210,7 @@ export default async post => {
       width:     1200,
       height:    630,
       embedFont: true,
-      fonts:     await loadGoogleFonts(),
+      fonts:     await loadGoogleFonts(title),
     }
   );
 };
