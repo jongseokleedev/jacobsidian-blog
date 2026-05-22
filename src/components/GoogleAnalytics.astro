@@ -13,15 +13,18 @@ import { PUBLIC_GA_MEASUREMENT_ID } from "astro:env/client";
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
-      gtag('config', measurementId);
+      gtag('config', measurementId, { send_page_view: false });
 
-      // Astro View Transitions: re-fire page_view on each navigation
-      document.addEventListener('astro:page-load', () => {
-        gtag('event', 'page_view', {
-          page_title: document.title,
-          page_location: window.location.href,
+      // Astro View Transitions: fire page_view on each navigation (once only)
+      if (!window.__gaInitialized) {
+        window.__gaInitialized = true;
+        document.addEventListener('astro:page-load', () => {
+          gtag('event', 'page_view', {
+            page_title: document.title,
+            page_location: window.location.href,
+          });
         });
-      });
+      }
     </script>
   </>
 )}
