@@ -1,9 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import BlogShell from "@/layouts/BlogShell.astro";
 import Pagination from "@/components/Pagination.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
@@ -28,39 +26,38 @@ const { tag: _tag } = Astro.params;
 const { page, tagName } = Astro.props;
 ---
 
-<Layout title={`#${tagName} | ${SITE.title}`}>
-  <Header />
-  <main id="main-content" class="app-layout pt-12 pb-16">
-    <section class="pb-10 border-b border-border">
-      <p class="text-sm text-foreground/40 mb-1">태그</p>
-      <h1 class="text-2xl font-semibold tracking-tight">#{tagName}</h1>
-    </section>
+<BlogShell mode="discovery" rail="discovery" title={`#${tagName} | ${SITE.title}`}>
+  <header class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+      <p class="bd-overline">태그</p>
+    </div>
+    <h1 class="text-[28px] font-bold tracking-[-0.02em]">#{tagName}</h1>
+  </header>
 
-    <section class="pt-8">
-      <ul class="divide-y divide-border">
-        {page.data.map(post => (
-          <li>
-            <a
-              href={getPath(post)}
-              class="group post-grid py-4 transition-colors duration-150 hover:text-accent"
-            >
-              <span class="text-xs text-foreground/40 tabular-nums self-center whitespace-nowrap">
-                {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </span>
-              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
-                {post.data.title}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
+  <section>
+    <ul class="archives-list">
+      {page.data.map(post => (
+        <li>
+          <a
+            href={getPath(post)}
+            class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+            style="border-color: var(--border-soft);"
+          >
+            <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+              {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+            </span>
+            <span class="font-medium text-[14px] truncate self-center transition-transform duration-150 group-hover:translate-x-[3px]">
+              {post.data.title}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
-    <Pagination {page} />
-  </main>
-  <Footer />
-</Layout>
+  <Pagination {page} />
+</BlogShell>
