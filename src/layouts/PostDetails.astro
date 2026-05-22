@@ -12,6 +12,7 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import GraphCanvas from "@/components/GraphCanvas.astro";
+import RelatedPosts from "@/components/RelatedPosts.astro";
 
 type Entry = CollectionEntry<"posts">;
 
@@ -205,6 +206,7 @@ const nextPost =
       </div>
     )}
   </article>
+  <RelatedPosts currentPost={post} allPosts={posts} />
   <BackToTopButton />
 
   <div class="mt-12 lg:hidden">

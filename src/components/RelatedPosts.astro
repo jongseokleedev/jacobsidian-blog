@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getPath } from "@/utils/getPath";
+import Datetime from "@/components/Datetime.astro";
+
+type Entry = CollectionEntry<"posts">;
+
+type Props = {
+  currentPost: Entry;
+  allPosts: Entry[];
+};
+
+const { currentPost, allPosts } = Astro.props;
+
+const currentTags = currentPost.data.tags ?? [];
+
+const related = allPosts
+  .filter(p => p.id !== currentPost.id && !p.data.draft)
+  .map(p => ({
+    post: p,
+    score: (p.data.tags ?? []).filter(t => currentTags.includes(t)).length,
+  }))
+  .filter(({ score }) => score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 3)
+  .map(({ post }) => post);
+---
+
+{related.length > 0 && (
+  <section class="mt-12 pt-8 border-t" style="border-color: var(--border);">
+    <h2 class="text-sm font-semibold mb-4" style="color: var(--fg-mute);">관련 글</h2>
+    <ul class="space-y-3">
+      {related.map(post => (
+        <li>
+          <a
+            href={getPath(post)}
+            class="group flex flex-col gap-0.5 hover:text-accent transition-colors"
+          >
+            <span class="text-sm font-medium">{post.data.title}</span>
+            <Datetime pubDatetime={post.data.pubDatetime} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
