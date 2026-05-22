@@ -21,6 +21,17 @@ export default defineConfig({
         if (/\/tags\/?$/.test(page)) return false;
         return true;
       },
+      changefreq: "weekly",
+      priority: 0.7,
+      serialize(item) {
+        if (item.url === SITE.website || item.url === `${SITE.website}/`) {
+          return { ...item, priority: 1.0, changefreq: "daily" as const } as typeof item;
+        }
+        if (/\/[^/]+\/[^/]+\/[^/]+/.test(new URL(item.url).pathname)) {
+          return { ...item, priority: 0.8, changefreq: "monthly" as const } as typeof item;
+        }
+        return item;
+      },
     }),
   ],
   markdown: {
