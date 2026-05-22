@@ -6,6 +6,7 @@ import Pagination from "@/components/Pagination.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
 import { getPath } from "@/utils/getPath";
+import { getCategoryMeta } from "@/utils/getCategories";
 import { SITE } from "@/config";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -36,26 +37,40 @@ const { page, tagName } = Astro.props;
 
   <section>
     <ul class="archives-list">
-      {page.data.map(post => (
-        <li>
-          <a
-            href={getPath(post)}
-            class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
-            style="border-color: var(--border-soft);"
-          >
-            <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
-              {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })}
-            </span>
-            <span class="font-medium text-[14px] truncate self-center transition-transform duration-150 group-hover:translate-x-[3px]">
-              {post.data.title}
-            </span>
-          </a>
-        </li>
-      ))}
+      {page.data.map(post => {
+        const meta = getCategoryMeta(post.data.category);
+        const color = meta?.color ?? "var(--fg-faint)";
+        const label = meta?.label ?? post.data.category;
+        return (
+          <li>
+            <a
+              href={getPath(post)}
+              class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+              style="border-color: var(--border-soft);"
+            >
+              <div class="flex items-center justify-between sm:contents">
+                <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+                  {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </span>
+                <span class="font-mono text-[11px] sm:hidden" style="color: var(--fg-faint);">
+                  {label}
+                </span>
+              </div>
+              <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+                <span class="cat-dot shrink-0" style={`background: ${color}`} />
+                {post.data.title}
+              </span>
+              <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
+                {label}
+              </span>
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </section>
 
