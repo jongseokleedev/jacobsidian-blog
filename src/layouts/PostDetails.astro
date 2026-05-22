@@ -37,13 +37,6 @@ const {
 
 const { Content, headings } = await render(post);
 
-const seeAlsoLinks = (post.data.links ?? [])
-  .map(linkTitle => {
-    const found = posts.find(p => p.data.title === linkTitle);
-    return found ? { title: linkTitle, url: getPath(found) } : null;
-  })
-  .filter(Boolean) as { title: string; url: string }[];
-
 const readingTime = Math.max(1, Math.ceil((post.body ?? "").split(/\s+/).length / 200));
 
 let ogImageUrl: string | undefined;
@@ -192,19 +185,6 @@ const nextPost =
     data-author={author ?? ""}
   >
     <Content />
-    {seeAlsoLinks.length > 0 && (
-      <div class="mt-12 pt-6 border-t border-border">
-        <p class="text-sm text-foreground/40 mb-2">see also</p>
-        <p class="text-sm italic text-foreground/70">
-          {seeAlsoLinks.map((link, i) => (
-            <>
-              {i > 0 && ", "}
-              <a href={link.url} class="hover:text-accent transition-colors">{link.title}</a>
-            </>
-          ))}
-        </p>
-      </div>
-    )}
   </article>
   <RelatedPosts currentPost={post} allPosts={posts} />
   <BackToTopButton />

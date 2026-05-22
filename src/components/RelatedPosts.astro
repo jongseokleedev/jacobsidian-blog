@@ -12,23 +12,39 @@ type Props = {
 
 const { currentPost, allPosts } = Astro.props;
 
-const currentTags = currentPost.data.tags ?? [];
+const linkedIds = new Set<string>();
 
-const related = allPosts
-  .filter(p => p.id !== currentPost.id && !p.data.draft)
-  .map(p => ({
-    post: p,
-    score: (p.data.tags ?? []).filter(t => currentTags.includes(t)).length,
-  }))
-  .filter(({ score }) => score > 0)
-  .sort((a, b) => b.score - a.score)
-  .slice(0, 3)
-  .map(({ post }) => post);
+const linkedPosts = (currentPost.data.links ?? [])
+  .map(linkTitle => allPosts.find(p => p.data.title === linkTitle && !p.data.draft))
+  .filter((p): p is Entry => p !== undefined)
+  .filter(p => {
+    if (linkedIds.has(p.id)) return false;
+    linkedIds.add(p.id);
+    return true;
+  });
+
+const currentTags = currentPost.data.tags ?? [];
+const remaining = 5 - linkedPosts.length;
+
+const tagBased = remaining > 0
+  ? allPosts
+      .filter(p => p.id !== currentPost.id && !p.data.draft && !linkedIds.has(p.id))
+      .map(p => ({
+        post: p,
+        score: (p.data.tags ?? []).filter(t => currentTags.includes(t)).length,
+      }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, remaining)
+      .map(({ post }) => post)
+  : [];
+
+const related = [...linkedPosts, ...tagBased];
 ---
 
 {related.length > 0 && (
   <section class="mt-12 pt-8 border-t" style="border-color: var(--border);">
-    <h2 class="text-sm font-semibold mb-4" style="color: var(--fg-mute);">관련 글</h2>
+    <h2 class="text-sm font-semibold mb-4" style="color: var(--fg-mute);">See Also</h2>
     <ul class="space-y-3">
       {related.map(post => (
         <li>
