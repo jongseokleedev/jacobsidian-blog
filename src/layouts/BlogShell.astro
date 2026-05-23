@@ -48,8 +48,6 @@ const {
   <script is:inline>
     (function () {
       const open = localStorage.getItem("jb:sidebar-left") !== "closed";
-      document.documentElement.style.setProperty("--left-rail-w", open ? "232px" : "0px");
-      document.documentElement.style.setProperty("--right-rail-w", open ? "260px" : "0px");
       document.documentElement.style.setProperty("--left-rail-tx", open ? "0px" : "-232px");
       document.documentElement.style.setProperty("--right-rail-tx", open ? "0px" : "260px");
     })();
@@ -95,12 +93,7 @@ const {
 
     if (!leftRail || !rightRail) return;
 
-    const LEFT_W  = "232px";
-    const RIGHT_W = "260px";
-
     function applyBoth(open: boolean) {
-      document.documentElement.style.setProperty("--left-rail-w", open ? LEFT_W : "0px");
-      document.documentElement.style.setProperty("--right-rail-w", open ? RIGHT_W : "0px");
       document.documentElement.style.setProperty("--left-rail-tx", open ? "0px" : "-232px");
       document.documentElement.style.setProperty("--right-rail-tx", open ? "0px" : "260px");
       btn?.style.setProperty("color", open ? "var(--foreground)" : "var(--fg-faint)");
@@ -123,8 +116,6 @@ const {
   // ── 뷰 전환 중 사이드바 상태 보존 ─────────────────────────────
   document.addEventListener("astro:after-swap", () => {
     const open = localStorage.getItem("jb:sidebar-left") !== "closed";
-    document.documentElement.style.setProperty("--left-rail-w", open ? "232px" : "0px");
-    document.documentElement.style.setProperty("--right-rail-w", open ? "260px" : "0px");
     document.documentElement.style.setProperty("--left-rail-tx", open ? "0px" : "-232px");
     document.documentElement.style.setProperty("--right-rail-tx", open ? "0px" : "260px");
 
