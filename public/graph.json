@@ -684,6 +684,21 @@
       "pubDatetime": "2026-05-21T00:00:00.000Z"
     },
     {
+      "id": "20260524-1158",
+      "title": "대한민국은 IT 강국이 아니다",
+      "url": "/tech/it/20260524-1158",
+      "type": "post",
+      "category": "tech-it",
+      "tags": [
+        "에세이",
+        "기술",
+        "한국",
+        "IT",
+        "AI"
+      ],
+      "pubDatetime": "2026-05-24T00:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -1438,6 +1453,20 @@
       "url": "/tags/post",
       "type": "tag",
       "tags": []
+    },
+    {
+      "id": "tag:한국",
+      "title": "한국",
+      "url": "/tags/한국",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:IT",
+      "title": "IT",
+      "url": "/tags/IT",
+      "type": "tag",
+      "tags": []
     }
   ],
   "edges": [
@@ -1804,6 +1833,11 @@
     {
       "source": "20260521-2308",
       "target": "20260514-2111-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260524-1158",
+      "target": "20260514-1200",
       "type": "wikilink"
     },
     {
@@ -2969,6 +3003,31 @@
     {
       "source": "20260521-2308",
       "target": "tag:일상",
+      "type": "tag"
+    },
+    {
+      "source": "20260524-1158",
+      "target": "tag:에세이",
+      "type": "tag"
+    },
+    {
+      "source": "20260524-1158",
+      "target": "tag:기술",
+      "type": "tag"
+    },
+    {
+      "source": "20260524-1158",
+      "target": "tag:한국",
+      "type": "tag"
+    },
+    {
+      "source": "20260524-1158",
+      "target": "tag:IT",
+      "type": "tag"
+    },
+    {
+      "source": "20260524-1158",
+      "target": "tag:AI",
       "type": "tag"
     }
   ]
