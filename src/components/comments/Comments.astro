@@ -29,8 +29,12 @@ try {
   style="border-top: 1px solid var(--border);"
   data-post-id={postId}
 >
-  <h2 class="text-base font-semibold mb-6" style="color: var(--foreground);">
+  <h2 class="flex items-center gap-3 text-base font-semibold mb-6" style="color: var(--foreground);">
     댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
+    <span class="inline-flex gap-1 text-xs font-normal ml-auto">
+      <button id="sort-asc" class="px-2 py-0.5 rounded transition-colors" style="background: var(--accent); color: #fff;">등록순</button>
+      <button id="sort-desc" class="px-2 py-0.5 rounded transition-colors" style="color: var(--fg-mute);">최신순</button>
+    </span>
   </h2>
 
   <div id="comments-list">
@@ -445,6 +449,63 @@ try {
 
       loadMoreBtn.textContent = "댓글 더 보기";
       loadMoreBtn.disabled = false;
+    });
+
+    let currentOrder: "asc" | "desc" = "asc";
+
+    async function loadAllComments(order: "asc" | "desc") {
+      const { data } = await supabase
+        .from("comments")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .select("*" as any)
+        .eq("post_id", postId)
+        .is("honeypot", null)
+        .order("created_at", { ascending: order === "asc" });
+
+      if (!data) return;
+      const list = getOrCreateTopList();
+      list.replaceChildren();
+
+      (data as Comment[]).filter(c => !c.parent_id).forEach(c => list.appendChild(buildCommentEl(c, false)));
+      (data as Comment[]).filter(c => !!c.parent_id).forEach(c => {
+        const parentLi = list.querySelector<HTMLLIElement>(`.comment-item[data-id="${c.parent_id}"]`);
+        if (!parentLi) return;
+        let replyList = parentLi.querySelector<HTMLUListElement>("ul");
+        if (!replyList) {
+          replyList = document.createElement("ul");
+          replyList.className = "ml-6 mt-3 border-l pl-4 space-y-4";
+          replyList.style.borderColor = "var(--border)";
+          parentLi.querySelector(".reply-form-mount")?.before(replyList);
+        }
+        replyList.appendChild(buildCommentEl(c, true));
+      });
+
+      attachReplyListeners();
+      syncLikeButtons();
+      attachLikeListeners();
+      syncMyBadges();
+    }
+
+    const sortAsc = document.getElementById("sort-asc") as HTMLButtonElement | null;
+    const sortDesc = document.getElementById("sort-desc") as HTMLButtonElement | null;
+
+    function setSortUI(order: "asc" | "desc") {
+      if (sortAsc) sortAsc.style.cssText = order === "asc" ? "background:var(--accent);color:#fff;" : "color:var(--fg-mute);";
+      if (sortDesc) sortDesc.style.cssText = order === "desc" ? "background:var(--accent);color:#fff;" : "color:var(--fg-mute);";
+    }
+
+    sortAsc?.addEventListener("click", async () => {
+      if (currentOrder === "asc") return;
+      currentOrder = "asc";
+      setSortUI("asc");
+      await loadAllComments("asc");
+    });
+
+    sortDesc?.addEventListener("click", async () => {
+      if (currentOrder === "desc") return;
+      currentOrder = "desc";
+      setSortUI("desc");
+      await loadAllComments("desc");
     });
   }
 
