@@ -246,20 +246,24 @@ try {
       hp.setAttribute("aria-hidden", "true");
       hp.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
 
+      const fieldGroup = document.createElement("div");
+      fieldGroup.className = "rounded border overflow-hidden";
+      fieldGroup.style.borderColor = "var(--border)";
+
       const nickRow = document.createElement("div");
-      nickRow.className = "inline-flex items-center rounded border overflow-hidden w-56";
-      nickRow.style.borderColor = "var(--border)";
+      nickRow.className = "flex items-center";
+      nickRow.style.borderBottom = "1px solid var(--border)";
 
       const nickInput = document.createElement("input");
       nickInput.type = "text";
       nickInput.name = "nickname";
       nickInput.placeholder = "닉네임";
       nickInput.maxLength = 30;
-      nickInput.className = "comment-nickname-input min-w-0 flex-1 px-3 py-1.5 text-sm bg-background text-foreground outline-none";
+      nickInput.className = "comment-nickname-input min-w-0 flex-1 px-3 py-2 text-sm bg-background text-foreground outline-none";
 
       const randBtn = document.createElement("button");
       randBtn.type = "button";
-      randBtn.className = "comment-nick-random shrink-0 px-2.5 py-1.5 text-base transition-colors hover:text-accent";
+      randBtn.className = "comment-nick-random shrink-0 px-3 py-2 text-base transition-colors hover:text-accent";
       randBtn.style.cssText = "color:var(--fg-mute);border-left:1px solid var(--border);background:var(--muted);";
       randBtn.title = "닉네임 바꾸기";
       randBtn.textContent = "🎲";
@@ -272,8 +276,10 @@ try {
       textarea.placeholder = "답글을 입력하세요";
       textarea.maxLength = 1000;
       textarea.rows = 2;
-      textarea.className = "w-full rounded border px-3 py-2 text-sm resize-none bg-background text-foreground";
-      textarea.style.borderColor = "var(--border)";
+      textarea.className = "w-full px-3 py-2 text-sm resize-none bg-background text-foreground outline-none block";
+
+      fieldGroup.appendChild(nickRow);
+      fieldGroup.appendChild(textarea);
 
       const submitRow = document.createElement("div");
       submitRow.className = "flex items-center gap-2";
@@ -292,8 +298,7 @@ try {
       submitRow.appendChild(errorEl);
 
       form.appendChild(hp);
-      form.appendChild(nickRow);
-      form.appendChild(textarea);
+      form.appendChild(fieldGroup);
       form.appendChild(submitRow);
 
       wrapper.appendChild(info);

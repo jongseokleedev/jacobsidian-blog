@@ -20,30 +20,32 @@ const { postId } = Astro.props;
     style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
   />
 
-  <div class="inline-flex items-center rounded border overflow-hidden w-56" style="border-color: var(--border);">
-    <input
-      type="text"
-      name="nickname"
-      placeholder="닉네임"
-      maxlength="30"
-      class="comment-nickname-input min-w-0 flex-1 px-3 py-1.5 text-sm bg-background text-foreground outline-none"
-    />
-    <button
-      type="button"
-      class="comment-nick-random shrink-0 px-2.5 py-1.5 text-base transition-colors hover:text-accent"
-      style="color: var(--fg-mute); border-left: 1px solid var(--border); background: var(--muted);"
-      title="닉네임 바꾸기"
-    >🎲</button>
+  <div class="rounded border overflow-hidden" style="border-color: var(--border);">
+    <!-- 닉네임 행 -->
+    <div class="flex items-center" style="border-bottom: 1px solid var(--border);">
+      <input
+        type="text"
+        name="nickname"
+        placeholder="닉네임"
+        maxlength="30"
+        class="comment-nickname-input min-w-0 flex-1 px-3 py-2 text-sm bg-background text-foreground outline-none"
+      />
+      <button
+        type="button"
+        class="comment-nick-random shrink-0 px-3 py-2 text-base transition-colors hover:text-accent"
+        style="color: var(--fg-mute); border-left: 1px solid var(--border); background: var(--muted);"
+        title="닉네임 바꾸기"
+      >🎲</button>
+    </div>
+    <!-- 댓글 입력 행 -->
+    <textarea
+      name="body"
+      placeholder="댓글을 입력하세요 (최대 1000자)"
+      maxlength="1000"
+      rows="3"
+      class="w-full px-3 py-2 text-sm resize-none bg-background text-foreground outline-none block"
+    ></textarea>
   </div>
-
-  <textarea
-    name="body"
-    placeholder="댓글을 입력하세요 (최대 1000자)"
-    maxlength="1000"
-    rows="3"
-    class="w-full rounded border px-3 py-2 text-sm resize-none bg-background text-foreground"
-    style="border-color: var(--border);"
-  ></textarea>
 
   <div class="flex items-center gap-2">
     <button
