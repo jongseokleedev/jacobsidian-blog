@@ -154,6 +154,7 @@ const posts = getSortedPosts(all);
           appendItems(prev);
           loading = false;
           spinner?.classList.add("hidden");
+          setupObserver();
         }, 400);
       }
 

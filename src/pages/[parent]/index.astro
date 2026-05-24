@@ -168,6 +168,8 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
           appendItems(prev);
           loading = false;
           spinner?.classList.add("hidden");
+          // Re-observe so the observer fires again if sentinel is still visible
+          setupObserver();
         }, 400);
       }
 
