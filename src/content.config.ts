@@ -33,6 +33,7 @@ const posts = defineCollection({
       poster: z.string().optional(),
       canonicalURL: z.string().optional(),
       hideEditPost: z.boolean().optional(),
+      disableComments: z.boolean().optional(),
       timezone: z.string().optional(),
     }),
 });

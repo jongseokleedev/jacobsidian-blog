@@ -235,7 +235,7 @@ const nextPost =
     </div>
   </div>
 
-  <Comments postId={post.id} />
+  {!post.data.disableComments && <Comments postId={post.id} />}
 
   <hr class="my-8 border-dashed" />
 
