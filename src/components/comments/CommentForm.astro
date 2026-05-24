@@ -20,7 +20,7 @@ const { postId } = Astro.props;
     style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
   />
 
-  <div class="rounded border overflow-hidden" style="border-color: var(--border);">
+  <div class="comment-field-group rounded border overflow-hidden transition-colors" style="border-color: var(--border);">
     <!-- 닉네임 행 -->
     <div class="flex items-center" style="border-bottom: 1px solid var(--border);">
       <input
@@ -56,3 +56,9 @@ const { postId } = Astro.props;
     <span class="comment-error text-xs hidden" style="color: #e53e3e;"></span>
   </div>
 </form>
+
+<style>
+  .comment-field-group:focus-within {
+    border-color: var(--accent);
+  }
+</style>
