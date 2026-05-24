@@ -80,7 +80,14 @@ try {
     date.style.color = "var(--fg-mute)";
     date.textContent = formatDate(comment.created_at);
 
+    const badge = document.createElement("span");
+    badge.className = "my-comment-badge text-xs px-1.5 py-0.5 rounded-full font-medium";
+    badge.style.cssText = "background:var(--accent-soft);color:var(--accent);display:none;";
+    badge.textContent = "나";
+    badge.dataset.nickname = comment.nickname;
+
     meta.appendChild(nick);
+    meta.appendChild(badge);
     meta.appendChild(date);
     header.appendChild(meta);
 
@@ -156,6 +163,7 @@ try {
         attachReplyListeners();
       }
       setTimeout(() => newEl.scrollIntoView({ behavior: "smooth", block: "nearest" }), 50);
+      syncMyBadges();
     }
 
     function initNickname(form: HTMLFormElement) {
@@ -336,6 +344,14 @@ try {
     }
 
     attachReplyListeners();
+
+    function syncMyBadges() {
+      const myNick = getNickname();
+      document.querySelectorAll<HTMLSpanElement>(".my-comment-badge").forEach(b => {
+        b.style.display = b.dataset.nickname === myNick ? "" : "none";
+      });
+    }
+    syncMyBadges();
   }
 
   initComments();
