@@ -137,6 +137,7 @@ try {
 
     function appendComment(comment: Comment, parentId?: string) {
       updateCount(1);
+      let newEl: HTMLLIElement;
       if (parentId) {
         const parentLi = document.querySelector<HTMLLIElement>(`.comment-item[data-id="${parentId}"]`);
         if (!parentLi) return;
@@ -147,11 +148,14 @@ try {
           replyList.style.borderColor = "var(--border)";
           parentLi.querySelector(".reply-form-mount")?.before(replyList);
         }
-        replyList.appendChild(buildCommentEl(comment, true));
+        newEl = buildCommentEl(comment, true);
+        replyList.appendChild(newEl);
       } else {
-        getOrCreateTopList().appendChild(buildCommentEl(comment, false));
+        newEl = buildCommentEl(comment, false);
+        getOrCreateTopList().appendChild(newEl);
         attachReplyListeners();
       }
+      setTimeout(() => newEl.scrollIntoView({ behavior: "smooth", block: "nearest" }), 50);
     }
 
     function initNickname(form: HTMLFormElement) {
