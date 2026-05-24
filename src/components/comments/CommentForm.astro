@@ -20,20 +20,19 @@ const { postId } = Astro.props;
     style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
   />
 
-  <div class="flex gap-2">
+  <div class="inline-flex items-center rounded border overflow-hidden w-56" style="border-color: var(--border);">
     <input
       type="text"
       name="nickname"
       placeholder="닉네임"
       maxlength="30"
-      class="comment-nickname-input w-44 rounded border px-3 py-1.5 text-sm bg-background text-foreground"
-      style="border-color: var(--border);"
+      class="comment-nickname-input min-w-0 flex-1 px-3 py-1.5 text-sm bg-background text-foreground outline-none"
     />
     <button
       type="button"
-      class="comment-nick-random text-xs px-2 rounded hover:text-accent transition-colors"
-      style="color: var(--fg-mute); border: 1px solid var(--border);"
-      title="랜덤 닉네임 생성"
+      class="comment-nick-random shrink-0 px-2.5 py-1.5 text-base transition-colors hover:text-accent"
+      style="color: var(--fg-mute); border-left: 1px solid var(--border); background: var(--muted);"
+      title="닉네임 바꾸기"
     >🎲</button>
   </div>
 

@@ -247,21 +247,21 @@ try {
       hp.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
 
       const nickRow = document.createElement("div");
-      nickRow.className = "flex gap-2";
+      nickRow.className = "inline-flex items-center rounded border overflow-hidden w-56";
+      nickRow.style.borderColor = "var(--border)";
 
       const nickInput = document.createElement("input");
       nickInput.type = "text";
       nickInput.name = "nickname";
       nickInput.placeholder = "닉네임";
       nickInput.maxLength = 30;
-      nickInput.className = "comment-nickname-input w-44 rounded border px-3 py-1.5 text-sm bg-background text-foreground";
-      nickInput.style.borderColor = "var(--border)";
+      nickInput.className = "comment-nickname-input min-w-0 flex-1 px-3 py-1.5 text-sm bg-background text-foreground outline-none";
 
       const randBtn = document.createElement("button");
       randBtn.type = "button";
-      randBtn.className = "comment-nick-random text-xs px-2 rounded hover:text-accent transition-colors";
-      randBtn.style.cssText = "color:var(--fg-mute);border:1px solid var(--border);";
-      randBtn.title = "랜덤 닉네임 생성";
+      randBtn.className = "comment-nick-random shrink-0 px-2.5 py-1.5 text-base transition-colors hover:text-accent";
+      randBtn.style.cssText = "color:var(--fg-mute);border-left:1px solid var(--border);background:var(--muted);";
+      randBtn.title = "닉네임 바꾸기";
       randBtn.textContent = "🎲";
 
       nickRow.appendChild(nickInput);
