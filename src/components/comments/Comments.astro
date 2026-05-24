@@ -10,7 +10,7 @@ const { postId } = Astro.props;
 
 let initialComments: Comment[] = [];
 try {
-  const url = `${import.meta.env.PUBLIC_SUPABASE_URL}/rest/v1/comments?post_id=eq.${encodeURIComponent(postId)}&honeypot=is.null&order=created_at.asc&select=*`;
+  const url = `${import.meta.env.PUBLIC_SUPABASE_URL}/rest/v1/comments?post_id=eq.${encodeURIComponent(postId)}&honeypot=is.null&order=created_at.asc&limit=10&select=*`;
   const res = await fetch(url, {
     headers: {
       apikey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
@@ -38,6 +38,12 @@ try {
       ? <CommentThread comments={initialComments} postId={postId} />
       : <p id="no-comments" class="text-sm mb-6" style="color: var(--fg-mute);">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요.</p>
     }
+  </div>
+
+  <div id="load-more-wrap" class:list={["mt-2", initialComments.length < 10 && "hidden"]}>
+    <button id="load-more-btn" class="text-sm transition-colors" style="color: var(--fg-mute);">
+      댓글 더 보기
+    </button>
   </div>
 
   <div class="mt-6">
@@ -403,6 +409,43 @@ try {
 
     syncLikeButtons();
     attachLikeListeners();
+
+    let offset = document.querySelectorAll("#comments-list > ul > .comment-item").length;
+    const PAGE = 10;
+
+    const loadMoreBtn = document.getElementById("load-more-btn") as HTMLButtonElement | null;
+    const loadMoreWrap = document.getElementById("load-more-wrap");
+
+    loadMoreBtn?.addEventListener("click", async () => {
+      loadMoreBtn.textContent = "불러오는 중...";
+      loadMoreBtn.disabled = true;
+
+      const { data } = await supabase
+        .from("comments")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .select("*" as any)
+        .eq("post_id", postId)
+        .is("honeypot", null)
+        .is("parent_id", null)
+        .order("created_at", { ascending: true })
+        .range(offset, offset + PAGE - 1);
+
+      if (data && (data as Comment[]).length > 0) {
+        const list = getOrCreateTopList();
+        (data as Comment[]).forEach(c => list.appendChild(buildCommentEl(c, false)));
+        attachReplyListeners();
+        syncLikeButtons();
+        attachLikeListeners();
+        syncMyBadges();
+        offset += (data as Comment[]).length;
+        if ((data as Comment[]).length < PAGE) loadMoreWrap?.classList.add("hidden");
+      } else {
+        loadMoreWrap?.classList.add("hidden");
+      }
+
+      loadMoreBtn.textContent = "댓글 더 보기";
+      loadMoreBtn.disabled = false;
+    });
   }
 
   initComments();
