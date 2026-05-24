@@ -1,0 +1,330 @@
+---
+import CommentThread from "./CommentThread.astro";
+import CommentForm from "./CommentForm.astro";
+import type { Comment } from "./lib";
+
+interface Props {
+  postId: string;
+}
+const { postId } = Astro.props;
+
+let initialComments: Comment[] = [];
+try {
+  const url = `${import.meta.env.PUBLIC_SUPABASE_URL}/rest/v1/comments?post_id=eq.${encodeURIComponent(postId)}&honeypot=is.null&order=created_at.asc&select=*`;
+  const res = await fetch(url, {
+    headers: {
+      apikey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${import.meta.env.PUBLIC_SUPABASE_ANON_KEY}`,
+    },
+  });
+  if (res.ok) initialComments = await res.json();
+} catch {
+  // 빌드타임 fetch 실패 시 빈 배열로 시작
+}
+---
+
+<section
+  id="comments-section"
+  class="mt-12 pt-8"
+  style="border-top: 1px solid var(--border);"
+  data-post-id={postId}
+>
+  <h2 class="text-base font-semibold mb-6" style="color: var(--foreground);">
+    댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
+  </h2>
+
+  <div id="comments-list">
+    {initialComments.length > 0
+      ? <CommentThread comments={initialComments} postId={postId} />
+      : <p id="no-comments" class="text-sm mb-6" style="color: var(--fg-mute);">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요.</p>
+    }
+  </div>
+
+  <div class="mt-6">
+    <CommentForm postId={postId} />
+  </div>
+</section>
+
+<script>
+  import { getNickname, saveNickname, generateNickname, getSupabase } from "./lib";
+  import type { Comment } from "./lib";
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleDateString("ko-KR", {
+      year: "numeric", month: "long", day: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    });
+  }
+
+  function buildCommentEl(comment: Comment, isReply: boolean): HTMLLIElement {
+    const li = document.createElement("li");
+    li.className = "comment-item space-y-1";
+    li.dataset.id = comment.id;
+
+    const header = document.createElement("div");
+    header.className = "flex items-start justify-between gap-2";
+
+    const meta = document.createElement("div");
+    meta.className = "flex items-center gap-2";
+
+    const nick = document.createElement("span");
+    nick.className = "text-sm font-medium";
+    nick.style.color = "var(--foreground)";
+    nick.textContent = comment.nickname;
+
+    const date = document.createElement("span");
+    date.className = "text-xs";
+    date.style.color = "var(--fg-mute)";
+    date.textContent = formatDate(comment.created_at);
+
+    meta.appendChild(nick);
+    meta.appendChild(date);
+    header.appendChild(meta);
+
+    if (!isReply) {
+      const replyBtn = document.createElement("button");
+      replyBtn.className = "reply-btn text-xs transition-colors";
+      replyBtn.style.color = "var(--fg-mute)";
+      replyBtn.dataset.commentId = comment.id;
+      replyBtn.dataset.nickname = comment.nickname;
+      replyBtn.textContent = "답글";
+      header.appendChild(replyBtn);
+    }
+
+    const body = document.createElement("p");
+    body.className = "mt-1 text-sm leading-relaxed whitespace-pre-wrap";
+    body.style.color = "var(--foreground)";
+    body.textContent = comment.body;
+
+    const mount = document.createElement("div");
+    mount.className = "reply-form-mount";
+    mount.dataset.parentId = comment.id;
+    mount.dataset.nickname = comment.nickname;
+
+    li.appendChild(header);
+    li.appendChild(body);
+    if (!isReply) li.appendChild(mount);
+
+    return li;
+  }
+
+  function initComments() {
+    const section = document.getElementById("comments-section");
+    if (!section) return;
+    const postId = section.dataset.postId!;
+    const supabase = getSupabase();
+
+    function updateCount(delta: number) {
+      const el = document.getElementById("comments-count");
+      if (!el) return;
+      const n = parseInt(el.textContent?.replace(/\D/g, "") ?? "0") + delta;
+      el.textContent = `(${n})`;
+    }
+
+    function getOrCreateTopList(): HTMLUListElement {
+      let list = document.querySelector<HTMLUListElement>("#comments-list > ul");
+      if (!list) {
+        document.getElementById("no-comments")?.remove();
+        list = document.createElement("ul");
+        list.className = "space-y-4";
+        document.getElementById("comments-list")!.appendChild(list);
+      }
+      return list;
+    }
+
+    function appendComment(comment: Comment, parentId?: string) {
+      updateCount(1);
+      if (parentId) {
+        const parentLi = document.querySelector<HTMLLIElement>(`.comment-item[data-id="${parentId}"]`);
+        if (!parentLi) return;
+        let replyList = parentLi.querySelector<HTMLUListElement>("ul");
+        if (!replyList) {
+          replyList = document.createElement("ul");
+          replyList.className = "ml-6 mt-3 border-l pl-4 space-y-4";
+          replyList.style.borderColor = "var(--border)";
+          parentLi.querySelector(".reply-form-mount")?.before(replyList);
+        }
+        replyList.appendChild(buildCommentEl(comment, true));
+      } else {
+        getOrCreateTopList().appendChild(buildCommentEl(comment, false));
+        attachReplyListeners();
+      }
+    }
+
+    function initNickname(form: HTMLFormElement) {
+      const input = form.querySelector<HTMLInputElement>(".comment-nickname-input");
+      const randomBtn = form.querySelector<HTMLButtonElement>(".comment-nick-random");
+      if (!input) return;
+      input.value = getNickname();
+      input.addEventListener("change", () => {
+        const v = input.value.trim();
+        if (v) saveNickname(v);
+      });
+      randomBtn?.addEventListener("click", () => {
+        const nick = generateNickname();
+        input.value = nick;
+        saveNickname(nick);
+      });
+    }
+
+    function handleSubmit(form: HTMLFormElement, parentId?: string) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const honeypot = form.querySelector<HTMLInputElement>("[name=honeypot]")?.value;
+        if (honeypot) return;
+
+        const nicknameInput = form.querySelector<HTMLInputElement>("[name=nickname]");
+        const bodyInput = form.querySelector<HTMLTextAreaElement>("[name=body]");
+        const errorEl = form.querySelector<HTMLSpanElement>(".comment-error");
+        const submitBtn = form.querySelector<HTMLButtonElement>(".comment-submit-btn");
+
+        const nickname = nicknameInput?.value.trim() || getNickname();
+        const body = bodyInput?.value.trim() ?? "";
+
+        if (!body) {
+          if (errorEl) { errorEl.textContent = "댓글 내용을 입력해주세요."; errorEl.classList.remove("hidden"); }
+          return;
+        }
+
+        if (submitBtn) submitBtn.disabled = true;
+        errorEl?.classList.add("hidden");
+
+        const { data, error } = await supabase
+          .from("comments")
+          .insert({ post_id: postId, parent_id: parentId ?? null, nickname, body, honeypot: null })
+          .select()
+          .single();
+
+        if (submitBtn) submitBtn.disabled = false;
+
+        if (error || !data) {
+          if (errorEl) { errorEl.textContent = "등록 실패. 잠시 후 다시 시도해주세요."; errorEl.classList.remove("hidden"); }
+          return;
+        }
+
+        saveNickname(nickname);
+        appendComment(data as Comment, parentId);
+        if (bodyInput) bodyInput.value = "";
+        if (parentId) form.closest<HTMLDivElement>(".reply-form-wrapper")?.remove();
+      });
+    }
+
+    function buildReplyForm(commentId: string, nickname: string): HTMLDivElement {
+      const wrapper = document.createElement("div");
+      wrapper.className = "reply-form-wrapper mt-3";
+
+      const info = document.createElement("p");
+      info.className = "text-sm mb-2";
+      info.style.color = "var(--fg-mute)";
+
+      const atSpan = document.createElement("span");
+      atSpan.style.color = "var(--accent)";
+      atSpan.textContent = `@${nickname}`;
+      info.appendChild(atSpan);
+      info.appendChild(document.createTextNode(" 에게 답글"));
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.type = "button";
+      cancelBtn.className = "text-xs px-3 py-1 rounded ml-2";
+      cancelBtn.style.cssText = "color:var(--fg-mute);border:1px solid var(--border);";
+      cancelBtn.textContent = "취소";
+      cancelBtn.addEventListener("click", () => wrapper.remove());
+      info.appendChild(cancelBtn);
+
+      const form = document.createElement("form");
+      form.className = "comment-form flex flex-col gap-3 mt-2";
+
+      const hp = document.createElement("input");
+      hp.type = "text";
+      hp.name = "honeypot";
+      hp.tabIndex = -1;
+      hp.autocomplete = "off";
+      hp.setAttribute("aria-hidden", "true");
+      hp.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
+
+      const nickRow = document.createElement("div");
+      nickRow.className = "flex gap-2";
+
+      const nickInput = document.createElement("input");
+      nickInput.type = "text";
+      nickInput.name = "nickname";
+      nickInput.placeholder = "닉네임";
+      nickInput.maxLength = 30;
+      nickInput.className = "comment-nickname-input w-44 rounded border px-3 py-1.5 text-sm bg-background text-foreground";
+      nickInput.style.borderColor = "var(--border)";
+
+      const randBtn = document.createElement("button");
+      randBtn.type = "button";
+      randBtn.className = "comment-nick-random text-xs px-2 rounded hover:text-accent transition-colors";
+      randBtn.style.cssText = "color:var(--fg-mute);border:1px solid var(--border);";
+      randBtn.title = "랜덤 닉네임 생성";
+      randBtn.textContent = "🎲";
+
+      nickRow.appendChild(nickInput);
+      nickRow.appendChild(randBtn);
+
+      const textarea = document.createElement("textarea");
+      textarea.name = "body";
+      textarea.placeholder = "답글을 입력하세요";
+      textarea.maxLength = 1000;
+      textarea.rows = 2;
+      textarea.className = "w-full rounded border px-3 py-2 text-sm resize-none bg-background text-foreground";
+      textarea.style.borderColor = "var(--border)";
+
+      const submitRow = document.createElement("div");
+      submitRow.className = "flex items-center gap-2";
+
+      const submitBtn = document.createElement("button");
+      submitBtn.type = "submit";
+      submitBtn.className = "comment-submit-btn text-sm px-4 py-1.5 rounded font-medium";
+      submitBtn.style.cssText = "background:var(--accent);color:#fff;";
+      submitBtn.textContent = "등록";
+
+      const errorEl = document.createElement("span");
+      errorEl.className = "comment-error text-xs hidden";
+      errorEl.style.color = "#e53e3e";
+
+      submitRow.appendChild(submitBtn);
+      submitRow.appendChild(errorEl);
+
+      form.appendChild(hp);
+      form.appendChild(nickRow);
+      form.appendChild(textarea);
+      form.appendChild(submitRow);
+
+      wrapper.appendChild(info);
+      wrapper.appendChild(form);
+
+      initNickname(form);
+      handleSubmit(form, commentId);
+
+      return wrapper;
+    }
+
+    function attachReplyListeners(root: HTMLElement | Document = document) {
+      root.querySelectorAll<HTMLButtonElement>(".reply-btn:not([data-bound])").forEach(btn => {
+        btn.dataset.bound = "1";
+        btn.addEventListener("click", () => {
+          const commentId = btn.dataset.commentId!;
+          const nickname = btn.dataset.nickname!;
+          const mount = document.querySelector<HTMLDivElement>(`.reply-form-mount[data-parent-id="${commentId}"]`);
+          if (!mount) return;
+          document.querySelectorAll(".reply-form-wrapper").forEach(w => w.remove());
+          mount.appendChild(buildReplyForm(commentId, nickname));
+          mount.querySelector<HTMLTextAreaElement>("[name=body]")?.focus();
+        });
+      });
+    }
+
+    const rootForm = document.querySelector<HTMLFormElement>("#comment-form-root");
+    if (rootForm) {
+      initNickname(rootForm);
+      handleSubmit(rootForm);
+    }
+
+    attachReplyListeners();
+  }
+
+  initComments();
+  document.addEventListener("astro:after-swap", initComments);
+</script>
