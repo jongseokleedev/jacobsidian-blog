@@ -173,6 +173,7 @@ const posts = getSortedPosts(all);
         shown = PAGE;
         showItems();
         pills.forEach(p => p.classList.toggle("active-pill", p.dataset.topic === key));
+        setTimeout(setupObserver, 120);
       }
 
       if (pills.length) {

@@ -188,6 +188,7 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
         shown = PAGE;
         showItems();
         pills.forEach(p => p.classList.toggle("active-pill", p.dataset.sub === key));
+        setTimeout(setupObserver, 120);
       }
 
       pills.forEach(p => p.addEventListener("click", () => applyFilter(p.dataset.sub ?? "all")));
