@@ -1,0 +1,57 @@
+---
+interface Props {
+  postId: string;
+}
+const { postId } = Astro.props;
+---
+
+<form
+  id="comment-form-root"
+  class="comment-form mt-4 flex flex-col gap-3"
+  data-post-id={postId}
+>
+  <!-- Honeypot: 봇만 채움, 사람에게 보이지 않음 -->
+  <input
+    type="text"
+    name="honeypot"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+    style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+  />
+
+  <div class="flex gap-2">
+    <input
+      type="text"
+      name="nickname"
+      placeholder="닉네임"
+      maxlength="30"
+      class="comment-nickname-input w-44 rounded border px-3 py-1.5 text-sm bg-background text-foreground"
+      style="border-color: var(--border);"
+    />
+    <button
+      type="button"
+      class="comment-nick-random text-xs px-2 rounded hover:text-accent transition-colors"
+      style="color: var(--fg-mute); border: 1px solid var(--border);"
+      title="랜덤 닉네임 생성"
+    >🎲</button>
+  </div>
+
+  <textarea
+    name="body"
+    placeholder="댓글을 입력하세요 (최대 1000자)"
+    maxlength="1000"
+    rows="3"
+    class="w-full rounded border px-3 py-2 text-sm resize-none bg-background text-foreground"
+    style="border-color: var(--border);"
+  ></textarea>
+
+  <div class="flex items-center gap-2">
+    <button
+      type="submit"
+      class="comment-submit-btn text-sm px-4 py-1.5 rounded font-medium transition-opacity"
+      style="background: var(--accent); color: #fff;"
+    >등록</button>
+    <span class="comment-error text-xs hidden" style="color: #e53e3e;"></span>
+  </div>
+</form>
