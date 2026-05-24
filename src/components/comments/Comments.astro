@@ -28,6 +28,7 @@ try {
   class="mt-12 pt-8"
   style="border-top: 1px solid var(--border);"
   data-post-id={postId}
+  data-admin-pw={import.meta.env.PUBLIC_ADMIN_PASSWORD ?? ""}
 >
   <h2 class="flex items-center gap-3 text-base font-semibold mb-6" style="color: var(--foreground);">
     댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
@@ -52,6 +53,10 @@ try {
 
   <div class="mt-6">
     <CommentForm postId={postId} />
+  </div>
+
+  <div class="mt-6 flex justify-end">
+    <button id="admin-toggle" class="text-xs" style="color: var(--fg-veryfaint);">관리</button>
   </div>
 </section>
 
@@ -96,9 +101,16 @@ try {
     badge.textContent = "나";
     badge.dataset.nickname = comment.nickname;
 
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn text-xs ml-2 transition-colors";
+    deleteBtn.style.cssText = "color:#e53e3e;display:none;";
+    deleteBtn.dataset.commentId = comment.id;
+    deleteBtn.textContent = "삭제";
+
     meta.appendChild(nick);
     meta.appendChild(badge);
     meta.appendChild(date);
+    meta.appendChild(deleteBtn);
     header.appendChild(meta);
 
     if (!isReply) {
@@ -202,6 +214,8 @@ try {
       syncMyBadges();
       syncLikeButtons();
       attachLikeListeners();
+      attachDeleteListeners();
+      if (adminMode) setAdminMode(true);
     }
 
     function initNickname(form: HTMLFormElement) {
@@ -391,6 +405,39 @@ try {
     }
     syncMyBadges();
 
+    const adminPw = section.dataset.adminPw ?? "";
+    let adminMode = false;
+
+    function setAdminMode(on: boolean) {
+      adminMode = on;
+      document.querySelectorAll<HTMLButtonElement>(".delete-btn").forEach(btn => {
+        btn.style.display = on ? "" : "none";
+      });
+    }
+
+    function attachDeleteListeners(root: HTMLElement | Document = document) {
+      root.querySelectorAll<HTMLButtonElement>(".delete-btn:not([data-del-bound])").forEach(btn => {
+        btn.dataset.delBound = "1";
+        const id = btn.dataset.commentId!;
+        btn.addEventListener("click", async () => {
+          if (!confirm("댓글을 삭제하시겠습니까?")) return;
+          const { error } = await supabase.from("comments").delete().eq("id", id);
+          if (error) { alert("삭제 실패"); return; }
+          btn.closest<HTMLLIElement>(".comment-item")?.remove();
+          updateCount(-1);
+        });
+      });
+    }
+
+    document.getElementById("admin-toggle")?.addEventListener("click", () => {
+      if (adminMode) { setAdminMode(false); return; }
+      const pw = prompt("관리자 비밀번호");
+      if (pw === adminPw) setAdminMode(true);
+      else if (pw !== null) alert("비밀번호가 틀렸습니다.");
+    });
+
+    attachDeleteListeners();
+
     function syncLikeButtons() {
       const liked = getLikedIds();
       document.querySelectorAll<HTMLButtonElement>(".like-btn").forEach(btn => {
@@ -441,6 +488,8 @@ try {
         syncLikeButtons();
         attachLikeListeners();
         syncMyBadges();
+        attachDeleteListeners();
+        if (adminMode) setAdminMode(true);
         offset += (data as Comment[]).length;
         if ((data as Comment[]).length < PAGE) loadMoreWrap?.classList.add("hidden");
       } else {
@@ -484,6 +533,8 @@ try {
       syncLikeButtons();
       attachLikeListeners();
       syncMyBadges();
+      attachDeleteListeners();
+      if (adminMode) setAdminMode(true);
     }
 
     const sortAsc = document.getElementById("sort-asc") as HTMLButtonElement | null;

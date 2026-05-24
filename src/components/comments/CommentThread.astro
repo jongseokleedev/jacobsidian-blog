@@ -38,6 +38,11 @@ const getReplies = (parentId: string) => comments.filter(c => c.parent_id === pa
             style="background: var(--accent-soft); color: var(--accent);"
           >나</span>
           <span class="text-xs" style="color: var(--fg-mute);">{formatDate(comment.created_at)}</span>
+          <button
+            class="delete-btn text-xs ml-2 transition-colors"
+            style="color: #e53e3e; display: none;"
+            data-comment-id={comment.id}
+          >삭제</button>
         </div>
         {!isReply && (
           <button
