@@ -75,3 +75,15 @@ export interface Comment {
   body: string;
   created_at: string;
 }
+
+export function getLikedIds(): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem("jb:comment-likes") ?? "[]")); }
+  catch { return new Set(); }
+}
+
+export function toggleLike(id: string): boolean {
+  const liked = getLikedIds();
+  if (liked.has(id)) { liked.delete(id); } else { liked.add(id); }
+  localStorage.setItem("jb:comment-likes", JSON.stringify([...liked]));
+  return liked.has(id);
+}
