@@ -53,13 +53,18 @@ export function saveNickname(nick: string): void {
   localStorage.setItem("jb:comment-nickname", nick);
 }
 
-export function createSupabaseClient() {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { createClient } = require("@supabase/supabase-js");
-  return createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL as string,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string,
-  );
+import { createClient } from "@supabase/supabase-js";
+
+let _supabase: ReturnType<typeof createClient> | null = null;
+
+export function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      import.meta.env.PUBLIC_SUPABASE_URL as string,
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string,
+    );
+  }
+  return _supabase;
 }
 
 export interface Comment {
