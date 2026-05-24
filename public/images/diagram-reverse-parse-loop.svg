@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" width="680" height="280" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="arr3r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="680" height="280" rx="14" fill="#fff7f7" stroke="#fecaca" stroke-width="1.5"/>
+
+  <text x="340" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">역파싱 루프 — 두 사람 모두 본업이 아닌 일을 하는 구조</text>
+
+  <!-- Node 1: 코드 (실물 구현체) -->
+  <rect x="40" y="60" width="130" height="50" rx="10" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="105" y="82" text-anchor="middle" font-size="12" fill="#374151">코드</text>
+  <text x="105" y="98" text-anchor="middle" font-size="10" fill="#6b7280">(실물 구현체)</text>
+
+  <!-- Arrow: 코드 → HTML 변환 -->
+  <line x1="170" y1="85" x2="226" y2="85" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr3r)"/>
+  <text x="198" y="76" text-anchor="middle" font-size="10" fill="#ef4444">개발자 작업</text>
+
+  <!-- Node 2: HTML 목업 -->
+  <rect x="226" y="60" width="130" height="50" rx="10" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="291" y="82" text-anchor="middle" font-size="12" fill="#374151">HTML 목업</text>
+  <text x="291" y="98" text-anchor="middle" font-size="10" fill="#6b7280">(변환 결과)</text>
+
+  <!-- Arrow: HTML → 피그마 파싱 -->
+  <line x1="356" y1="85" x2="412" y2="85" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr3r)"/>
+  <text x="384" y="76" text-anchor="middle" font-size="10" fill="#ef4444">역파싱</text>
+
+  <!-- Node 3: 피그마 캔버스 (불완전) -->
+  <rect x="412" y="60" width="140" height="50" rx="10" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="482" y="82" text-anchor="middle" font-size="12" fill="#374151">피그마 캔버스</text>
+  <text x="482" y="98" text-anchor="middle" font-size="10" fill="#ef4444">⚠ 불완전 복원</text>
+
+  <!-- Arrow: 피그마 → 디자인 수정 -->
+  <path d="M552,85 Q620,85 620,160 Q620,200 552,200" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arr3r)"/>
+  <text x="638" y="148" text-anchor="middle" font-size="10" fill="#ef4444" transform="rotate(90,638,148)">디자이너 작업</text>
+
+  <!-- Node 4: 수정된 피그마 시안 -->
+  <rect x="412" y="174" width="140" height="50" rx="10" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="482" y="196" text-anchor="middle" font-size="12" fill="#374151">수정된 시안</text>
+  <text x="482" y="212" text-anchor="middle" font-size="10" fill="#6b7280">(어긋난 캔버스 위)</text>
+
+  <!-- Arrow: 시안 → 코드 반영 -->
+  <line x1="412" y1="199" x2="356" y2="199" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr3r)"/>
+
+  <!-- Node 5: 코드 반영 -->
+  <rect x="226" y="174" width="130" height="50" rx="10" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="291" y="196" text-anchor="middle" font-size="12" fill="#374151">코드 반영</text>
+  <text x="291" y="212" text-anchor="middle" font-size="10" fill="#ef4444">개발자 재작업</text>
+
+  <!-- Arrow back to start -->
+  <path d="M226,199 Q105,199 105,112" stroke="#9ca3af" stroke-width="1.5" fill="none" marker-end="url(#arr3)"/>
+
+  <!-- Center label -->
+  <text x="291" y="152" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">두 사람 모두</text>
+  <text x="291" y="167" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">본업이 아닌 일</text>
+</svg>

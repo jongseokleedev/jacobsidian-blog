@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+  <style>
+    .bg { fill: none; }
+    .label { font-size: 12px; fill: #6b7280; }
+    .title { font-size: 13px; font-weight: 700; }
+    .node { rx: 8; ry: 8; }
+    .arrow { marker-end: url(#arr); }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
+
+    @media (prefers-color-scheme: dark) {
+      .label { fill: #9ca3af; }
+    }
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Background panels -->
+  <rect x="16" y="16" width="340" height="368" rx="12" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+  <rect x="364" y="16" width="340" height="368" rx="12" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+
+  <!-- Panel titles -->
+  <text x="186" y="46" text-anchor="middle" class="section-label" fill="#dc2626">BEFORE — 피그마 기반</text>
+  <text x="534" y="46" text-anchor="middle" class="section-label" fill="#059669">AFTER — 코드 기반</text>
+
+  <!-- ===== BEFORE column ===== -->
+  <!-- Node: 디자이너 -->
+  <rect x="116" y="64" width="140" height="36" class="node" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="186" y="87" text-anchor="middle" font-size="13" fill="#374151">디자이너</text>
+
+  <!-- Arrow down -->
+  <line x1="186" y1="100" x2="186" y2="118" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Node: 피그마 시안 -->
+  <rect x="116" y="118" width="140" height="36" class="node" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="186" y="141" text-anchor="middle" font-size="13" fill="#374151">피그마 시안</text>
+
+  <!-- Arrow + 협의 label -->
+  <line x1="186" y1="154" x2="186" y2="172" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+  <text x="200" y="166" font-size="10" fill="#ef4444">빈 부분 협의</text>
+
+  <!-- Node: 개발자 코드 -->
+  <rect x="116" y="172" width="140" height="36" class="node" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="186" y="195" text-anchor="middle" font-size="13" fill="#374151">개발자 → 코드</text>
+
+  <!-- Arrow + QA label -->
+  <line x1="186" y1="208" x2="186" y2="226" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+  <text x="200" y="220" font-size="10" fill="#ef4444">QA 피드백</text>
+
+  <!-- Node: 수정 반복 -->
+  <rect x="116" y="226" width="140" height="36" class="node" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="186" y="249" text-anchor="middle" font-size="13" fill="#374151">수정 반복</text>
+
+  <!-- Cycle arrow back -->
+  <path d="M116,244 Q64,244 64,180 Q64,130 116,130" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-red)"/>
+  <text x="30" y="192" font-size="10" fill="#ef4444" text-anchor="middle">반복</text>
+
+  <!-- Arrow down -->
+  <line x1="186" y1="262" x2="186" y2="280" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Node: 배포 -->
+  <rect x="116" y="280" width="140" height="36" class="node" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="186" y="303" text-anchor="middle" font-size="13" fill="#374151">배포</text>
+
+  <!-- Time label -->
+  <text x="186" y="345" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="600">화면 하나 → 며칠</text>
+  <text x="186" y="363" text-anchor="middle" font-size="11" fill="#9ca3af">마디 4–5개</text>
+
+  <!-- ===== AFTER column ===== -->
+  <!-- Node: 디자이너 -->
+  <rect x="464" y="64" width="140" height="36" class="node" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="534" y="87" text-anchor="middle" font-size="13" fill="#374151">디자이너</text>
+
+  <!-- Arrow down -->
+  <line x1="534" y1="100" x2="534" y2="118" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Node: DESIGN.md -->
+  <rect x="464" y="118" width="140" height="36" class="node" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="534" y="137" text-anchor="middle" font-size="13" fill="#374151">DESIGN.md</text>
+  <text x="534" y="151" text-anchor="middle" font-size="10" fill="#6b7280">(시안 + 명세 = 동일)</text>
+
+  <!-- Arrow down -->
+  <line x1="534" y1="158" x2="534" y2="226" stroke="#10b981" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="548" y="196" font-size="10" fill="#10b981">직접 참조</text>
+
+  <!-- Node: 코드 -->
+  <rect x="464" y="226" width="140" height="36" class="node" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="534" y="249" text-anchor="middle" font-size="13" fill="#374151">코드</text>
+
+  <!-- Arrow down -->
+  <line x1="534" y1="262" x2="534" y2="280" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Node: 배포 -->
+  <rect x="464" y="280" width="140" height="36" class="node" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="534" y="303" text-anchor="middle" font-size="13" fill="#374151">배포</text>
+
+  <!-- Time label -->
+  <text x="534" y="345" text-anchor="middle" font-size="12" fill="#059669" font-weight="600">화면 하나 → 몇 시간</text>
+  <text x="534" y="363" text-anchor="middle" font-size="11" fill="#9ca3af">마디 1개</text>
+</svg>
