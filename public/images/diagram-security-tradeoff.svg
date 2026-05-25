@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" width="680" height="300" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="26" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">보안 강도 ↔ 유저 불편도 트레이드오프</text>
+
+  <!-- Y axis -->
+  <line x1="80" y1="240" x2="80" y2="50" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arrA)"/>
+  <text x="76" y="46" text-anchor="end" font-size="10" fill="#9ca3af">유저</text>
+  <text x="76" y="58" text-anchor="end" font-size="10" fill="#9ca3af">불편도</text>
+
+  <!-- X axis -->
+  <line x1="80" y1="240" x2="620" y2="240" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arrA)"/>
+  <text x="625" y="244" font-size="10" fill="#9ca3af">보안 강도</text>
+
+  <!-- X axis labels -->
+  <text x="80" y="258" text-anchor="middle" font-size="10" fill="#9ca3af">0</text>
+  <text x="200" y="258" text-anchor="middle" font-size="10" fill="#ef4444">10점</text>
+  <text x="370" y="258" text-anchor="middle" font-size="10" fill="#f59e0b">70~80점</text>
+  <text x="560" y="258" text-anchor="middle" font-size="10" fill="#6b7280">99점</text>
+
+  <!-- Tradeoff curve -->
+  <path d="M80,240 Q150,238 200,210 Q300,170 370,130 Q460,90 560,60" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+
+  <!-- Danger zone (too low security) -->
+  <rect x="82" y="190" width="116" height="48" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="140" y="210" text-anchor="middle" font-size="10" fill="#dc2626">최소 기준 미달</text>
+  <text x="140" y="226" text-anchor="middle" font-size="10" fill="#dc2626">없는 것보다 나쁨</text>
+
+  <!-- Optimal zone -->
+  <rect x="310" y="110" width="120" height="48" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="370" y="129" text-anchor="middle" font-size="10" fill="#16a34a" font-weight="600">서비스 적정 구간</text>
+  <text x="370" y="145" text-anchor="middle" font-size="10" fill="#16a34a">유저 불편 최소화</text>
+  <text x="370" y="158" text-anchor="middle" font-size="10" fill="#16a34a">+ 충분한 보안</text>
+
+  <!-- Points on curve -->
+  <circle cx="200" cy="210" r="5" fill="#ef4444"/>
+  <circle cx="370" cy="130" r="6" fill="#10b981"/>
+  <circle cx="560" cy="60" r="5" fill="#6b7280"/>
+
+  <!-- Annotations -->
+  <text x="208" y="198" font-size="10" fill="#dc2626">스티로폼</text>
+  <text x="208" y="210" font-size="10" fill="#dc2626">자물쇠 구간</text>
+
+  <text x="572" y="64" font-size="10" fill="#6b7280">유저가</text>
+  <text x="572" y="76" font-size="10" fill="#6b7280">너무 불편</text>
+
+  <!-- JWT example -->
+  <line x1="370" y1="175" x2="370" y2="195" stroke="#10b981" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="370" y="208" text-anchor="middle" font-size="10" fill="#059669">JWT 등 타협안</text>
+</svg>
