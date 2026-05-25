@@ -32,10 +32,14 @@ try {
 >
   <h2 class="flex items-center gap-3 text-base font-semibold mb-6" style="color: var(--foreground);">
     댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
-    <span class="inline-flex gap-1 text-xs font-normal ml-auto">
-      <button id="sort-asc" class="px-2 py-0.5 rounded transition-colors" style="background: var(--accent); color: #fff;">등록순</button>
-      <button id="sort-desc" class="px-2 py-0.5 rounded transition-colors" style="color: var(--fg-mute);">최신순</button>
-    </span>
+    <select
+      id="sort-select"
+      class="text-xs ml-auto rounded px-2 py-0.5 outline-none cursor-pointer"
+      style="background: var(--muted); color: var(--fg-mute); border: 1px solid var(--border);"
+    >
+      <option value="asc">등록순</option>
+      <option value="desc">최신순</option>
+    </select>
   </h2>
 
   <div id="comments-list">
@@ -153,7 +157,7 @@ try {
 
     const likeLabel = document.createElement("span");
     likeLabel.className = "like-label";
-    likeLabel.textContent = "좋아요";
+    likeLabel.textContent = comment.like_count > 0 ? String(comment.like_count) : "좋아요";
 
     likeBtn.appendChild(svg);
     likeBtn.appendChild(likeLabel);
@@ -451,9 +455,13 @@ try {
     function attachLikeListeners(root: HTMLElement | Document = document) {
       root.querySelectorAll<HTMLButtonElement>(".like-btn:not([data-like-bound])").forEach(btn => {
         btn.dataset.likeBound = "1";
-        btn.addEventListener("click", () => {
-          toggleLike(btn.dataset.commentId!);
-          syncLikeButtons();
+        btn.addEventListener("click", async () => {
+          const { liked, count } = await toggleLike(btn.dataset.commentId!);
+          btn.style.color = liked ? "var(--accent)" : "var(--fg-mute)";
+          const svgEl = btn.querySelector("svg");
+          if (svgEl) svgEl.setAttribute("fill", liked ? "currentColor" : "none");
+          const label = btn.querySelector<HTMLSpanElement>(".like-label");
+          if (label) label.textContent = count > 0 ? String(count) : "좋아요";
         });
       });
     }
@@ -592,26 +600,12 @@ try {
       if (adminMode) setAdminMode(true);
     }
 
-    const sortAsc = document.getElementById("sort-asc") as HTMLButtonElement | null;
-    const sortDesc = document.getElementById("sort-desc") as HTMLButtonElement | null;
-
-    function setSortUI(order: "asc" | "desc") {
-      if (sortAsc) sortAsc.style.cssText = order === "asc" ? "background:var(--accent);color:#fff;" : "color:var(--fg-mute);";
-      if (sortDesc) sortDesc.style.cssText = order === "desc" ? "background:var(--accent);color:#fff;" : "color:var(--fg-mute);";
-    }
-
-    sortAsc?.addEventListener("click", async () => {
-      if (currentOrder === "asc") return;
-      currentOrder = "asc";
-      setSortUI("asc");
-      await loadAllComments("asc");
-    });
-
-    sortDesc?.addEventListener("click", async () => {
-      if (currentOrder === "desc") return;
-      currentOrder = "desc";
-      setSortUI("desc");
-      await loadAllComments("desc");
+    const sortSelect = document.getElementById("sort-select") as HTMLSelectElement | null;
+    sortSelect?.addEventListener("change", async () => {
+      const order = sortSelect.value as "asc" | "desc";
+      if (currentOrder === order) return;
+      currentOrder = order;
+      await loadAllComments(order);
     });
 
     refreshComments();

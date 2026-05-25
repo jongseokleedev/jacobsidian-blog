@@ -64,7 +64,7 @@ const getReplies = (parentId: string) => comments.filter(c => c.parent_id === pa
         <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
-        <span class="like-label">좋아요</span>
+        <span class="like-label">{comment.like_count > 0 ? comment.like_count : "좋아요"}</span>
       </button>
 
       {getReplies(comment.id).length > 0 && (

@@ -184,6 +184,7 @@ export interface Comment {
   nickname: string;
   body: string;
   created_at: string;
+  like_count: number;
 }
 
 export function getLikedIds(): Set<string> {
@@ -191,9 +192,14 @@ export function getLikedIds(): Set<string> {
   catch { return new Set(); }
 }
 
-export function toggleLike(id: string): boolean {
+export async function toggleLike(id: string): Promise<{ liked: boolean; count: number }> {
   const liked = getLikedIds();
-  if (liked.has(id)) { liked.delete(id); } else { liked.add(id); }
+  const nowLiked = !liked.has(id);
+  const delta = nowLiked ? 1 : -1;
+  if (nowLiked) { liked.add(id); } else { liked.delete(id); }
   localStorage.setItem("jb:comment-likes", JSON.stringify([...liked]));
-  return liked.has(id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (getSupabase() as any).rpc("increment_like", { comment_id: id, delta });
+  const { data } = await getSupabase().from("comments").select("like_count").eq("id", id).single();
+  return { liked: nowLiked, count: (data as any)?.like_count ?? 0 };
 }
