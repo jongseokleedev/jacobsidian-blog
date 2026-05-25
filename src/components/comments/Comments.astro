@@ -34,8 +34,8 @@ try {
     댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
     <select
       id="sort-select"
-      class="text-xs ml-auto rounded px-2 py-0.5 outline-none cursor-pointer"
-      style="background: var(--muted); color: var(--fg-mute); border: 1px solid var(--border);"
+      class="text-xs ml-auto outline-none cursor-pointer bg-transparent"
+      style="color: var(--fg-mute);"
     >
       <option value="asc">등록순</option>
       <option value="desc">최신순</option>
@@ -84,7 +84,7 @@ try {
     li.dataset.id = comment.id;
 
     const header = document.createElement("div");
-    header.className = "flex items-start justify-between gap-2";
+    header.className = "flex items-center justify-between gap-2";
 
     const meta = document.createElement("div");
     meta.className = "flex items-center gap-2";
