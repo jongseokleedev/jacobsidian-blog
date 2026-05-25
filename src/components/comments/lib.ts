@@ -84,8 +84,35 @@ export const ANIMALS = [
   "오소리",
 ];
 
+export const DARK_SITUATIONS = [
+  "모든 게 다 피곤한",
+  "웃음 포인트가 고장난",
+  "희망 재고 소진된",
+  "이유 없이 허탈한",
+  "착한 척이 지겨운",
+  "사과를 거부하는",
+  "참는 게 미덕인 세상이 틀렸다는",
+  "눈치 보다 지쳐버린",
+  "틀렸어도 인정 안 할",
+  "싫은 사람이 너무 많은",
+  "설레임 유효기간 만료된",
+  "에너지가 딱 0 인",
+  "분위기 맞춰주기 그만둔",
+  "기대가 사치가 된",
+  "위로가 식상해진",
+  "감정 낭비를 줄이는",
+  "열심히 산 게 억울한",
+  "그러든지 말든지인",
+  "좋아하는 척 그만둔",
+  "더 이상 참지 않기로 한",
+];
+
 export function generateNickname(): string {
-  const s = SITUATIONS[Math.floor(Math.random() * SITUATIONS.length)];
+  const isDark =
+    typeof document !== "undefined" &&
+    document.firstElementChild?.getAttribute("data-theme") === "dark";
+  const pool = isDark ? DARK_SITUATIONS : SITUATIONS;
+  const s = pool[Math.floor(Math.random() * pool.length)];
   const a = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
   return `${s} ${a}`;
 }
