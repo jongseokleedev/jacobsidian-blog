@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "tsx scripts/generateGraph.ts",
+    "prebuild": "tsx scripts/generateFavicon.ts && tsx scripts/generateGraph.ts",
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
     "graph": "tsx scripts/generateGraph.ts",
     "preview": "astro preview",
@@ -57,6 +57,7 @@
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "to-ico": "^1.1.5",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.51.0",
