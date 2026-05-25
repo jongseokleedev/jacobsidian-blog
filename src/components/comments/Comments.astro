@@ -461,11 +461,68 @@ try {
     syncLikeButtons();
     attachLikeListeners();
 
-    let offset = document.querySelectorAll("#comments-list > ul > .comment-item").length;
     const PAGE = 10;
+    let currentOrder: "asc" | "desc" = "asc";
 
     const loadMoreBtn = document.getElementById("load-more-btn") as HTMLButtonElement | null;
     const loadMoreWrap = document.getElementById("load-more-wrap");
+
+    async function refreshComments() {
+      const { data } = await supabase
+        .from("comments")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .select("*" as any)
+        .eq("post_id", postId)
+        .is("honeypot", null)
+        .order("created_at", { ascending: currentOrder === "asc" })
+        .range(0, PAGE - 1);
+
+      if (!data) return;
+      const comments = data as Comment[];
+
+      document.getElementById("no-comments")?.remove();
+      const listContainer = document.getElementById("comments-list")!;
+      let list = listContainer.querySelector<HTMLUListElement>("ul");
+      if (!list) {
+        list = document.createElement("ul");
+        list.className = "space-y-4";
+        listContainer.appendChild(list);
+      }
+      list.replaceChildren();
+
+      comments.filter(c => !c.parent_id).forEach(c => list!.appendChild(buildCommentEl(c, false)));
+      comments.filter(c => !!c.parent_id).forEach(c => {
+        const parentLi = list!.querySelector<HTMLLIElement>(`.comment-item[data-id="${c.parent_id}"]`);
+        if (!parentLi) return;
+        let replyList = parentLi.querySelector<HTMLUListElement>("ul");
+        if (!replyList) {
+          replyList = document.createElement("ul");
+          replyList.className = "ml-6 mt-3 border-l pl-4 space-y-4";
+          replyList.style.borderColor = "var(--border)";
+          parentLi.querySelector(".reply-form-mount")?.before(replyList);
+        }
+        replyList.appendChild(buildCommentEl(c, true));
+      });
+
+      const countEl = document.getElementById("comments-count");
+      if (countEl) countEl.textContent = `(${comments.filter(c => !c.parent_id).length})`;
+
+      attachReplyListeners();
+      syncLikeButtons();
+      attachLikeListeners();
+      syncMyBadges();
+      attachDeleteListeners();
+      if (adminMode) setAdminMode(true);
+
+      offset = comments.filter(c => !c.parent_id).length;
+      if (comments.filter(c => !c.parent_id).length < PAGE) {
+        loadMoreWrap?.classList.add("hidden");
+      } else {
+        loadMoreWrap?.classList.remove("hidden");
+      }
+    }
+
+    let offset = PAGE;
 
     loadMoreBtn?.addEventListener("click", async () => {
       loadMoreBtn.textContent = "불러오는 중...";
@@ -499,8 +556,6 @@ try {
       loadMoreBtn.textContent = "댓글 더 보기";
       loadMoreBtn.disabled = false;
     });
-
-    let currentOrder: "asc" | "desc" = "asc";
 
     async function loadAllComments(order: "asc" | "desc") {
       const { data } = await supabase
@@ -558,8 +613,9 @@ try {
       setSortUI("desc");
       await loadAllComments("desc");
     });
+
+    refreshComments();
   }
 
-  initComments();
-  document.addEventListener("astro:after-swap", initComments);
+  document.addEventListener("astro:page-load", initComments);
 </script>
