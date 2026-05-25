@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 420" width="680" height="420" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" width="680" height="400" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
   <defs>
     <marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
       <path d="M0,0 L0,6 L8,3 z" fill="#6b7280"/>
@@ -7,35 +7,29 @@
 
   <text x="340" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">보안 강도 ↔ 유저 불편도 트레이드오프</text>
 
-  <!-- ── Top annotation boxes ── -->
+  <!-- ── Top annotation boxes (width=110, centers at 160 / 340 / 520) ── -->
 
-  <!-- Box 1: danger zone -->
-  <rect x="60" y="40" width="160" height="72" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
-  <text x="140" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">최소 기준 미달</text>
-  <text x="140" y="77" text-anchor="middle" font-size="10" fill="#dc2626">없는 것보다 나쁨</text>
-  <text x="140" y="93" text-anchor="middle" font-size="10" fill="#9ca3af">스티로폼 자물쇠 구간</text>
+  <rect x="105" y="40" width="110" height="68" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="160" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">최소 기준 미달</text>
+  <text x="160" y="76" text-anchor="middle" font-size="10" fill="#dc2626">없는 것보다 나쁨</text>
+  <text x="160" y="92" text-anchor="middle" font-size="9" fill="#9ca3af">스티로폼 자물쇠</text>
 
-  <!-- Box 2: optimal -->
-  <rect x="260" y="40" width="160" height="72" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
-  <text x="340" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">서비스 적정 구간</text>
-  <text x="340" y="77" text-anchor="middle" font-size="10" fill="#16a34a">유저 불편 최소화 +</text>
-  <text x="340" y="93" text-anchor="middle" font-size="10" fill="#16a34a">충분한 보안 확보</text>
+  <rect x="285" y="40" width="110" height="68" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="340" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">서비스 적정 구간</text>
+  <text x="340" y="76" text-anchor="middle" font-size="10" fill="#16a34a">유저 불편 최소화</text>
+  <text x="340" y="92" text-anchor="middle" font-size="10" fill="#16a34a">+ 충분한 보안</text>
 
-  <!-- Box 3: over-secured -->
-  <rect x="460" y="40" width="160" height="72" rx="8" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/>
-  <text x="540" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#6b7280">과도한 보안</text>
-  <text x="540" y="77" text-anchor="middle" font-size="10" fill="#6b7280">유저 경험 심각하게</text>
-  <text x="540" y="93" text-anchor="middle" font-size="10" fill="#6b7280">저하 (현실적 불가)</text>
+  <rect x="465" y="40" width="110" height="68" rx="8" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="520" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#6b7280">과도한 보안</text>
+  <text x="520" y="76" text-anchor="middle" font-size="10" fill="#6b7280">유저 불편 심각</text>
+  <text x="520" y="92" text-anchor="middle" font-size="9" fill="#9ca3af">현실적 불가</text>
 
-  <!-- ── Dashed lines from boxes to curve points ── -->
-  <!-- Point 1 at (140, 278) -->
-  <line x1="140" y1="112" x2="140" y2="272" stroke="#fca5a5" stroke-width="1.2" stroke-dasharray="5,4"/>
-  <!-- Point 2 at (340, 220) -->
-  <line x1="340" y1="112" x2="340" y2="214" stroke="#86efac" stroke-width="1.2" stroke-dasharray="5,4"/>
-  <!-- Point 3 at (540, 168) -->
-  <line x1="540" y1="112" x2="540" y2="162" stroke="#d1d5db" stroke-width="1.2" stroke-dasharray="5,4"/>
+  <!-- ── Dashed lines from box bottoms to curve points ── -->
+  <line x1="160" y1="108" x2="160" y2="298" stroke="#fca5a5" stroke-width="1.2" stroke-dasharray="5,4"/>
+  <line x1="340" y1="108" x2="340" y2="238" stroke="#86efac" stroke-width="1.2" stroke-dasharray="5,4"/>
+  <line x1="520" y1="108" x2="520" y2="178" stroke="#d1d5db" stroke-width="1.2" stroke-dasharray="5,4"/>
 
-  <!-- ── Graph area ── -->
+  <!-- ── Graph ── -->
 
   <!-- Y axis -->
   <line x1="80" y1="330" x2="80" y2="130" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arrA)"/>
@@ -46,23 +40,23 @@
   <line x1="80" y1="330" x2="620" y2="330" stroke="#d1d5db" stroke-width="1.5" marker-end="url(#arrA)"/>
   <text x="626" y="334" font-size="10" fill="#9ca3af">보안 강도</text>
 
-  <!-- X axis tick labels -->
-  <text x="140" y="348" text-anchor="middle" font-size="10" fill="#ef4444">10점</text>
+  <!-- X axis labels -->
+  <text x="160" y="348" text-anchor="middle" font-size="10" fill="#ef4444">10점</text>
   <text x="340" y="348" text-anchor="middle" font-size="10" fill="#f59e0b">70~80점</text>
-  <text x="540" y="348" text-anchor="middle" font-size="10" fill="#6b7280">99점</text>
+  <text x="520" y="348" text-anchor="middle" font-size="10" fill="#6b7280">99점</text>
 
-  <!-- Curve: passes through (140,278), (340,220), (540,168) -->
-  <path d="M80,330 Q110,328 140,278 Q240,248 340,220 Q440,194 540,168 Q580,160 610,156" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+  <!-- Smooth single cubic bezier curve -->
+  <path d="M80,330 C240,322 450,188 610,158" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
 
   <!-- Curve points -->
-  <circle cx="140" cy="278" r="6" fill="#ef4444" stroke="white" stroke-width="1.5"/>
-  <circle cx="340" cy="220" r="6" fill="#10b981" stroke="white" stroke-width="1.5"/>
-  <circle cx="540" cy="168" r="6" fill="#6b7280" stroke="white" stroke-width="1.5"/>
+  <circle cx="160" cy="302" r="6" fill="#ef4444" stroke="white" stroke-width="1.5"/>
+  <circle cx="340" cy="242" r="6" fill="#10b981" stroke="white" stroke-width="1.5"/>
+  <circle cx="520" cy="182" r="6" fill="#6b7280" stroke="white" stroke-width="1.5"/>
 
-  <!-- JWT note below optimal point -->
-  <text x="340" y="370" text-anchor="middle" font-size="10" fill="#059669">JWT 등 타협안이 이 구간에 위치</text>
+  <!-- JWT note -->
+  <text x="340" y="368" text-anchor="middle" font-size="10" fill="#059669">JWT 등 타협안이 이 구간에 위치</text>
 
   <!-- Bottom insight -->
-  <rect x="80" y="386" width="520" height="24" rx="6" fill="#fffbeb" stroke="#fde68a" stroke-width="1.2"/>
-  <text x="340" y="402" text-anchor="middle" font-size="10" fill="#92400e">보안 강화 = 유저 불편 증가 → 서비스에 맞는 적정 수준을 찾는 것이 개발자의 역할</text>
+  <rect x="80" y="380" width="520" height="22" rx="6" fill="#fffbeb" stroke="#fde68a" stroke-width="1.2"/>
+  <text x="340" y="395" text-anchor="middle" font-size="10" fill="#92400e">보안 강화 = 유저 불편 증가 → 서비스에 맞는 적정 수준을 찾는 것이 개발자의 역할</text>
 </svg>
