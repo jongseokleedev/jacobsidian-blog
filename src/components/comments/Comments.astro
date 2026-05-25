@@ -32,14 +32,10 @@ try {
 >
   <h2 class="flex items-center gap-3 text-base font-semibold mb-6" style="color: var(--foreground);">
     댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
-    <select
-      id="sort-select"
-      class="text-xs ml-auto outline-none cursor-pointer bg-transparent"
-      style="color: var(--fg-mute);"
-    >
-      <option value="asc">등록순</option>
-      <option value="desc">최신순</option>
-    </select>
+    <div class="ml-auto flex text-xs rounded-full overflow-hidden" style="border: 1px solid var(--border);">
+      <button id="sort-asc" class="sort-seg px-3 py-0.5 transition-colors" data-order="asc">등록순</button>
+      <button id="sort-desc" class="sort-seg px-3 py-0.5 transition-colors" style="border-left: 1px solid var(--border);" data-order="desc">최신순</button>
+    </div>
   </h2>
 
   <div id="comments-list">
@@ -600,12 +596,25 @@ try {
       if (adminMode) setAdminMode(true);
     }
 
-    const sortSelect = document.getElementById("sort-select") as HTMLSelectElement | null;
-    sortSelect?.addEventListener("change", async () => {
-      const order = sortSelect.value as "asc" | "desc";
-      if (currentOrder === order) return;
-      currentOrder = order;
-      await loadAllComments(order);
+    function setSortUI(order: "asc" | "desc") {
+      document.querySelectorAll<HTMLButtonElement>(".sort-seg").forEach(btn => {
+        const active = btn.dataset.order === order;
+        btn.style.cssText = active
+          ? `background:var(--accent);color:#fff;${btn.id === "sort-desc" ? "border-left:1px solid var(--accent);" : ""}`
+          : `background:transparent;color:var(--fg-mute);${btn.id === "sort-desc" ? "border-left:1px solid var(--border);" : ""}`;
+      });
+    }
+
+    setSortUI("asc");
+
+    document.querySelectorAll<HTMLButtonElement>(".sort-seg").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const order = btn.dataset.order as "asc" | "desc";
+        if (currentOrder === order) return;
+        currentOrder = order;
+        setSortUI(order);
+        await loadAllComments(order);
+      });
     });
 
     refreshComments();
