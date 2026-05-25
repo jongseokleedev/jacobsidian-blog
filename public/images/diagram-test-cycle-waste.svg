@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" width="680" height="300" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <marker id="arrW" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="arrWr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+    </marker>
+    <marker id="arrWg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Panel labels -->
+  <rect x="16" y="16" width="316" height="268" rx="12" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+  <rect x="348" y="16" width="316" height="268" rx="12" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <text x="174" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626">수동 테스트 사이클 (현재)</text>
+  <text x="506" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#059669">코드 기반 테스트 (목표)</text>
+
+  <!-- LEFT: Manual cycle -->
+  <!-- Node 1 -->
+  <rect x="94" y="56" width="160" height="36" rx="8" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="174" y="79" text-anchor="middle" font-size="12" fill="#374151">새 피처 개발</text>
+
+  <line x1="174" y1="92" x2="174" y2="108" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrW)"/>
+
+  <!-- Node 2 -->
+  <rect x="94" y="108" width="160" height="36" rx="8" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="174" y="131" text-anchor="middle" font-size="12" fill="#374151">테스트 빌드 전달</text>
+
+  <line x1="174" y1="144" x2="174" y2="160" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrW)"/>
+
+  <!-- Node 3 -->
+  <rect x="94" y="160" width="160" height="36" rx="8" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="174" y="178" text-anchor="middle" font-size="12" fill="#374151">수동 반복 검증</text>
+  <text x="174" y="191" text-anchor="middle" font-size="10" fill="#ef4444">동일 시나리오 N회</text>
+
+  <!-- Bug found → back to top -->
+  <path d="M94,178 Q36,178 36,120 Q36,74 92,74" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#arrWr)"/>
+  <text x="26" y="140" text-anchor="middle" font-size="10" fill="#ef4444" transform="rotate(-90,26,140)">버그 발견 → 재작업</text>
+
+  <line x1="174" y1="196" x2="174" y2="212" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrW)"/>
+
+  <!-- Node 4 -->
+  <rect x="94" y="212" width="160" height="36" rx="8" fill="white" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="174" y="235" text-anchor="middle" font-size="12" fill="#374151">QA 시트 기록</text>
+  <text x="174" y="248" text-anchor="middle" font-size="10" fill="#ef4444">믿음 기반 검증</text>
+
+  <text x="174" y="272" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">중복 · 불투명 · 비효율</text>
+
+  <!-- RIGHT: Code-based -->
+  <!-- Node 1 -->
+  <rect x="426" y="56" width="160" height="36" rx="8" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="506" y="79" text-anchor="middle" font-size="12" fill="#374151">새 피처 개발</text>
+
+  <line x1="506" y1="92" x2="506" y2="108" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arrW)"/>
+
+  <!-- Node 2 -->
+  <rect x="426" y="108" width="160" height="36" rx="8" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="506" y="127" text-anchor="middle" font-size="12" fill="#374151">Sanity Test 실행</text>
+  <text x="506" y="140" text-anchor="middle" font-size="10" fill="#059669">코드로 자동 검증</text>
+
+  <line x1="506" y1="144" x2="506" y2="160" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrWg)"/>
+
+  <!-- Node 3 -->
+  <rect x="426" y="160" width="160" height="36" rx="8" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="506" y="179" text-anchor="middle" font-size="12" fill="#374151">Smoke + Regression</text>
+  <text x="506" y="192" text-anchor="middle" font-size="10" fill="#059669">누적 케이스 자동 실행</text>
+
+  <line x1="506" y1="196" x2="506" y2="212" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrWg)"/>
+
+  <!-- Node 4 -->
+  <rect x="426" y="212" width="160" height="36" rx="8" fill="white" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="506" y="231" text-anchor="middle" font-size="12" fill="#374151">QA — 정성 평가</text>
+  <text x="506" y="244" text-anchor="middle" font-size="10" fill="#059669">도메인 관점 완성도</text>
+
+  <text x="506" y="272" text-anchor="middle" font-size="11" fill="#059669" font-weight="600">명확 · 반복 가능 · 효율적</text>
+</svg>

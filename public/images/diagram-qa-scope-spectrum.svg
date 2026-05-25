@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" width="680" height="260" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <linearGradient id="specGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#fef9c3;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#fed7aa;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#fecaca;stop-opacity:1"/>
+    </linearGradient>
+    <marker id="arrSpec" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">"QA 완료됐습니다" — 같은 말, 다른 의미</text>
+
+  <!-- Spectrum bar -->
+  <rect x="60" y="48" width="560" height="28" rx="6" fill="url(#specGrad)" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="90" y="67" font-size="11" fill="#92400e" font-weight="600">기본</text>
+  <text x="330" y="67" text-anchor="middle" font-size="11" fill="#c2410c" font-weight="600">Edge Case 포함</text>
+  <text x="590" y="67" text-anchor="end" font-size="11" fill="#dc2626" font-weight="600">Corner Case 포함</text>
+
+  <!-- Vertical dividers -->
+  <line x1="247" y1="48" x2="247" y2="76" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="433" y1="48" x2="433" y2="76" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Case A -->
+  <rect x="60" y="96" width="175" height="140" rx="10" fill="#fefce8" stroke="#fde68a" stroke-width="1.5"/>
+  <text x="147" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">A</text>
+  <line x1="80" y1="128" x2="220" y2="128" stroke="#fde68a" stroke-width="1"/>
+  <text x="147" y="148" text-anchor="middle" font-size="11" fill="#78350f">"2번째 케이스</text>
+  <text x="147" y="164" text-anchor="middle" font-size="11" fill="#78350f">넣어봤더니</text>
+  <text x="147" y="180" text-anchor="middle" font-size="11" fill="#78350f">잘 나오더라"</text>
+  <text x="147" y="204" text-anchor="middle" font-size="10" fill="#a16207">해피 패스만 확인</text>
+  <text x="147" y="220" text-anchor="middle" font-size="10" fill="#a16207">검증 범위 불명확</text>
+
+  <!-- Case B -->
+  <rect x="253" y="96" width="175" height="140" rx="10" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/>
+  <text x="340" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">B</text>
+  <line x1="273" y1="128" x2="413" y2="128" stroke="#fdba74" stroke-width="1"/>
+  <text x="340" y="148" text-anchor="middle" font-size="11" fill="#9a3412">"4번째까지 DB에</text>
+  <text x="340" y="164" text-anchor="middle" font-size="11" fill="#9a3412">넣어봤더니 3번까지</text>
+  <text x="340" y="180" text-anchor="middle" font-size="11" fill="#9a3412">잘 잘려 나오더라"</text>
+  <text x="340" y="204" text-anchor="middle" font-size="10" fill="#c2410c">Edge case 포함</text>
+  <text x="340" y="220" text-anchor="middle" font-size="10" fill="#c2410c">경계값 검증</text>
+
+  <!-- Case C -->
+  <rect x="446" y="96" width="175" height="140" rx="10" fill="#fff1f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="533" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">C</text>
+  <line x1="466" y1="128" x2="606" y2="128" stroke="#fca5a5" stroke-width="1"/>
+  <text x="533" y="144" text-anchor="middle" font-size="11" fill="#991b1b">"외부 연동 기록,</text>
+  <text x="533" y="160" text-anchor="middle" font-size="11" fill="#991b1b">수기 기록까지 포함한</text>
+  <text x="533" y="176" text-anchor="middle" font-size="11" fill="#991b1b">복합 케이스로</text>
+  <text x="533" y="192" text-anchor="middle" font-size="11" fill="#991b1b">테스트해봤다"</text>
+  <text x="533" y="216" text-anchor="middle" font-size="10" fill="#dc2626">Corner case 포함</text>
+  <text x="533" y="232" text-anchor="middle" font-size="10" fill="#dc2626">복합 시나리오 검증</text>
+
+  <!-- Arrows pointing at spectrum -->
+  <line x1="147" y1="90" x2="147" y2="78" stroke="#a16207" stroke-width="1.5" marker-end="url(#arrSpec)"/>
+  <line x1="340" y1="90" x2="340" y2="78" stroke="#c2410c" stroke-width="1.5" marker-end="url(#arrSpec)"/>
+  <line x1="533" y1="90" x2="533" y2="78" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrSpec)"/>
+</svg>

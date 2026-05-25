@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" width="680" height="300" font-family="'Pretendard', 'Apple SD Gothic Neo', sans-serif">
+  <!-- Outer QA box -->
+  <rect x="40" y="30" width="600" height="240" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="340" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8" letter-spacing="0.08em">QA — Quality Assurance</text>
+  <text x="340" y="76" text-anchor="middle" font-size="11" fill="#3b82f6">앱의 종합 퍼포먼스 측정 · 완성도 평가 · 정성적 판단</text>
+  <text x="340" y="92" text-anchor="middle" font-size="10" fill="#6b7280">담당: 기획자 / 도메인 이해자</text>
+
+  <!-- Inner Test box -->
+  <rect x="80" y="108" width="520" height="148" rx="10" fill="#f0fdf4" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="340" y="130" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46" letter-spacing="0.08em">Test — 기능 검증 (QA의 하위 개념)</text>
+  <text x="340" y="148" text-anchor="middle" font-size="11" fill="#059669">특정 기능이 의도대로 동작하는지 시나리오 기반 검증</text>
+  <text x="340" y="164" text-anchor="middle" font-size="10" fill="#6b7280">담당: 엔지니어 (FE · BE · TechLead) / 코드 기반 실행</text>
+
+  <!-- Three test type chips -->
+  <rect x="108" y="182" width="140" height="58" rx="8" fill="white" stroke="#a7f3d0" stroke-width="1.5"/>
+  <text x="178" y="205" text-anchor="middle" font-size="12" font-weight="600" fill="#047857">Sanity Test</text>
+  <text x="178" y="222" text-anchor="middle" font-size="10" fill="#6b7280">새 피처 의도대로</text>
+  <text x="178" y="235" text-anchor="middle" font-size="10" fill="#6b7280">동작하는지 검증</text>
+
+  <rect x="270" y="182" width="140" height="58" rx="8" fill="white" stroke="#a7f3d0" stroke-width="1.5"/>
+  <text x="340" y="205" text-anchor="middle" font-size="12" font-weight="600" fill="#047857">Smoke Test</text>
+  <text x="340" y="222" text-anchor="middle" font-size="10" fill="#6b7280">기존 기능 정상 여부</text>
+  <text x="340" y="235" text-anchor="middle" font-size="10" fill="#6b7280">최소 조건 확인</text>
+
+  <rect x="432" y="182" width="140" height="58" rx="8" fill="white" stroke="#a7f3d0" stroke-width="1.5"/>
+  <text x="502" y="205" text-anchor="middle" font-size="12" font-weight="600" fill="#047857">Regression Test</text>
+  <text x="502" y="222" text-anchor="middle" font-size="10" fill="#6b7280">Side-Effect · 버그</text>
+  <text x="502" y="235" text-anchor="middle" font-size="10" fill="#6b7280">재발 여부 확인</text>
+</svg>
