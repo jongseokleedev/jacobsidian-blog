@@ -53,10 +53,6 @@ try {
   <div class="mt-6">
     <CommentForm postId={postId} />
   </div>
-
-  <div class="mt-6 flex justify-end">
-    <button id="admin-toggle" class="text-xs" style="color: var(--fg-veryfaint);">관리</button>
-  </div>
 </section>
 
 <script>
@@ -100,16 +96,9 @@ try {
     badge.textContent = "나";
     badge.dataset.nickname = comment.nickname;
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "delete-btn text-xs ml-2 transition-colors";
-    deleteBtn.style.cssText = "color:#e53e3e;display:none;";
-    deleteBtn.dataset.commentId = comment.id;
-    deleteBtn.textContent = "삭제";
-
     meta.appendChild(nick);
     meta.appendChild(badge);
     meta.appendChild(date);
-    meta.appendChild(deleteBtn);
     header.appendChild(meta);
 
     if (!isReply) {
@@ -213,8 +202,6 @@ try {
       syncMyBadges();
       syncLikeButtons();
       attachLikeListeners();
-      attachDeleteListeners();
-      if (adminMode) setAdminMode(true);
     }
 
     function initNickname(form: HTMLFormElement) {
@@ -404,55 +391,6 @@ try {
     }
     syncMyBadges();
 
-    let adminMode = false;
-
-    function setAdminMode(on: boolean) {
-      adminMode = on;
-      document.querySelectorAll<HTMLButtonElement>(".delete-btn").forEach(btn => {
-        btn.style.display = on ? "" : "none";
-      });
-    }
-
-    function attachDeleteListeners(root: HTMLElement | Document = document) {
-      root.querySelectorAll<HTMLButtonElement>(".delete-btn:not([data-del-bound])").forEach(btn => {
-        btn.dataset.delBound = "1";
-        const id = btn.dataset.commentId!;
-        btn.addEventListener("click", async () => {
-          if (!confirm("댓글을 삭제하시겠습니까?")) return;
-          const res = await fetch("/api/admin/delete-comment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ commentId: id, password: (window as any).__adminPw }),
-          });
-          if (!res.ok) { alert("삭제 실패"); return; }
-          btn.closest<HTMLLIElement>(".comment-item")?.remove();
-          updateCount(-1);
-        });
-      });
-    }
-
-    document.getElementById("admin-toggle")?.addEventListener("click", async () => {
-      if (adminMode) { setAdminMode(false); return; }
-      const pw = prompt("관리자 비밀번호를 입력하세요");
-      if (!pw) return;
-      // Verify password by attempting a no-op check against the API
-      const res = await fetch("/api/admin/delete-comment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ commentId: "__verify__", password: pw }),
-      });
-      // 401 = wrong password, 400 = wrong fields (but password was accepted) = correct
-      if (res.status === 400 || res.ok) {
-        // store pw in memory for subsequent deletes
-        (window as any).__adminPw = pw;
-        setAdminMode(true);
-      } else {
-        alert("비밀번호가 틀렸습니다.");
-      }
-    });
-
-    attachDeleteListeners();
-
     function syncLikeButtons() {
       const liked = getLikedIds();
       document.querySelectorAll<HTMLButtonElement>(".like-btn").forEach(btn => {
@@ -530,8 +468,6 @@ try {
       syncLikeButtons();
       attachLikeListeners();
       syncMyBadges();
-      attachDeleteListeners();
-      if (adminMode) setAdminMode(true);
 
       offset = comments.filter(c => !c.parent_id).length;
       if (comments.filter(c => !c.parent_id).length < PAGE) {
@@ -564,8 +500,6 @@ try {
         syncLikeButtons();
         attachLikeListeners();
         syncMyBadges();
-        attachDeleteListeners();
-        if (adminMode) setAdminMode(true);
         offset += (data as Comment[]).length;
         if ((data as Comment[]).length < PAGE) loadMoreWrap?.classList.add("hidden");
       } else {
@@ -607,8 +541,6 @@ try {
       syncLikeButtons();
       attachLikeListeners();
       syncMyBadges();
-      attachDeleteListeners();
-      if (adminMode) setAdminMode(true);
     }
 
     function setSortUI(order: "asc" | "desc") {

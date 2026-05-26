@@ -55,6 +55,15 @@ const { data: subscriberRows } = await supabase
 
 const subscribers = subscriberRows ?? [];
 const activeSubscribers = subscribers.filter((s) => s.unsubscribed_at === null);
+
+// Fetch all comments
+const { data: commentRows } = await supabase
+  .from("comments")
+  .select("id, post_id, nickname, body, created_at, parent_id")
+  .is("honeypot", null)
+  .order("created_at", { ascending: false });
+
+const comments = commentRows ?? [];
 ---
 
 <!doctype html>
@@ -229,5 +238,59 @@ const activeSubscribers = subscribers.filter((s) => s.unsubscribed_at === null);
         }
       </tbody>
     </table>
+    <!-- 5. Comments -->
+    <h2>Comments</h2>
+    <p style="color:#777; font-size:0.8rem; margin-bottom:0.5rem;">비밀번호 재입력 없이 바로 삭제됩니다.</p>
+    <table id="comments-table">
+      <thead>
+        <tr>
+          <th>Post</th>
+          <th>Nickname</th>
+          <th>Body</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {comments.map(c => (
+          <tr id={`row-${c.id}`}>
+            <td style="color:#888; font-size:0.75rem;">{c.post_id}</td>
+            <td>{c.nickname}</td>
+            <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{c.body}</td>
+            <td style="color:#888; font-size:0.75rem;">{new Date(c.created_at).toLocaleDateString("ko-KR")}</td>
+            <td>
+              <button
+                type="button"
+                class="del-btn"
+                data-id={c.id}
+                style="color:#e53e3e; background:none; border:none; cursor:pointer; font-family:inherit; font-size:0.8rem;"
+              >삭제</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <script>
+      const pw = new URLSearchParams(location.search).get("pw") ?? "";
+      document.querySelectorAll(".del-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = (btn as HTMLButtonElement).dataset.id;
+          if (!confirm("삭제하시겠습니까?")) return;
+          (btn as HTMLButtonElement).textContent = "...";
+          const res = await fetch("/api/admin/delete-comment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ commentId: id, password: pw }),
+          });
+          if (res.ok) {
+            document.getElementById(`row-${id}`)?.remove();
+          } else {
+            (btn as HTMLButtonElement).textContent = "삭제";
+            alert("삭제 실패");
+          }
+        });
+      });
+    </script>
   </body>
 </html>
