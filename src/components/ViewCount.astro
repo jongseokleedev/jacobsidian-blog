@@ -1,0 +1,30 @@
+---
+import { bucketViewCount } from "@/utils/viewCount";
+
+interface Props {
+  postId: string;
+}
+
+const { postId } = Astro.props;
+
+let label: string | null = null;
+try {
+  const url = `${import.meta.env.PUBLIC_SUPABASE_URL}/rest/v1/page_views?post_id=eq.${encodeURIComponent(postId)}&select=id`;
+  const res = await fetch(url, {
+    headers: {
+      apikey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${import.meta.env.PUBLIC_SUPABASE_ANON_KEY}`,
+    },
+  });
+  if (res.ok) {
+    const rows: { id: string }[] = await res.json();
+    label = bucketViewCount(rows.length);
+  }
+} catch {
+  // 빌드타임 fetch 실패 시 렌더링 생략
+}
+---
+
+{label && (
+  <span class="text-xs" style="color: var(--fg-mute);">{label}</span>
+)}

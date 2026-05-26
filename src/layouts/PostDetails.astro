@@ -15,6 +15,7 @@ import GraphCanvas from "@/components/GraphCanvas.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import Comments from "@/components/comments/Comments.astro";
 import PageViewTracker from "@/components/analytics/PageViewTracker.astro";
+import ViewCount from "@/components/ViewCount.astro";
 
 type Entry = CollectionEntry<"posts">;
 
@@ -134,6 +135,7 @@ const nextPost =
     )}
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      <ViewCount postId={post.id} />
       <span aria-hidden="true" class="text-foreground/30">·</span>
       <span class="text-sm opacity-80">{readingTime} min read</span>
       <span

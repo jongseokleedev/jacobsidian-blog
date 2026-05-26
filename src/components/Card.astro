@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
+import ViewCount from "./ViewCount.astro";
 
 type Props = {
   variant?: "h2" | "h3";
@@ -23,6 +24,9 @@ const { title, description, pubDatetime, modDatetime, timezone } = data;
   >
     <Heading>{title}</Heading>
   </a>
-  <Datetime {pubDatetime} {modDatetime} {timezone} />
+  <div class="flex items-center gap-2">
+    <Datetime {pubDatetime} {modDatetime} {timezone} />
+    <ViewCount postId={entry.id} />
+  </div>
   <p>{description}</p>
 </li>
