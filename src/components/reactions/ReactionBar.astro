@@ -1,0 +1,158 @@
+---
+interface Props {
+  targetType: "post" | "comment";
+  targetId: string;
+}
+const { targetType, targetId } = Astro.props;
+---
+
+<div
+  class="reaction-bar flex flex-wrap items-center gap-1.5"
+  data-target-type={targetType}
+  data-target-id={targetId}
+>
+  <button
+    type="button"
+    class="reaction-add-btn flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors"
+    style="border: 1px solid var(--border); color: var(--fg-mute);"
+    aria-label="이모지 반응 추가"
+  >+ 반응</button>
+</div>
+
+<script>
+  import { fetchReactions, toggleReaction, getMyReactions } from "@/components/comments/lib";
+
+  function applyReactionStyle(btn: HTMLButtonElement, reacted: boolean) {
+    btn.style.borderColor = reacted ? "var(--accent)" : "var(--border)";
+    btn.style.color = reacted ? "var(--accent)" : "var(--fg-mute)";
+  }
+
+  function makeReactionBtn(emoji: string, count: number, reacted: boolean): HTMLButtonElement {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.emoji = emoji;
+    btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors";
+    applyReactionStyle(btn, reacted);
+
+    const emojiSpan = document.createElement("span");
+    emojiSpan.textContent = emoji;
+
+    const countSpan = document.createElement("span");
+    countSpan.className = "reaction-count";
+    countSpan.textContent = String(count);
+
+    btn.appendChild(emojiSpan);
+    btn.appendChild(countSpan);
+    return btn;
+  }
+
+  function upsertReactionBtn(
+    bar: HTMLElement,
+    emoji: string,
+    count: number,
+    reacted: boolean,
+    addBtn: HTMLElement,
+  ): HTMLButtonElement | null {
+    const existing = bar.querySelector<HTMLButtonElement>(`[data-emoji="${CSS.escape(emoji)}"]`);
+    if (existing) {
+      existing.querySelector(".reaction-count")!.textContent = String(count);
+      applyReactionStyle(existing, reacted);
+      if (count === 0) { existing.remove(); return null; }
+      return existing;
+    }
+    if (count === 0) return null;
+    const btn = makeReactionBtn(emoji, count, reacted);
+    bar.insertBefore(btn, addBtn);
+    return btn;
+  }
+
+  function bindReactionBtn(
+    btn: HTMLButtonElement,
+    targetType: string,
+    targetId: string,
+    targetKey: string,
+    addBtn: HTMLElement,
+    bar: HTMLElement,
+  ) {
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", async () => {
+      const emoji = btn.dataset.emoji!;
+      const mine = getMyReactions(targetKey);
+      const reacted = !mine.has(emoji);
+      const currentCount = parseInt(btn.querySelector(".reaction-count")!.textContent ?? "0");
+      const newCount = Math.max(0, currentCount + (reacted ? 1 : -1));
+      upsertReactionBtn(bar, emoji, newCount, reacted, addBtn);
+      await toggleReaction(targetType, targetId, emoji);
+    });
+  }
+
+  async function initBar(bar: HTMLElement) {
+    const targetType = bar.dataset.targetType as "post" | "comment";
+    const targetId = bar.dataset.targetId!;
+    const targetKey = `${targetType}:${targetId}`;
+    const addBtn = bar.querySelector<HTMLElement>(".reaction-add-btn")!;
+
+    const reactions = await fetchReactions(targetType, targetId);
+    const mine = getMyReactions(targetKey);
+
+    for (const { emoji, count } of reactions) {
+      const btn = upsertReactionBtn(bar, emoji, count, mine.has(emoji), addBtn);
+      if (btn) bindReactionBtn(btn, targetType, targetId, targetKey, addBtn, bar);
+    }
+
+    addBtn.addEventListener("click", async () => {
+      const existingPopup = document.getElementById("emoji-picker-popup");
+      if (existingPopup) { existingPopup.remove(); return; }
+
+      const [{ Picker }, data] = await Promise.all([
+        import("emoji-mart"),
+        import("@emoji-mart/data"),
+      ]);
+
+      const popup = document.createElement("div");
+      popup.id = "emoji-picker-popup";
+      popup.style.cssText = "position:fixed; z-index:9999; box-shadow:0 4px 24px rgba(0,0,0,0.2);";
+
+      const rect = addBtn.getBoundingClientRect();
+      popup.style.top = `${rect.bottom + 8 + window.scrollY}px`;
+      popup.style.left = `${rect.left}px`;
+      document.body.appendChild(popup);
+
+      new Picker({
+        data: data.default,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onEmojiSelect: async (em: any) => {
+          popup.remove();
+          const emoji = em.native as string;
+          const mine = getMyReactions(targetKey);
+          const existing = bar.querySelector<HTMLButtonElement>(`[data-emoji="${CSS.escape(emoji)}"]`);
+          const currentCount = parseInt(existing?.querySelector(".reaction-count")?.textContent ?? "0");
+          const reacted = !mine.has(emoji);
+          const newCount = Math.max(0, currentCount + (reacted ? 1 : -1));
+          const btn = upsertReactionBtn(bar, emoji, newCount, reacted, addBtn);
+          if (btn) bindReactionBtn(btn, targetType, targetId, targetKey, addBtn, bar);
+          await toggleReaction(targetType, targetId, emoji);
+        },
+        theme: document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light",
+        locale: "ko",
+        parent: popup,
+      });
+
+      setTimeout(() => {
+        document.addEventListener("click", function close(e) {
+          if (!popup.contains(e.target as Node) && e.target !== addBtn) {
+            popup.remove();
+            document.removeEventListener("click", close);
+          }
+        });
+      }, 0);
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll<HTMLElement>(".reaction-bar").forEach(bar => {
+      initBar(bar);
+    });
+  });
+</script>
