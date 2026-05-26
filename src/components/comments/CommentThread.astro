@@ -52,7 +52,7 @@ const getReplies = (parentId: string) => comments.filter(c => c.parent_id === pa
       </div>
       <p class="mt-1.5 text-sm leading-relaxed whitespace-pre-wrap" style="color: var(--foreground);">{comment.body}</p>
 
-      <div class="reaction-bar flex flex-wrap items-center gap-1.5 mt-2"
+      <div class="reaction-bar flex flex-wrap items-center gap-1.5 mt-3"
         data-target-type="comment"
         data-target-id={comment.id}
       >
