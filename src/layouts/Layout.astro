@@ -4,6 +4,7 @@ import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { SITE } from "@/config";
 import "@/styles/global.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro";
+import GoogleAdSense from "@/components/GoogleAdSense.astro";
 
 type Props = {
   title?: string;
@@ -204,6 +205,7 @@ const organizationLD = {
     }
 
     {import.meta.env.PROD && <GoogleAnalytics />}
+    {import.meta.env.PROD && <GoogleAdSense />}
 
     <slot name="head" />
 
