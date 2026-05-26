@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
-import SubscribeForm from "./SubscribeForm.astro";
+import IconBell from "@/assets/icons/IconBell.svg";
 
 const currentYear = new Date().getFullYear();
 
@@ -17,15 +17,73 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
   style="position:relative; z-index:6; background:var(--background);"
   {...attrs}
 >
-  <div class="px-6 pt-4">
-    <SubscribeForm />
-  </div>
   <div class="flex flex-col items-center justify-between sm:flex-row-reverse w-full px-6 py-6 sm:py-4">
     <Socials />
     <div class="my-2 flex items-center gap-2 text-sm text-foreground/60 whitespace-nowrap">
       <span>© {currentYear} Jacob</span>
       <span aria-hidden="true">·</span>
       <a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a>
+      <span aria-hidden="true">·</span>
+      <div class="flex items-center gap-2" id="subscribe-inline">
+        <button
+          id="subscribe-toggle"
+          class="flex items-center transition-colors hover:text-accent"
+          aria-label="구독"
+          title="새 글 알림 구독"
+        >
+          <IconBell class="size-4" />
+        </button>
+        <div id="subscribe-expand" class="hidden items-center gap-1.5">
+          <input
+            id="subscribe-email"
+            type="email"
+            placeholder="이메일"
+            class="w-36 border-b border-border bg-transparent text-xs text-foreground outline-none placeholder:text-foreground/30 focus:border-foreground/50 transition-colors"
+          />
+          <button id="subscribe-submit" class="text-xs text-foreground/50 hover:text-accent transition-colors">→</button>
+        </div>
+        <span id="subscribe-msg" class="hidden text-xs text-foreground/40"></span>
+      </div>
     </div>
   </div>
 </footer>
+
+<script>
+  const toggle = document.getElementById("subscribe-toggle");
+  const expand = document.getElementById("subscribe-expand");
+  const emailInput = document.getElementById("subscribe-email") as HTMLInputElement | null;
+  const submitBtn = document.getElementById("subscribe-submit");
+  const msg = document.getElementById("subscribe-msg");
+
+  toggle?.addEventListener("click", () => {
+    const isHidden = expand?.classList.contains("hidden");
+    expand?.classList.toggle("hidden", !isHidden);
+    expand?.classList.toggle("flex", isHidden);
+    if (isHidden) emailInput?.focus();
+  });
+
+  async function submit() {
+    const email = emailInput?.value.trim() ?? "";
+    if (!email) return;
+    if (submitBtn) submitBtn.textContent = "…";
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      expand?.classList.add("hidden");
+      expand?.classList.remove("flex");
+      if (msg) {
+        msg.textContent = res.ok ? "구독됐어요" : "오류가 발생했어요";
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 3000);
+      }
+    } finally {
+      if (submitBtn) submitBtn.textContent = "→";
+    }
+  }
+
+  submitBtn?.addEventListener("click", submit);
+  emailInput?.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+</script>
