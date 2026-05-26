@@ -1,0 +1,233 @@
+---
+import { createClient } from "@supabase/supabase-js";
+
+// Access guard
+if (Astro.url.searchParams.get("pw") !== import.meta.env.ADMIN_PASSWORD) {
+  return new Response("Forbidden", { status: 403 });
+}
+
+const supabase = createClient(
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
+);
+
+// Fetch page_views
+const { data: pageViews } = await supabase
+  .from("page_views")
+  .select("post_id, scroll_depth, referrer, visited_at");
+
+const views = pageViews ?? [];
+
+// postCounts: views per post (all time)
+const postCounts: Record<string, number> = {};
+for (const row of views) {
+  postCounts[row.post_id] = (postCounts[row.post_id] ?? 0) + 1;
+}
+
+// completionMap: per post, total (scroll_depth === 0) and complete (scroll_depth === 100)
+const completionMap: Record<string, { total: number; complete: number }> = {};
+for (const row of views) {
+  if (!completionMap[row.post_id]) {
+    completionMap[row.post_id] = { total: 0, complete: 0 };
+  }
+  if (row.scroll_depth === 0) completionMap[row.post_id].total += 1;
+  if (row.scroll_depth === 100) completionMap[row.post_id].complete += 1;
+}
+
+// referrerCounts: total count per referrer type
+const referrerCounts: Record<string, number> = {};
+for (const row of views) {
+  const ref = row.referrer ?? "other";
+  referrerCounts[ref] = (referrerCounts[ref] ?? 0) + 1;
+}
+
+// totalViews
+const totalViews = Object.values(postCounts).reduce((a, b) => a + b, 0);
+
+// Sort posts by views descending
+const sortedPosts = Object.entries(postCounts).sort((a, b) => b[1] - a[1]);
+
+// Fetch subscribers
+const { data: subscriberRows } = await supabase
+  .from("subscribers")
+  .select("email, subscribed_at, unsubscribed_at")
+  .order("subscribed_at", { ascending: false });
+
+const subscribers = subscriberRows ?? [];
+const activeSubscribers = subscribers.filter((s) => s.unsubscribed_at === null);
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 14px;
+        background: #0f0f0f;
+        color: #d4d4d4;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 2rem;
+        color: #ffffff;
+        border-bottom: 1px solid #333;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        font-size: 1rem;
+        margin: 2rem 0 0.75rem;
+        color: #aaaaaa;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .stat {
+        display: inline-block;
+        margin-right: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .stat-label {
+        color: #777;
+      }
+      .stat-value {
+        color: #ffffff;
+        font-weight: bold;
+        margin-left: 0.5rem;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        padding: 0.2rem 0;
+        color: #c0c0c0;
+      }
+      ul li span {
+        color: #ffffff;
+        font-weight: bold;
+        margin-left: 0.5rem;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 900px;
+        margin-top: 0.5rem;
+      }
+      th {
+        text-align: left;
+        padding: 0.4rem 0.8rem;
+        border-bottom: 1px solid #333;
+        color: #888;
+        font-weight: normal;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+      }
+      td {
+        padding: 0.35rem 0.8rem;
+        border-bottom: 1px solid #1e1e1e;
+        color: #d4d4d4;
+      }
+      tr:hover td {
+        background: #1a1a1a;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Admin Dashboard</h1>
+
+    <!-- 1. Overview -->
+    <h2>Overview</h2>
+    <div>
+      <span class="stat">
+        <span class="stat-label">Total Views</span>
+        <span class="stat-value">{totalViews}</span>
+      </span>
+      <span class="stat">
+        <span class="stat-label">Active Subscribers</span>
+        <span class="stat-value">{activeSubscribers.length}</span>
+      </span>
+    </div>
+
+    <!-- 2. Referrer Breakdown -->
+    <h2>Referrer Breakdown</h2>
+    <ul>
+      {
+        Object.entries(referrerCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([ref, count]) => (
+            <li>
+              {ref}
+              <span>{count}</span>
+            </li>
+          ))
+      }
+    </ul>
+
+    <!-- 3. Per-Post Views Table -->
+    <h2>Per-Post Views</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Post ID</th>
+          <th>Views</th>
+          <th>Completion Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          sortedPosts.map(([postId, count]) => {
+            const cm = completionMap[postId];
+            const rate =
+              cm && cm.total > 0 ? Math.round((cm.complete / cm.total) * 100) : 0;
+            return (
+              <tr>
+                <td>{postId}</td>
+                <td>{count}</td>
+                <td>{rate}%</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+
+    <!-- 4. Subscriber List Table -->
+    <h2>Subscribers</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Subscribed At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          activeSubscribers.map((s) => {
+            const date = new Date(s.subscribed_at).toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            return (
+              <tr>
+                <td>{s.email}</td>
+                <td>{date}</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </body>
+</html>
