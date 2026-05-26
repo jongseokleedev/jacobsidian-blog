@@ -28,7 +28,6 @@ try {
   class="mt-12 pt-8"
   style="border-top: 1px solid var(--border);"
   data-post-id={postId}
-  data-admin-pw={import.meta.env.PUBLIC_ADMIN_PASSWORD ?? ""}
 >
   <h2 class="flex items-center gap-3 text-base font-semibold mb-6" style="color: var(--foreground);">
     댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
@@ -405,7 +404,6 @@ try {
     }
     syncMyBadges();
 
-    const adminPw = section.dataset.adminPw ?? "";
     let adminMode = false;
 
     function setAdminMode(on: boolean) {
@@ -421,19 +419,36 @@ try {
         const id = btn.dataset.commentId!;
         btn.addEventListener("click", async () => {
           if (!confirm("댓글을 삭제하시겠습니까?")) return;
-          const { error } = await supabase.from("comments").delete().eq("id", id);
-          if (error) { alert("삭제 실패"); return; }
+          const res = await fetch("/api/admin/delete-comment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ commentId: id, password: (window as any).__adminPw }),
+          });
+          if (!res.ok) { alert("삭제 실패"); return; }
           btn.closest<HTMLLIElement>(".comment-item")?.remove();
           updateCount(-1);
         });
       });
     }
 
-    document.getElementById("admin-toggle")?.addEventListener("click", () => {
+    document.getElementById("admin-toggle")?.addEventListener("click", async () => {
       if (adminMode) { setAdminMode(false); return; }
-      const pw = prompt("관리자 비밀번호");
-      if (pw === adminPw) setAdminMode(true);
-      else if (pw !== null) alert("비밀번호가 틀렸습니다.");
+      const pw = prompt("관리자 비밀번호를 입력하세요");
+      if (!pw) return;
+      // Verify password by attempting a no-op check against the API
+      const res = await fetch("/api/admin/delete-comment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentId: "__verify__", password: pw }),
+      });
+      // 401 = wrong password, 400 = wrong fields (but password was accepted) = correct
+      if (res.status === 400 || res.ok) {
+        // store pw in memory for subsequent deletes
+        (window as any).__adminPw = pw;
+        setAdminMode(true);
+      } else {
+        alert("비밀번호가 틀렸습니다.");
+      }
     });
 
     attachDeleteListeners();
