@@ -1,30 +1,36 @@
 ---
-import { bucketViewCount } from "@/utils/viewCount";
-
-interface Props {
-  postId: string;
-}
-
+interface Props { postId: string; }
 const { postId } = Astro.props;
-
-let label: string | null = null;
-try {
-  const url = `${import.meta.env.PUBLIC_SUPABASE_URL}/rest/v1/page_views?post_id=eq.${encodeURIComponent(postId)}&select=id`;
-  const res = await fetch(url, {
-    headers: {
-      apikey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${import.meta.env.PUBLIC_SUPABASE_ANON_KEY}`,
-    },
-  });
-  if (res.ok) {
-    const rows: { id: string }[] = await res.json();
-    label = bucketViewCount(rows.length);
-  }
-} catch {
-  // 빌드타임 fetch 실패 시 렌더링 생략
-}
 ---
+<span class="view-count-mount" data-post-id={postId}></span>
 
-{label && (
-  <span class="text-xs" style="color: var(--fg-mute);">{label}</span>
-)}
+<script>
+  import { getSupabase } from "@/components/comments/lib";
+  import { bucketViewCount } from "@/utils/viewCount";
+
+  async function loadViewCounts() {
+    const mounts = document.querySelectorAll<HTMLElement>(".view-count-mount");
+    if (!mounts.length) return;
+
+    const postIds = [...new Set([...mounts].map(el => el.dataset.postId!))];
+    const sb = getSupabase();
+
+    for (const postId of postIds) {
+      const { count } = await sb
+        .from("page_views")
+        .select("id", { count: "exact", head: true })
+        .eq("post_id", postId);
+
+      const label = bucketViewCount(count ?? 0);
+      if (!label) continue;
+
+      document.querySelectorAll<HTMLElement>(`.view-count-mount[data-post-id="${postId}"]`).forEach(el => {
+        el.textContent = label;
+        el.className = "text-xs";
+        el.style.color = "var(--fg-mute)";
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", loadViewCounts);
+</script>
