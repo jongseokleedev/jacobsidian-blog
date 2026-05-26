@@ -95,6 +95,10 @@
     const email = emailInput?.value.trim() ?? "";
     if (!email) return;
 
+    const btn = form.querySelector("button[type=submit]") as HTMLButtonElement;
+    btn.disabled = true;
+    btn.textContent = "처리 중...";
+
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
@@ -110,6 +114,9 @@
       }
     } catch {
       if (msg) msg.textContent = "오류가 발생했습니다. 다시 시도해주세요.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "구독";
     }
   });
 </script>

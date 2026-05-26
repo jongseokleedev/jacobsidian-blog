@@ -13,7 +13,9 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
-  if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  const normalizedEmail = typeof email === "string" ? email.toLowerCase().trim() : "";
+
+  if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
     return new Response(JSON.stringify({ error: "invalid email" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -27,7 +29,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const { error } = await supabase
     .from("subscribers")
-    .upsert({ email }, { onConflict: "email", ignoreDuplicates: true });
+    .upsert({ email: normalizedEmail }, { onConflict: "email", ignoreDuplicates: true });
 
   if (error) {
     return new Response(JSON.stringify({ error: "db error" }), {
