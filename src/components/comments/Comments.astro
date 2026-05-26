@@ -29,13 +29,15 @@ try {
   style="border-top: 1px solid var(--border);"
   data-post-id={postId}
 >
-  <h2 class="flex items-center gap-3 text-base font-semibold mb-6" style="color: var(--foreground);">
-    댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
-    <div class="ml-auto flex text-xs rounded-full overflow-hidden" style="border: 1px solid var(--border);">
-      <button id="sort-asc" class="sort-seg px-3 py-0.5 transition-colors" data-order="asc">등록순</button>
-      <button id="sort-desc" class="sort-seg px-3 py-0.5 transition-colors" style="border-left: 1px solid var(--border);" data-order="desc">최신순</button>
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-base font-semibold" style="color: var(--foreground);">
+      댓글 <span id="comments-count" class="text-sm font-normal" style="color: var(--fg-mute);">({initialComments.length})</span>
+    </h2>
+    <div class="flex text-xs rounded-full overflow-hidden" style="border: 1px solid var(--border);">
+      <button id="sort-asc" class="sort-seg px-3 py-1 transition-colors" data-order="asc">등록순</button>
+      <button id="sort-desc" class="sort-seg px-3 py-1 transition-colors" style="border-left: 1px solid var(--border);" data-order="desc">최신순</button>
     </div>
-  </h2>
+  </div>
 
   <div id="comments-list">
     {initialComments.length > 0
@@ -44,13 +46,14 @@ try {
     }
   </div>
 
-  <div id="load-more-wrap" class:list={["mt-2", initialComments.length < 10 && "hidden"]}>
-    <button id="load-more-btn" class="text-sm transition-colors" style="color: var(--fg-mute);">
+  <div id="load-more-wrap" class:list={["mt-4", initialComments.length < 10 && "hidden"]}>
+    <button id="load-more-btn" class="w-full text-sm py-2 rounded-lg transition-colors hover:border-[var(--accent)] hover:text-accent"
+      style="color: var(--fg-mute); border: 1px solid var(--border);">
       댓글 더 보기
     </button>
   </div>
 
-  <div class="mt-6">
+  <div id="comment-form-wrap" class="mt-8 pt-6" style="border-top: 1px solid var(--border);">
     <CommentForm postId={postId} />
   </div>
 </section>
@@ -72,14 +75,23 @@ try {
 
   function buildCommentEl(comment: Comment, isReply: boolean): HTMLLIElement {
     const li = document.createElement("li");
-    li.className = "comment-item space-y-1";
+    li.className = isReply ? "comment-item reply-item pl-3 py-2 rounded-lg" : "comment-item";
+    if (isReply) li.style.cssText = "border-left: 2px solid var(--border); background: var(--muted);";
     li.dataset.id = comment.id;
 
     const header = document.createElement("div");
     header.className = "flex items-center justify-between gap-2";
 
     const meta = document.createElement("div");
-    meta.className = "flex items-center gap-2";
+    meta.className = "flex items-center gap-2 flex-wrap";
+
+    if (isReply) {
+      const arrow = document.createElement("span");
+      arrow.className = "text-xs";
+      arrow.style.color = "var(--fg-mute)";
+      arrow.textContent = "↳";
+      meta.appendChild(arrow);
+    }
 
     const nick = document.createElement("span");
     nick.className = "text-sm font-medium";
@@ -196,8 +208,7 @@ try {
         let replyList = parentLi.querySelector<HTMLUListElement>("ul");
         if (!replyList) {
           replyList = document.createElement("ul");
-          replyList.className = "ml-6 mt-3 border-l pl-4 space-y-4";
-          replyList.style.borderColor = "var(--border)";
+          replyList.className = "ml-4 mt-3 space-y-3";
           parentLi.querySelector(".reply-form-mount")?.before(replyList);
         }
         newEl = buildCommentEl(comment, true);
@@ -268,7 +279,10 @@ try {
         saveNickname(nickname);
         appendComment(data as Comment, parentId);
         if (bodyInput) bodyInput.value = "";
-        if (parentId) form.closest<HTMLDivElement>(".reply-form-wrapper")?.remove();
+        if (parentId) {
+          form.closest<HTMLDivElement>(".reply-form-wrapper")?.remove();
+          setMainFormVisible(true);
+        }
       });
     }
 
@@ -291,7 +305,7 @@ try {
       cancelBtn.className = "text-xs px-3 py-1 rounded ml-2";
       cancelBtn.style.cssText = "color:var(--fg-mute);border:1px solid var(--border);";
       cancelBtn.textContent = "취소";
-      cancelBtn.addEventListener("click", () => wrapper.remove());
+      cancelBtn.addEventListener("click", () => { wrapper.remove(); setMainFormVisible(true); });
       info.appendChild(cancelBtn);
 
       const form = document.createElement("form");
@@ -369,6 +383,14 @@ try {
       return wrapper;
     }
 
+    function setMainFormVisible(visible: boolean) {
+      const wrap = document.getElementById("comment-form-wrap");
+      if (!wrap) return;
+      wrap.style.opacity = visible ? "" : "0.35";
+      wrap.style.pointerEvents = visible ? "" : "none";
+      wrap.style.userSelect = visible ? "" : "none";
+    }
+
     function attachReplyListeners(root: HTMLElement | Document = document) {
       root.querySelectorAll<HTMLButtonElement>(".reply-btn:not([data-bound])").forEach(btn => {
         btn.dataset.bound = "1";
@@ -378,6 +400,7 @@ try {
           const mount = document.querySelector<HTMLDivElement>(`.reply-form-mount[data-parent-id="${commentId}"]`);
           if (!mount) return;
           document.querySelectorAll(".reply-form-wrapper").forEach(w => w.remove());
+          setMainFormVisible(false);
           mount.appendChild(buildReplyForm(commentId, nickname));
           mount.querySelector<HTMLTextAreaElement>("[name=body]")?.focus();
         });
@@ -566,7 +589,7 @@ try {
         let replyList = parentLi.querySelector<HTMLUListElement>("ul");
         if (!replyList) {
           replyList = document.createElement("ul");
-          replyList.className = "ml-6 mt-3 border-l pl-4 space-y-4";
+          replyList.className = "ml-4 mt-3 space-y-3";
           replyList.style.borderColor = "var(--border)";
           parentLi.querySelector(".reply-form-mount")?.before(replyList);
         }
@@ -642,7 +665,7 @@ try {
         let replyList = parentLi.querySelector<HTMLUListElement>("ul");
         if (!replyList) {
           replyList = document.createElement("ul");
-          replyList.className = "ml-6 mt-3 border-l pl-4 space-y-4";
+          replyList.className = "ml-4 mt-3 space-y-3";
           replyList.style.borderColor = "var(--border)";
           parentLi.querySelector(".reply-form-mount")?.before(replyList);
         }

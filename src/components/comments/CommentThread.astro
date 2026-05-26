@@ -23,14 +23,16 @@ const topLevel = isReply ? comments : comments.filter(c => !c.parent_id);
 const getReplies = (parentId: string) => comments.filter(c => c.parent_id === parentId);
 ---
 
-<ul
-  class:list={["space-y-4", isReply && "ml-6 mt-3 border-l pl-4"]}
-  style={isReply ? "border-color: var(--border);" : ""}
->
+<ul class:list={["space-y-4", isReply && "mt-3 space-y-3"]}>
   {topLevel.map(comment => (
-    <li class="comment-item" data-id={comment.id}>
+    <li
+      class:list={["comment-item", isReply && "reply-item pl-3 py-2 rounded-lg"]}
+      data-id={comment.id}
+      style={isReply ? "border-left: 2px solid var(--border); background: var(--muted);" : ""}
+    >
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          {isReply && <span class="text-xs" style="color: var(--fg-mute);">↳</span>}
           <span class="text-sm font-medium" style="color: var(--foreground);">{comment.nickname}</span>
           <span
             class="my-comment-badge hidden text-xs px-1.5 py-0.5 rounded-full font-medium"
@@ -38,37 +40,39 @@ const getReplies = (parentId: string) => comments.filter(c => c.parent_id === pa
             style="background: var(--accent-soft); color: var(--accent);"
           >나</span>
           <span class="text-xs" style="color: var(--fg-mute);">{formatDate(comment.created_at)}</span>
-          <button
-            class="delete-btn text-xs ml-2 transition-colors"
-            style="color: #e53e3e; display: none;"
-            data-comment-id={comment.id}
-          >삭제</button>
         </div>
         {!isReply && (
           <button
-            class="reply-btn text-xs transition-colors"
+            class="reply-btn text-xs transition-colors hover:text-accent shrink-0"
             style="color: var(--fg-mute);"
             data-comment-id={comment.id}
             data-nickname={comment.nickname}
           >답글</button>
         )}
       </div>
-      <p class="mt-1 text-sm leading-relaxed whitespace-pre-wrap" style="color: var(--foreground);">{comment.body}</p>
+      <p class="mt-1.5 text-sm leading-relaxed whitespace-pre-wrap" style="color: var(--foreground);">{comment.body}</p>
 
-      <button
-        class="like-btn mt-1 flex items-center gap-1 text-xs transition-colors"
-        style="color: var(--fg-mute);"
-        data-comment-id={comment.id}
-        aria-label="좋아요"
+      <div class="reaction-bar flex flex-wrap items-center gap-1.5 mt-2"
+        data-target-type="comment"
+        data-target-id={comment.id}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
-        <span class="like-label">{comment.like_count > 0 ? comment.like_count : "좋아요"}</span>
-      </button>
+        <button
+          type="button"
+          class="reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 cursor-pointer"
+          style="border: 1px solid var(--border);"
+          aria-label="이모지 반응 추가"
+        >
+          <span style="font-size:1.1rem; line-height:1;">😊</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="color:var(--fg-mute); flex-shrink:0;">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
 
       {getReplies(comment.id).length > 0 && (
-        <Astro.self comments={getReplies(comment.id)} postId={postId} isReply={true} />
+        <div class="ml-4 mt-3">
+          <Astro.self comments={getReplies(comment.id)} postId={postId} isReply={true} />
+        </div>
       )}
 
       <div class="reply-form-mount" data-parent-id={comment.id} data-nickname={comment.nickname}></div>
