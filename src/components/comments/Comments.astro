@@ -157,10 +157,10 @@ try {
 
     const reactionAddBtn = document.createElement("button");
     reactionAddBtn.type = "button";
-    reactionAddBtn.className = "reaction-add-btn flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors";
+    reactionAddBtn.className = "reaction-add-btn flex items-center text-sm px-2.5 py-1 rounded-full transition-colors";
     reactionAddBtn.style.cssText = "border: 1px solid var(--border); color: var(--fg-mute);";
     reactionAddBtn.setAttribute("aria-label", "이모지 반응 추가");
-    reactionAddBtn.textContent = "+ 반응";
+    reactionAddBtn.textContent = "😊+";
     reactionWrap.appendChild(reactionAddBtn);
     li.appendChild(reactionWrap);
 
