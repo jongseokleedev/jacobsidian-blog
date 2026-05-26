@@ -13,7 +13,8 @@ const { postId } = Astro.props;
 
     const el = document.getElementById("pvt-post-id");
     if (!el) return;
-    const postId = el.dataset.postId as string;
+    const postId = el.dataset.postId;
+    if (!postId) return;
 
     const { getSupabase } = await import("@/components/comments/lib");
     const db = getSupabase();
@@ -32,17 +33,20 @@ const { postId } = Astro.props;
     } catch { /* fire and forget */ }
 
     const milestones = new Set<number>();
-    window.addEventListener("scroll", () => {
-      const scrolled = window.scrollY + window.innerHeight;
-      const total = document.documentElement.scrollHeight;
-      const pct = Math.round((scrolled / total) * 100);
-
+    function onScroll() {
+      const pct = Math.round(
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100
+      );
       for (const m of [25, 50, 75, 100]) {
         if (pct >= m && !milestones.has(m)) {
           milestones.add(m);
           table.insert({ post_id: postId, referrer, scroll_depth: m }).then(() => {});
         }
       }
-    }, { passive: true });
+      if (milestones.size === 4) {
+        window.removeEventListener("scroll", onScroll);
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
   })();
 </script>
