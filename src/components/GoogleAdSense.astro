@@ -1,0 +1,12 @@
+---
+import { PUBLIC_ADSENSE_PUBLISHER_ID } from "astro:env/client";
+---
+
+{PUBLIC_ADSENSE_PUBLISHER_ID && (
+  <script
+    is:inline
+    async
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${PUBLIC_ADSENSE_PUBLISHER_ID}`}
+    crossorigin="anonymous"
+  ></script>
+)}
