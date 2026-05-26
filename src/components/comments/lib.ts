@@ -203,3 +203,65 @@ export async function toggleLike(id: string): Promise<{ liked: boolean; count: n
   const { data } = await getSupabase().from("comments").select("like_count").eq("id", id).single();
   return { liked: nowLiked, count: (data as any)?.like_count ?? 0 };
 }
+
+export interface Reaction {
+  emoji: string;
+  count: number;
+}
+
+export function getMyReactions(targetKey: string): Set<string> {
+  try {
+    const all = JSON.parse(localStorage.getItem("jb:reactions") ?? "{}");
+    return new Set(all[targetKey] ?? []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveMyReactions(targetKey: string, emojis: Set<string>): void {
+  try {
+    const all = JSON.parse(localStorage.getItem("jb:reactions") ?? "{}");
+    if (emojis.size === 0) {
+      delete all[targetKey];
+    } else {
+      all[targetKey] = [...emojis];
+    }
+    localStorage.setItem("jb:reactions", JSON.stringify(all));
+  } catch { /* ignore */ }
+}
+
+export async function fetchReactions(
+  targetType: string,
+  targetId: string,
+): Promise<Reaction[]> {
+  const { data } = await getSupabase()
+    .from("reactions")
+    .select("emoji, count")
+    .eq("target_type", targetType)
+    .eq("target_id", targetId)
+    .gt("count", 0)
+    .order("count", { ascending: false });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (data as any[]) ?? [];
+}
+
+export async function toggleReaction(
+  targetType: string,
+  targetId: string,
+  emoji: string,
+): Promise<{ reacted: boolean }> {
+  const targetKey = `${targetType}:${targetId}`;
+  const mine = getMyReactions(targetKey);
+  const reacted = !mine.has(emoji);
+  const delta = reacted ? 1 : -1;
+  if (reacted) { mine.add(emoji); } else { mine.delete(emoji); }
+  saveMyReactions(targetKey, mine);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (getSupabase() as any).rpc("increment_reaction", {
+    p_target_type: targetType,
+    p_target_id: targetId,
+    p_emoji: emoji,
+    p_delta: delta,
+  });
+  return { reacted };
+}
