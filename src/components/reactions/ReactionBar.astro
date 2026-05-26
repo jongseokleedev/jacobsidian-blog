@@ -13,7 +13,7 @@ const { targetType, targetId } = Astro.props;
 >
   <button
     type="button"
-    class="reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors"
+    class="reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 cursor-pointer"
     style="border: 1px solid var(--border);"
     aria-label="이모지 반응 추가"
   >
@@ -36,7 +36,7 @@ const { targetType, targetId } = Astro.props;
     const btn = document.createElement("button");
     btn.type = "button";
     btn.dataset.emoji = emoji;
-    btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors";
+    btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors hover:opacity-80 cursor-pointer";
     applyReactionStyle(btn, reacted);
 
     const emojiSpan = document.createElement("span");

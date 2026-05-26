@@ -56,7 +56,8 @@ try {
 </section>
 
 <script>
-  import { getNickname, saveNickname, generateNickname, getSupabase, getLikedIds, toggleLike, fetchReactions, toggleReaction, getMyReactions } from "./lib";
+  import { getNickname, saveNickname, generateNickname, getSupabase, fetchReactions, toggleReaction, getMyReactions } from "./lib";
+
   import type { Comment } from "./lib";
 
   function formatDate(iso: string) {
@@ -121,34 +122,10 @@ try {
     mount.dataset.parentId = comment.id;
     mount.dataset.nickname = comment.nickname;
 
-    const likeBtn = document.createElement("button");
-    likeBtn.className = "like-btn mt-1 flex items-center gap-1 text-xs transition-colors";
-    likeBtn.dataset.commentId = comment.id;
-    likeBtn.setAttribute("aria-label", "좋아요");
-
     const svgNS = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill", "none");
-    svg.setAttribute("stroke", "currentColor");
-    svg.setAttribute("stroke-width", "2");
-    svg.setAttribute("stroke-linecap", "round");
-    svg.setAttribute("stroke-linejoin", "round");
-    svg.classList.add("size-3.5");
-    const heartPath = document.createElementNS(svgNS, "path");
-    heartPath.setAttribute("d", "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z");
-    svg.appendChild(heartPath);
-
-    const likeLabel = document.createElement("span");
-    likeLabel.className = "like-label";
-    likeLabel.textContent = comment.like_count > 0 ? String(comment.like_count) : "좋아요";
-
-    likeBtn.appendChild(svg);
-    likeBtn.appendChild(likeLabel);
 
     li.appendChild(header);
     li.appendChild(body);
-    li.appendChild(likeBtn);
 
     const reactionWrap = document.createElement("div");
     reactionWrap.className = "reaction-bar flex flex-wrap items-center gap-1.5 mt-1";
@@ -157,7 +134,7 @@ try {
 
     const reactionAddBtn = document.createElement("button");
     reactionAddBtn.type = "button";
-    reactionAddBtn.className = "reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors";
+    reactionAddBtn.className = "reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 cursor-pointer";
     reactionAddBtn.style.cssText = "border: 1px solid var(--border);";
     reactionAddBtn.setAttribute("aria-label", "이모지 반응 추가");
     const emojiSpan = document.createElement("span");
@@ -234,8 +211,6 @@ try {
       if (bar) initReactionBar(bar);
       setTimeout(() => newEl.scrollIntoView({ behavior: "smooth", block: "nearest" }), 50);
       syncMyBadges();
-      syncLikeButtons();
-      attachLikeListeners();
     }
 
     function initNickname(form: HTMLFormElement) {
@@ -425,33 +400,6 @@ try {
     }
     syncMyBadges();
 
-    function syncLikeButtons() {
-      const liked = getLikedIds();
-      document.querySelectorAll<HTMLButtonElement>(".like-btn").forEach(btn => {
-        const isLiked = liked.has(btn.dataset.commentId ?? "");
-        btn.style.color = isLiked ? "var(--accent)" : "var(--fg-mute)";
-        const svgEl = btn.querySelector("svg");
-        if (svgEl) svgEl.setAttribute("fill", isLiked ? "currentColor" : "none");
-      });
-    }
-
-    function attachLikeListeners(root: HTMLElement | Document = document) {
-      root.querySelectorAll<HTMLButtonElement>(".like-btn:not([data-like-bound])").forEach(btn => {
-        btn.dataset.likeBound = "1";
-        btn.addEventListener("click", async () => {
-          const { liked, count } = await toggleLike(btn.dataset.commentId!);
-          btn.style.color = liked ? "var(--accent)" : "var(--fg-mute)";
-          const svgEl = btn.querySelector("svg");
-          if (svgEl) svgEl.setAttribute("fill", liked ? "currentColor" : "none");
-          const label = btn.querySelector<HTMLSpanElement>(".like-label");
-          if (label) label.textContent = count > 0 ? String(count) : "좋아요";
-        });
-      });
-    }
-
-    syncLikeButtons();
-    attachLikeListeners();
-
     function applyReactionStyle(btn: HTMLButtonElement, reacted: boolean) {
       btn.style.borderColor = reacted ? "var(--accent)" : "var(--border)";
       btn.style.color = reacted ? "var(--accent)" : "var(--fg-mute)";
@@ -461,7 +409,7 @@ try {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.dataset.emoji = emoji;
-      btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors";
+      btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors hover:opacity-80 cursor-pointer";
       applyReactionStyle(btn, reacted);
 
       const emojiSpan = document.createElement("span");
@@ -629,8 +577,6 @@ try {
       if (countEl) countEl.textContent = `(${comments.filter(c => !c.parent_id).length})`;
 
       attachReplyListeners();
-      syncLikeButtons();
-      attachLikeListeners();
       syncMyBadges();
 
       section!.querySelectorAll<HTMLElement>(".reaction-bar[data-target-type='comment']").forEach(bar => {
@@ -665,8 +611,6 @@ try {
         const list = getOrCreateTopList();
         (data as Comment[]).forEach(c => list.appendChild(buildCommentEl(c, false)));
         attachReplyListeners();
-        syncLikeButtons();
-        attachLikeListeners();
         syncMyBadges();
         offset += (data as Comment[]).length;
         if ((data as Comment[]).length < PAGE) loadMoreWrap?.classList.add("hidden");
@@ -706,8 +650,6 @@ try {
       });
 
       attachReplyListeners();
-      syncLikeButtons();
-      attachLikeListeners();
       syncMyBadges();
 
       section!.querySelectorAll<HTMLElement>(".reaction-bar[data-target-type='comment']").forEach(bar => {
