@@ -14,6 +14,7 @@ import { SITE } from "@/config";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import Comments from "@/components/comments/Comments.astro";
+import PostReactions from "@/components/reactions/PostReactions.astro";
 import PageViewTracker from "@/components/analytics/PageViewTracker.astro";
 import ViewCount from "@/components/ViewCount.astro";
 
@@ -239,6 +240,7 @@ const nextPost =
   </div>
 
   <PageViewTracker postId={post.id} />
+  <PostReactions postId={post.id} />
   {!post.data.disableComments && <Comments postId={post.id} />}
 
   <hr class="my-8 border-dashed" />
