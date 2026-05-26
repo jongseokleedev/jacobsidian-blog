@@ -77,6 +77,11 @@ export default defineConfig({
         context: "client",
         optional: true,
       }),
+      PUBLIC_ADSENSE_PUBLISHER_ID: envField.string({
+        access: "public",
+        context: "client",
+        optional: true,
+      }),
     },
   },
 });
