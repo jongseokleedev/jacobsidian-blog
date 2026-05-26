@@ -157,10 +157,27 @@ try {
 
     const reactionAddBtn = document.createElement("button");
     reactionAddBtn.type = "button";
-    reactionAddBtn.className = "reaction-add-btn flex items-center text-sm px-2.5 py-1 rounded-full transition-colors";
-    reactionAddBtn.style.cssText = "border: 1px solid var(--border); color: var(--fg-mute);";
+    reactionAddBtn.className = "reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors";
+    reactionAddBtn.style.cssText = "border: 1px solid var(--border);";
     reactionAddBtn.setAttribute("aria-label", "이모지 반응 추가");
-    reactionAddBtn.textContent = "😊+";
+    const emojiSpan = document.createElement("span");
+    emojiSpan.textContent = "😊";
+    emojiSpan.style.cssText = "font-size:1.1rem; line-height:1;";
+    const plusSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    plusSvg.setAttribute("width", "12");
+    plusSvg.setAttribute("height", "12");
+    plusSvg.setAttribute("viewBox", "0 0 24 24");
+    plusSvg.setAttribute("fill", "none");
+    plusSvg.setAttribute("stroke", "currentColor");
+    plusSvg.setAttribute("stroke-width", "2.5");
+    plusSvg.setAttribute("stroke-linecap", "round");
+    plusSvg.style.cssText = "color:var(--fg-mute); flex-shrink:0;";
+    const l1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    l1.setAttribute("x1", "12"); l1.setAttribute("y1", "5"); l1.setAttribute("x2", "12"); l1.setAttribute("y2", "19");
+    const l2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    l2.setAttribute("x1", "5"); l2.setAttribute("y1", "12"); l2.setAttribute("x2", "19"); l2.setAttribute("y2", "12");
+    plusSvg.appendChild(l1); plusSvg.appendChild(l2);
+    reactionAddBtn.appendChild(emojiSpan); reactionAddBtn.appendChild(plusSvg);
     reactionWrap.appendChild(reactionAddBtn);
     li.appendChild(reactionWrap);
 
