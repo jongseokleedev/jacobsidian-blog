@@ -14,6 +14,7 @@ import { SITE } from "@/config";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import Comments from "@/components/comments/Comments.astro";
+import PageViewTracker from "@/components/analytics/PageViewTracker.astro";
 
 type Entry = CollectionEntry<"posts">;
 
@@ -235,6 +236,7 @@ const nextPost =
     </div>
   </div>
 
+  <PageViewTracker postId={post.id} />
   {!post.data.disableComments && <Comments postId={post.id} />}
 
   <hr class="my-8 border-dashed" />
