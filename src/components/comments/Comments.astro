@@ -616,6 +616,10 @@ try {
       attachLikeListeners();
       syncMyBadges();
 
+      section!.querySelectorAll<HTMLElement>(".reaction-bar[data-target-type='comment']").forEach(bar => {
+        initReactionBar(bar);
+      });
+
       offset = comments.filter(c => !c.parent_id).length;
       if (comments.filter(c => !c.parent_id).length < PAGE) {
         loadMoreWrap?.classList.add("hidden");
@@ -688,6 +692,10 @@ try {
       syncLikeButtons();
       attachLikeListeners();
       syncMyBadges();
+
+      section!.querySelectorAll<HTMLElement>(".reaction-bar[data-target-type='comment']").forEach(bar => {
+        initReactionBar(bar);
+      });
     }
 
     function setSortUI(order: "asc" | "desc") {
