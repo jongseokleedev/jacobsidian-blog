@@ -52,6 +52,34 @@ const topPosts = scoredPosts.slice(0, 10).map(({ post }) => ({
   color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
 }));
 
+// Popular posts: top 3 by view count in the last 7 days
+let popularPosts: typeof posts = [];
+try {
+  const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const res = await fetch(
+    `${supabaseUrl}/rest/v1/page_views?visited_at=gte.${since}&select=post_id`,
+    { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } }
+  );
+  if (res.ok) {
+    const rows: { post_id: string }[] = await res.json();
+    const counts: Record<string, number> = {};
+    for (const { post_id } of rows) {
+      counts[post_id] = (counts[post_id] ?? 0) + 1;
+    }
+    const top3Ids = Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([id]) => id);
+    popularPosts = top3Ids
+      .map(id => posts.find(p => p.id === id || getPath(p) === id))
+      .filter((p): p is (typeof posts)[number] => p !== undefined);
+  }
+} catch {
+  popularPosts = [];
+}
+
 // Featured: latest 1 post per unique parent category, max 3
 const latestPosts = posts
   .slice(0, 10)
@@ -153,6 +181,29 @@ const latestPosts = posts
       </div>
     </div>
   </section>
+
+  <!-- Popular posts this week -->
+  {popularPosts.length > 0 && (
+    <section class="py-10 border-b border-border">
+      <div class="mb-5">
+        <div class="bd-overline mb-1">Trending</div>
+        <h2 class="text-base font-semibold tracking-tight">이번 주 많이 읽힌 글</h2>
+      </div>
+      <ol class="space-y-3">
+        {popularPosts.map((post, i) => (
+          <li class="flex items-center gap-3">
+            <span class="font-mono text-[11px] tabular-nums w-4 shrink-0 text-right" style="color: var(--fg-faint);">{i + 1}</span>
+            <a
+              href={getPath(post)}
+              class="flex-1 text-[14px] font-medium transition-colors hover:text-accent truncate"
+            >
+              {post.data.title}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
 
   <!-- Archives -->
   {allItems.length > 0 && (
