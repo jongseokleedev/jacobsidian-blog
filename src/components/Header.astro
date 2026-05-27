@@ -7,6 +7,11 @@ import IconMenu from "@/assets/icons/IconMenu.svg";
 import Logo from "./Logo.astro";
 import { SITE } from "@/config";
 import { PARENTS } from "@/utils/getCategories";
+import { getLangFromUrl, getEnUrl, getKoUrl } from "@/i18n";
+
+const lang = getLangFromUrl(Astro.url);
+const toggleHref = lang === "ko" ? getEnUrl(Astro.url) : getKoUrl(Astro.url);
+const toggleLabel = lang === "ko" ? "EN" : "KR";
 
 const { pathname } = Astro.url;
 
@@ -74,6 +79,15 @@ const isActive = (path: string) => {
             <path d="M15 3v18"/>
           </svg>
         </button>
+        <a
+          href={toggleHref}
+          id="lang-toggle"
+          class="focus-outline flex items-center justify-center rounded border border-border px-2 py-1 text-[12px] font-mono hover:border-accent hover:text-accent transition-colors"
+          aria-label={`Switch to ${toggleLabel}`}
+          title={`Switch to ${toggleLabel}`}
+        >
+          {toggleLabel}
+        </a>
       </div>
 
       <!-- 모바일 우측: 검색 + 테마 + 햄버거 -->
@@ -181,6 +195,18 @@ const isActive = (path: string) => {
           <span class="w-1.5 h-1.5 rounded-full shrink-0 opacity-0" aria-hidden="true" />
           About
         </a>
+        <div class="flex items-center justify-between px-2 py-2.5 mt-1 border-t border-border">
+          <span class="text-[12px] font-mono" style="color: var(--fg-faint);">Language</span>
+          <a
+            href={toggleHref}
+            class="lang-toggle-mobile flex items-center gap-1 rounded border border-border px-2.5 py-1 text-[12px] font-mono hover:border-accent hover:text-accent transition-colors"
+            aria-label={`Switch to ${toggleLabel}`}
+          >
+            <span class:list={["transition-colors", lang === "ko" ? "text-accent font-semibold" : ""]}>KR</span>
+            <span class="opacity-30">/</span>
+            <span class:list={["transition-colors", lang === "en" ? "text-accent font-semibold" : ""]}>EN</span>
+          </a>
+        </div>
       </nav>
     </div>
   </div>
@@ -399,11 +425,26 @@ const isActive = (path: string) => {
     }, { signal: controller.signal });
   }
 
+  function initLangToggle() {
+    const setLang = (lang: string) => localStorage.setItem("lang", lang);
+
+    document.getElementById("lang-toggle")?.addEventListener("click", () => {
+      const isKo = !location.pathname.startsWith("/en");
+      setLang(isKo ? "en" : "ko");
+    }, { signal: controller.signal });
+
+    document.querySelector(".lang-toggle-mobile")?.addEventListener("click", () => {
+      const isKo = !location.pathname.startsWith("/en");
+      setLang(isKo ? "en" : "ko");
+    }, { signal: controller.signal });
+  }
+
   function init() {
     toggleNav();
     syncThemeButtons();
     initScrollBorder();
     initSearchModal();
+    initLangToggle();
   }
 
   init();
