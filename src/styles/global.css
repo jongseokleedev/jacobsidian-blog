@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+:root {
+  --overlay-bg: rgba(0, 0, 0, 0.3);
+  --overlay-blur: 4px;
+}
+
 :root,
 html[data-theme="light"] {
   --background: #f8f8f7;
@@ -183,6 +188,16 @@ html[data-theme="dark"] {
 @keyframes content-in {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+@keyframes toc-heading-pulse {
+  0%   { color: inherit; }
+  30%  { color: var(--accent); }
+  100% { color: inherit; }
+}
+
+.toc-heading-pulse {
+  animation: toc-heading-pulse 700ms ease-out forwards;
 }
 
 

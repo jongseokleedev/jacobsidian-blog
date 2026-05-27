@@ -346,6 +346,40 @@ const postUrl = (post: (typeof allPosts)[number]) => {
     const firstLink = items[0];
     if (firstLink) moveIndicator(firstLink, true);
 
+    // Smooth scroll + heading pulse on click
+    function smoothScrollTo(targetY: number, duration: number) {
+      const startY = window.scrollY;
+      const diff = targetY - startY;
+      if (diff === 0) return;
+      let startTime: number | null = null;
+      const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+      function step(timestamp: number) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, startY + diff * easeOut(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function pulseHeading(el: HTMLElement) {
+      el.classList.add("toc-heading-pulse");
+      el.addEventListener("animationend", () => el.classList.remove("toc-heading-pulse"), { once: true });
+    }
+
+    items.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const slug = link.dataset.heading;
+        const target = slug ? document.getElementById(slug) : null;
+        if (!target) return;
+        const targetY = target.getBoundingClientRect().top + window.scrollY - 72;
+        smoothScrollTo(targetY, 300);
+        setTimeout(() => pulseHeading(target), 280);
+      });
+    });
+
     return () => observer.disconnect();
   }
 

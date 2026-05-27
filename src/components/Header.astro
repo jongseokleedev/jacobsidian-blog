@@ -28,7 +28,7 @@ const isActive = (path: string) => {
   Skip to content
 </a>
 
-<header class="sticky top-0 z-10 w-full">
+<header class="sticky top-0 z-10 w-full relative">
   <div
     id="top-nav-wrap"
     class="border-b border-border w-full bg-background/90 backdrop-blur-sm"
@@ -112,7 +112,7 @@ const isActive = (path: string) => {
     </div>
 
     <!-- 모바일 드롭다운 메뉴 -->
-    <div id="menu-items" class="overflow-hidden sm:hidden" style="max-height: 0; transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0;">
+    <div id="menu-items" class="sm:hidden absolute left-0 right-0 top-full overflow-hidden bg-background/95 backdrop-blur-sm border-b border-border" style="max-height: 0; transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0; z-index: 10;">
       <nav class="pb-4 px-4 flex flex-col">
         {Object.entries(PARENTS).map(([parentKey, parentMeta]) => {
           const isParentActive = isActive(`/${parentKey}`);
@@ -186,6 +186,13 @@ const isActive = (path: string) => {
   </div>
 </header>
 
+<!-- 햄버거 메뉴 backdrop -->
+<div
+  id="menu-backdrop"
+  class="sm:hidden fixed left-0 right-0 bottom-0 z-[9] pointer-events-none opacity-0 transition-opacity duration-300"
+  style="top: 56px; background: var(--overlay-bg); backdrop-filter: blur(var(--overlay-blur));"
+></div>
+
 <!-- Search modal -->
 <dialog
   id="search-modal"
@@ -235,6 +242,14 @@ const isActive = (path: string) => {
       return menuItems!.scrollHeight;
     }
 
+    const menuBackdrop = document.querySelector("#menu-backdrop") as HTMLElement | null;
+
+    function setMenuBackdrop(open: boolean) {
+      if (!menuBackdrop) return;
+      menuBackdrop.style.opacity = open ? "1" : "0";
+      menuBackdrop.style.pointerEvents = open ? "auto" : "none";
+    }
+
     menuBtn.addEventListener("click", () => {
       const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
       const next = !isOpen;
@@ -244,6 +259,17 @@ const isActive = (path: string) => {
       menuItems.style.opacity = next ? "1" : "0";
       menuIcon.classList.toggle("hidden", next);
       closeIcon.classList.toggle("hidden", !next);
+      setMenuBackdrop(next);
+    }, { signal: controller.signal });
+
+    menuBackdrop?.addEventListener("click", () => {
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.setAttribute("aria-label", "Open Menu");
+      menuItems.style.maxHeight = "0";
+      menuItems.style.opacity = "0";
+      menuIcon.classList.remove("hidden");
+      closeIcon.classList.add("hidden");
+      setMenuBackdrop(false);
     }, { signal: controller.signal });
 
     // 서브카테고리 아코디언 토글
@@ -395,8 +421,8 @@ const isActive = (path: string) => {
 
 <style is:global>
   #search-modal::backdrop {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(4px);
+    background: var(--overlay-bg);
+    backdrop-filter: blur(var(--overlay-blur));
   }
 
   #pagefind-modal-ui {

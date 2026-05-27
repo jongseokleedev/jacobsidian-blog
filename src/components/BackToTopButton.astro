@@ -1,11 +1,29 @@
 ---
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
+
+interface Props {
+  headings?: { depth: number; slug: string; text: string }[];
+}
+const { headings = [] } = Astro.props;
+const tocHeadings = headings.filter(h => h.depth <= 3);
 ---
 
 <div
   id="btt-btn-container"
-  class="fixed end-8 bottom-8 z-50 translate-y-14 opacity-0 transition-all duration-500 hover:!opacity-100"
+  class="fixed end-8 bottom-8 z-50 translate-y-14 opacity-0 transition-all duration-500 hover:!opacity-100 flex flex-col items-center gap-2"
 >
+  {tocHeadings.length > 0 && (
+    <button
+      id="toc-open-btn"
+      aria-label="목차 열기"
+      class="lg:hidden bg-background size-10 rounded-full shadow-xl flex items-center justify-center text-foreground/60 hover:text-accent transition-colors"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="12" y2="18"/>
+      </svg>
+    </button>
+  )}
+
   <button
     data-button="back-to-top"
     aria-label="맨 위로 이동"
@@ -19,25 +37,61 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
   </button>
 </div>
 
+{tocHeadings.length > 0 && (
+  <div id="toc-drawer" class="lg:hidden fixed inset-0 z-[60] pointer-events-none">
+    <div id="toc-backdrop" class="toc-backdrop absolute inset-0" style="background: var(--overlay-bg); backdrop-filter: blur(var(--overlay-blur));"></div>
+    <nav id="toc-panel" class="toc-panel absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-xl max-h-[50vh] overflow-y-auto">
+      <div class="flex items-center justify-between px-5 py-2.5 border-b border-border sticky top-0 bg-background">
+        <span class="bd-overline">On This Page</span>
+        <button id="toc-close-btn" aria-label="닫기" class="text-foreground/40 hover:text-accent transition-colors p-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="px-5 py-3">
+        <ul id="mobile-toc-list" class="relative flex flex-col border-l border-border">
+          <span
+            id="mobile-toc-indicator"
+            class="absolute pointer-events-none rounded-full bg-accent"
+            style="left:-1px; width:2px; top:0; height:0; opacity:0; transition: top 200ms cubic-bezier(0.4,0,0.2,1), height 200ms cubic-bezier(0.4,0,0.2,1), opacity 150ms ease;"
+          ></span>
+          {tocHeadings.map(h => (
+            <li>
+              <a
+                href={`#${h.slug}`}
+                data-toc-link
+                data-heading={h.slug}
+                class:list={[
+                  "mobile-toc-item block text-[12.5px] text-[color:var(--fg-mute)] hover:text-accent transition-colors",
+                  h.depth === 3 ? "pl-[24px] text-[12px]" : h.depth === 2 ? "pl-[14px]" : "pl-[14px]",
+                ]}
+                style="padding-top:8px;padding-bottom:8px;"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+  </div>
+)}
+
 <script is:inline data-astro-rerun>
-  /** Scrolls the document to the top when
-   * the "Back to Top" button is clicked. */
   function backToTop() {
     const rootElement = document.documentElement;
     const btnContainer = document.querySelector("#btt-btn-container");
     const backToTopBtn = document.querySelector("[data-button='back-to-top']");
     const progressIndicator = document.querySelector("#progress-indicator");
 
-    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
-      return;
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator) return;
 
-    // Attach click event handler for back-to-top button
     backToTopBtn.addEventListener("click", () => {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     });
 
-    // Handle button visibility according to scroll position
     const articleEl = document.getElementById("article");
 
     function getArticleScrollEnd() {
@@ -72,25 +126,142 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
     let idleTimer = null;
     function onScroll() {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
+        window.requestAnimationFrame(() => { handleScroll(); ticking = false; });
         ticking = true;
       }
-      // While scrolling: fully visible
       btnContainer.classList.remove("btt-idle");
       clearTimeout(idleTimer);
-      // After 1.5s of no scroll: fade to subtle
       idleTimer = setTimeout(() => btnContainer.classList.add("btt-idle"), 1500);
     }
     document.addEventListener("scroll", onScroll);
   }
   backToTop();
+
+  function initTocDrawer() {
+    const openBtn = document.getElementById("toc-open-btn");
+    const drawer = document.getElementById("toc-drawer");
+    const backdrop = document.getElementById("toc-backdrop");
+    const panel = document.getElementById("toc-panel");
+    const closeBtn = document.getElementById("toc-close-btn");
+    if (!openBtn || !drawer || !backdrop || !panel || !closeBtn) return;
+
+    function open() {
+      drawer.classList.add("toc-is-open");
+      document.body.style.overflow = "hidden";
+    }
+    function close() {
+      drawer.classList.remove("toc-is-open");
+      document.body.style.overflow = "";
+    }
+
+    openBtn.addEventListener("click", open);
+    closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+    function smoothScrollTo(targetY, duration) {
+      const startY = window.scrollY;
+      const diff = targetY - startY;
+      if (diff === 0) return;
+      let startTime = null;
+      function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, startY + diff * easeOut(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function pulseHeading(el) {
+      el.classList.add("toc-heading-pulse");
+      el.addEventListener("animationend", () => el.classList.remove("toc-heading-pulse"), { once: true });
+    }
+
+    document.querySelectorAll("[data-toc-link]").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const slug = link.getAttribute("href")?.slice(1);
+        const target = slug ? document.getElementById(slug) : null;
+        close();
+        if (!target) return;
+        const targetY = target.getBoundingClientRect().top + window.scrollY - 72;
+        smoothScrollTo(targetY, 300);
+        setTimeout(() => pulseHeading(target), 280);
+      });
+    });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+
+    // Scrollspy + sliding indicator (mirrors desktop RightRail logic)
+    const tocList = document.getElementById("mobile-toc-list");
+    const indicator = document.getElementById("mobile-toc-indicator");
+    const items = Array.from(document.querySelectorAll(".mobile-toc-item"));
+    if (tocList && indicator && items.length) {
+      function moveIndicator(link, instant) {
+        const listRect = tocList.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        const top = linkRect.top - listRect.top + tocList.scrollTop;
+        const height = linkRect.height;
+        if (instant) {
+          indicator.style.transition = "none";
+          indicator.style.top = top + "px";
+          indicator.style.height = height + "px";
+          indicator.style.opacity = "1";
+          indicator.getBoundingClientRect();
+          indicator.style.transition = "";
+        } else {
+          indicator.style.top = top + "px";
+          indicator.style.height = height + "px";
+          indicator.style.opacity = "1";
+        }
+        items.forEach(a => { a.style.color = a === link ? "var(--accent)" : ""; });
+      }
+
+      const headingEls = items
+        .map(a => document.getElementById(a.dataset.heading))
+        .filter(Boolean);
+      let activeHeading = null;
+
+      const observer = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) activeHeading = entry.target;
+        }
+        if (activeHeading) {
+          const link = items.find(a => a.dataset.heading === activeHeading.id);
+          if (link) moveIndicator(link, false);
+        }
+      }, { rootMargin: "0px 0px -60% 0px", threshold: 0 });
+
+      headingEls.forEach(el => observer.observe(el));
+      if (items[0]) moveIndicator(items[0], true);
+    }
+  }
+  initTocDrawer();
 </script>
 
 <style>
   #btt-btn-container.btt-idle {
     opacity: 0.15;
+  }
+
+  /* Drawer closed (default) */
+  .toc-backdrop {
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+  .toc-panel {
+    transform: translateY(100%);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Drawer open */
+  #toc-drawer.toc-is-open {
+    pointer-events: auto;
+  }
+  #toc-drawer.toc-is-open .toc-backdrop {
+    opacity: 1;
+  }
+  #toc-drawer.toc-is-open .toc-panel {
+    transform: translateY(0);
   }
 </style>
