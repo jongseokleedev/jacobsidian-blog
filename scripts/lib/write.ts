@@ -48,6 +48,7 @@ export async function cleanOrphans(
   const removed: string[] = [];
   for (const entry of entries) {
     if (!entry.endsWith(".md")) continue;
+    if (entry.endsWith(".en.md")) continue; // English translations managed separately
     const slug = entry.slice(0, -".md".length);
     if (keepSlugs.has(slug)) continue;
     removed.push(entry);

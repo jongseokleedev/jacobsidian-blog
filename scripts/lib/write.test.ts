@@ -104,6 +104,21 @@ describe("cleanOrphans", () => {
     expect(entries).toEqual(["orphan.md"]);
   });
 
+  it("never removes .en.md files (English translations managed separately)", async () => {
+    await fs.writeFile(path.join(dest, "keep.md"), "ok");
+    await fs.writeFile(path.join(dest, "keep.en.md"), "english");
+    await fs.writeFile(path.join(dest, "orphan.md"), "old");
+
+    const removed = await cleanOrphans({
+      destDir: dest,
+      keepSlugs: new Set(["keep"]),
+    });
+
+    expect(removed).toEqual(["orphan.md"]);
+    const remaining = (await fs.readdir(dest)).sort();
+    expect(remaining).toEqual(["keep.en.md", "keep.md"]);
+  });
+
   it("handles missing destDir gracefully", async () => {
     const removed = await cleanOrphans({
       destDir: path.join(dest, "does-not-exist"),
