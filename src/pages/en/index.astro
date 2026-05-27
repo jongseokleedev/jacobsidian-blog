@@ -1,3 +1,201 @@
 ---
-return Astro.redirect("/", 302);
+import { getCollection } from "astro:content";
+import BlogShell from "@/layouts/BlogShell.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { getPath } from "@/utils/getPath";
+import { PARENTS, getCategoryMeta, parseCategory } from "@/utils/getCategories";
+
+// All non-draft Korean posts (source of truth for what exists)
+const allKo = await getCollection("posts", ({ data }) => !data.draft && data.lang !== "en");
+// English posts indexed by id (without .en suffix) for lookup
+const allEn = await getCollection("posts", ({ data }) => !data.draft && data.lang === "en");
+const enById = new Map(allEn.map(p => [p.id.replace(/\.en$/, ""), p]));
+
+const posts = getSortedPosts(allKo);
+
+const allItems = posts.map(p => {
+  const enPost = enById.get(p.id);
+  const display = enPost ?? p;
+  const { parent } = parseCategory(p.data.category);
+  const meta = getCategoryMeta(p.data.category);
+  return {
+    href: `/en${getPath(p)}`,
+    date: new Date(p.data.pubDatetime),
+    title: display.data.title,
+    category: p.data.category,
+    label: meta?.label ?? p.data.category,
+    color: meta?.color ?? "var(--fg-faint)",
+    parent,
+    hasEn: !!enPost,
+  };
+});
+
+const total = allItems.length;
+const parentCounts = allItems.reduce<Record<string, number>>((acc, item) => {
+  acc[item.parent] = (acc[item.parent] ?? 0) + 1;
+  return acc;
+}, {});
 ---
+
+<BlogShell mode="discovery" rail="discovery" activePage="home" title="jacobsidian (English)">
+  <header class="mb-6 pb-6 border-b border-border">
+    <h1 class="text-[28px] font-bold tracking-[-0.02em]">jacobsidian</h1>
+    <p class="mt-1 text-[15px]" style="color: var(--fg-mute);">
+      English posts — translations added gradually.
+    </p>
+  </header>
+
+  <div id="archives-filter-row" class="flex gap-2 flex-wrap mb-4">
+    <button
+      class="archives-filter-pill active-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+      data-parent="all"
+    >
+      All
+      <span class="font-mono text-[11px] opacity-50">{total}</span>
+    </button>
+    {Object.entries(PARENTS).map(([parentKey, parentMeta]) => (
+      <button
+        class="archives-filter-pill flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-[12.5px] transition-all hover:border-accent hover:text-accent"
+        data-parent={parentKey}
+      >
+        <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+        {parentMeta.label}
+        <span class="font-mono text-[11px] opacity-50">{parentCounts[parentKey] ?? 0}</span>
+      </button>
+    ))}
+  </div>
+
+  <ul id="post-list" class="archives-list">
+    {allItems.map((item, i) => (
+      <li data-parent={item.parent} class={i >= 10 ? "hidden" : ""}>
+        <a
+          href={item.href}
+          class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+          style="border-color: var(--border-soft);"
+        >
+          <div class="flex items-center justify-between sm:contents">
+            <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+              {item.date.toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" })}
+            </span>
+            <span class="font-mono text-[11px] sm:hidden" style="color: var(--fg-faint);">
+              {item.label}
+            </span>
+          </div>
+          <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+            <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
+            {item.title}
+            {!item.hasEn && (
+              <span class="text-[11px] font-mono shrink-0" style="color: var(--fg-faint);">[KO]</span>
+            )}
+          </span>
+          <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
+            {item.label}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <div id="load-sentinel" class="mt-4 flex justify-center" aria-hidden="true">
+    <div id="load-spinner" class="hidden h-4 w-4 rounded-full border-2 border-border border-t-accent animate-spin"></div>
+  </div>
+
+  <script>
+    document.addEventListener("astro:page-load", () => {
+      const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".archives-filter-pill"));
+      const items = Array.from(document.querySelectorAll<HTMLElement>("#post-list li[data-parent]"));
+      const sentinel = document.getElementById("load-sentinel");
+      const spinner = document.getElementById("load-spinner");
+
+      const PAGE = 10;
+      let activeParent = "all";
+      let shown = PAGE;
+      let loading = false;
+      let observer: IntersectionObserver | null = null;
+
+      function filteredItems() {
+        return items.filter(el => activeParent === "all" || el.dataset.parent === activeParent);
+      }
+
+      function showItems() {
+        const toShow = filteredItems().slice(0, shown);
+        const toShowSet = new Set(toShow);
+        items.forEach(el => {
+          if (el.style.display !== "none" && !toShowSet.has(el)) {
+            el.style.transition = "opacity 100ms ease";
+            el.style.opacity = "0";
+          }
+        });
+        setTimeout(() => {
+          items.forEach(el => {
+            el.classList.remove("hidden");
+            el.style.display = "none";
+            el.style.opacity = "0";
+            el.style.transition = "";
+          });
+          toShow.forEach((el, i) => {
+            el.style.display = "";
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                el.style.transition = "opacity 150ms ease";
+                el.style.opacity = "1";
+              }, i * 18);
+            });
+          });
+        }, 110);
+      }
+
+      function appendItems(prevShown: number) {
+        filteredItems().slice(prevShown, shown).forEach((el, i) => {
+          el.classList.remove("hidden");
+          el.style.display = "";
+          el.style.opacity = "0";
+          el.style.transition = "";
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              el.style.transition = "opacity 150ms ease";
+              el.style.opacity = "1";
+            }, i * 18);
+          });
+        });
+      }
+
+      function loadMore() {
+        const total = filteredItems().length;
+        if (loading || shown >= total) return;
+        loading = true;
+        spinner?.classList.remove("hidden");
+        const prev = shown;
+        shown = Math.min(shown + PAGE, total);
+        setTimeout(() => {
+          appendItems(prev);
+          loading = false;
+          spinner?.classList.add("hidden");
+          setupObserver();
+        }, 400);
+      }
+
+      function setupObserver() {
+        observer?.disconnect();
+        if (!sentinel) return;
+        observer = new IntersectionObserver(
+          entries => { if (entries[0].isIntersecting) loadMore(); },
+          { rootMargin: "0px", threshold: 0 }
+        );
+        observer.observe(sentinel);
+      }
+
+      pills.forEach(pill => {
+        pill.addEventListener("click", () => {
+          activeParent = pill.dataset.parent ?? "all";
+          shown = PAGE;
+          showItems();
+          pills.forEach(p => p.classList.toggle("active-pill", p.dataset.parent === activeParent));
+          setTimeout(setupObserver, 120);
+        });
+      });
+
+      setupObserver();
+    });
+  </script>
+</BlogShell>
