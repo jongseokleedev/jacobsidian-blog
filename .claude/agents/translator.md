@@ -93,6 +93,9 @@ Korean originals sometimes define invented terms in callout boxes. In English, i
 **Preserve resonance — don't explain it.**
 Some words function as both metaphor and technical term simultaneously (e.g. "bridge" = software bridge/protocol + physical bridge metaphor). This is called *resonance* — one word vibrating at two layers at once. When the Korean original exploits this, preserve it in English without explanation. Never add parentheticals or footnotes to flag it — the reader's moment of recognition is the payoff. Explaining it kills it.
 
+**Use "X-free" to frame deliberate absence as a choice.**
+"Without X" describes mere absence. "X-free" (Figma-free, serverless, sugar-free) frames the absence as an intentional posture — the way English tech writing describes paradigm shifts. When the Korean original says "X 없이" in the context of a deliberate workflow choice, prefer "X-free" over "without X".
+
 **"scales with" not "adapts to".**
 When describing how something grows or keeps up with a system, native developers say "scales with X" — not "adapts to" or "grows with."
 
