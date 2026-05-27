@@ -56,9 +56,13 @@ if (typeof initOgImage === "string") {
   ogImageUrl = initOgImage.src; // Local asset
 }
 
-// Use dynamic OG image if enabled and no remote|local ogImage
+// Use dynamic OG image if enabled and no remote|local ogImage.
+// Derive path from current URL so /en/... pages get /en/.../og.png correctly.
 if (!ogImageUrl && SITE.dynamicOgImage) {
-  ogImageUrl = `${getPath(post)}og.png`;
+  const pagePath = Astro.url.pathname.endsWith("/")
+    ? Astro.url.pathname
+    : Astro.url.pathname + "/";
+  ogImageUrl = `${pagePath}og.png`;
 }
 
 // Resolve OG image URL (or fallback to SITE.ogImage / default `og.png`)
