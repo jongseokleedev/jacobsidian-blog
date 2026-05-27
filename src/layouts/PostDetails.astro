@@ -23,9 +23,10 @@ type Entry = CollectionEntry<"posts">;
 type Props = {
   post: Entry;
   posts: Entry[];
+  hreflangPairs?: { ko: string; en?: string };
 };
 
-const { post, posts } = Astro.props;
+const { post, posts, hreflangPairs } = Astro.props;
 
 const {
   title,
@@ -102,6 +103,7 @@ const nextPost =
   modDatetime={modDatetime}
   tags={tags}
   breadcrumbs={breadcrumbs}
+  hreflangPairs={hreflangPairs}
 >
   <!-- Back link -->
   <a

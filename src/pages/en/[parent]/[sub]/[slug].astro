@@ -38,6 +38,11 @@ const all = await getCollection(
   ({ data }) => data.category === catKey && data.lang === "en"
 );
 const sortedPosts = getSortedPosts(all);
+
+const { parent, sub, slug } = Astro.params;
+const koPath = `/${parent}/${sub}/${slug}`;
+const enPath = `/en/${parent}/${sub}/${slug}`;
+const hreflangPairs = { ko: koPath, en: enPath };
 ---
 
-<PostDetails post={post} posts={sortedPosts} />
+<PostDetails post={post} posts={sortedPosts} {hreflangPairs} />
