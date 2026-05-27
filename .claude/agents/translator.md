@@ -94,6 +94,9 @@ Some words function as both metaphor and technical term simultaneously (e.g. "br
 **"scales with" not "adapts to".**
 When describing how something grows or keeps up with a system, native developers say "scales with X" — not "adapts to" or "grows with."
 
+**"도입했다" → "You've got" not "You adopted".**
+"Adopted" sounds formal and policy-like ("the company adopted a policy"). For a conversational tech blog context where the reader has simply started using a tool, prefer "you've got" or "you're using." "You've got X" carries the natural sense of "it's already set up — so why isn't it working?"
+
 ## What NOT to Do
 
 - Don't write the file without discussing key translation choices first
