@@ -10,18 +10,28 @@ export async function getStaticPaths() {
   for (const [parent, pm] of Object.entries(PARENTS)) {
     for (const sub of Object.keys(pm.subs)) {
       const catKey = `${parent}-${sub}`;
-      const posts = await getCollection(
+      // All non-draft Korean posts get an /en/ route
+      const koPosts = await getCollection(
+        "posts",
+        ({ data }) => data.category === catKey && !data.draft && data.lang !== "en"
+      );
+      // English posts indexed by slug for quick lookup
+      const enPosts = await getCollection(
         "posts",
         ({ data }) => data.category === catKey && !data.draft && data.lang === "en"
       );
-      for (const post of posts) {
+      const enBySlug = new Map(
+        enPosts.map(p => [
+          slugifyStr((p.id.split("/").pop() ?? p.id).replace(/\.en$/, "")),
+          p,
+        ])
+      );
+      for (const koPost of koPosts) {
+        const slug = slugifyStr(koPost.id.split("/").pop() ?? koPost.id);
+        const enPost = enBySlug.get(slug);
         allPaths.push({
-          params: {
-            parent,
-            sub,
-            slug: slugifyStr((post.id.split("/").pop() ?? post.id).replace(/\.en$/, "")),
-          },
-          props: { post },
+          params: { parent, sub, slug },
+          props: { post: enPost ?? koPost, hasEnVersion: !!enPost },
         });
       }
     }
@@ -29,20 +39,20 @@ export async function getStaticPaths() {
   return allPaths;
 }
 
-type Props = { post: CollectionEntry<"posts"> };
-const { post } = Astro.props;
+type Props = { post: CollectionEntry<"posts">; hasEnVersion: boolean };
+const { post, hasEnVersion } = Astro.props;
 const catKey = post.data.category;
 
 const all = await getCollection(
   "posts",
-  ({ data }) => data.category === catKey && data.lang === "en"
+  ({ data }) => data.category === catKey && data.lang === (hasEnVersion ? "en" : "ko")
 );
 const sortedPosts = getSortedPosts(all);
 
 const { parent, sub, slug } = Astro.params;
 const koPath = `/${parent}/${sub}/${slug}`;
 const enPath = `/en/${parent}/${sub}/${slug}`;
-const hreflangPairs = { ko: koPath, en: enPath };
+const hreflangPairs = { ko: koPath, ...(hasEnVersion ? { en: enPath } : {}) };
 ---
 
-<PostDetails post={post} posts={sortedPosts} {hreflangPairs} />
+<PostDetails post={post} posts={sortedPosts} {hreflangPairs} koFallback={!hasEnVersion} />

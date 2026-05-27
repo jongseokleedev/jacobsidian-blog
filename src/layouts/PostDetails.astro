@@ -25,9 +25,10 @@ type Props = {
   post: Entry;
   posts: Entry[];
   hreflangPairs?: { ko: string; en?: string };
+  koFallback?: boolean;
 };
 
-const { post, posts, hreflangPairs } = Astro.props;
+const { post, posts, hreflangPairs, koFallback = false } = Astro.props;
 const currentLang = getLangFromUrl(Astro.url);
 
 const {
@@ -116,6 +117,14 @@ const nextPost =
     <IconChevronLeft class="size-3.5" />
     {catMeta?.label ?? catUrlPath}
   </a>
+
+  <!-- English fallback notice -->
+  {koFallback && (
+    <div class="mb-4 flex items-center gap-2 rounded-md border border-border px-3 py-2 text-[13px]" style="color: var(--fg-mute); background: color-mix(in srgb, var(--accent) 6%, transparent);">
+      <span>🌐</span>
+      <span>English version coming soon. Showing the original Korean post.</span>
+    </div>
+  )}
 
   <!-- Cinema poster + title row -->
   <div class:list={["flex gap-4", post.data.category === "review-cinema" && post.data.poster ? "items-start" : ""]}>
