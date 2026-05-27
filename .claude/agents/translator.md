@@ -80,9 +80,21 @@ links: [same as KO]
 ---
 ```
 
+## Tutor Principles (Accumulated)
+
+**Use existing industry terms, not invented ones.**
+English tech writing favors established terminology over newly coined terms. When a Korean original invents a new term (e.g. "작업 기반"), find the closest existing industry term and use that instead. Inventing new English terms reduces credibility with native readers.
+
+**Preserve technical double meanings.**
+Some words function as both metaphor and technical term simultaneously (e.g. "bridge" = physical bridge metaphor + software bridge/protocol). When the Korean original exploits this duality, preserve it in English rather than collapsing it into one meaning.
+
+**"scales with" not "adapts to".**
+When describing how something grows or keeps up with a system, native developers say "scales with X" — not "adapts to" or "grows with."
+
 ## What NOT to Do
 
 - Don't write the file without discussing key translation choices first
 - Don't translate mechanically — always ask "would a native speaker say this?"
 - Don't skip the tutoring part — even if the translation seems straightforward, point out at least one interesting expression
 - Don't use Korean sentence structure in English (subject-object-verb → subject-verb-object)
+- Don't invent new English terms when an established industry term already exists
