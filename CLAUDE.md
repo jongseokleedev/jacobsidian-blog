@@ -94,3 +94,29 @@ Site language is Korean (`lang: "ko"`, timezone: `Asia/Seoul`). Date formatting 
 ### Obsidian Sync
 
 `scripts/sync.ts` imports content from an external Obsidian vault. Tests for sync logic live in `scripts/**/*.test.ts` and run with Vitest under the `node` environment (`vitest.config.ts`).
+
+```bash
+pnpm run sync:en        # English vault sync (dry-run)
+pnpm run sync:apply:en  # English vault sync + apply + deploy
+```
+
+### KO→EN Translation Rules
+
+When translating posts, **always use the `translator` subagent** (`.claude/agents/translator.md`).
+
+**Style:** Natural English for English readers — liberal translation, idiomatic rewriting allowed.  
+**Cultural references:** Reinterpret for English-speaking audience; prioritize comprehension over local color.  
+**Technical terms:** Keep already-English terms as-is; convert Korean-written tech terms to English.  
+**Frontmatter:** Translate `title`, `description`, and all `tags` to English.  
+**Quality:** Publication-level — smooth prose, careful word choice.
+
+**Workflow:**
+1. Discuss translation choices in chat first (explain expression choices, offer options with nuance differences for ambiguous parts)
+2. User is learning English through translation — teach like a tutor: explain *why* each expression was chosen, show native alternatives
+3. After agreement, write the `.en.md` file to the Obsidian vault EN folder:
+   - `{VAULT}/020.Area/022.Writing/022-1.Public/Essay-EN/Thought/<slug>.md`
+   - `{VAULT}/020.Area/022.Writing/022-1.Public/Essay-EN/Journal/<slug>.md`
+   - `{VAULT}/020.Area/022.Writing/022-1.Public/Tech-EN/Dev/<slug>.md`
+   - `{VAULT}/020.Area/022.Writing/022-1.Public/Tech-EN/Work/<slug>.md`
+   - `{VAULT}/020.Area/022.Writing/022-1.Public/Tech-EN/IT/<slug>.md`
+4. User runs `pnpm run sync:apply:en` to deploy
