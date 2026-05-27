@@ -8,7 +8,10 @@ const PROJECT_ROOT = path.resolve(import.meta.dirname, "..");
 
 async function loadItems(dir: string) {
   const abs = path.resolve(PROJECT_ROOT, dir);
-  const files = await fg("**/*.md", { cwd: abs, absolute: true });
+  // .en.md 파일 제외 — 영어 번역본은 KO 노드와 동일 포스트이므로 중복 제거
+  const files = (await fg("**/*.md", { cwd: abs, absolute: true })).filter(
+    f => !f.endsWith(".en.md")
+  );
   const results = await Promise.all(
     files.map(async f => {
       const raw = await fs.readFile(f, "utf8");
