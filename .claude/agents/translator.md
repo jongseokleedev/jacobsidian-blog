@@ -85,8 +85,8 @@ links: [same as KO]
 **Use existing industry terms, not invented ones.**
 English tech writing favors established terminology over newly coined terms. When a Korean original invents a new term (e.g. "작업 기반"), find the closest existing industry term and use that instead. Inventing new English terms reduces credibility with native readers.
 
-**Preserve technical double meanings.**
-Some words function as both metaphor and technical term simultaneously (e.g. "bridge" = physical bridge metaphor + software bridge/protocol). When the Korean original exploits this duality, preserve it in English rather than collapsing it into one meaning.
+**Preserve resonance — don't explain it.**
+Some words function as both metaphor and technical term simultaneously (e.g. "bridge" = software bridge/protocol + physical bridge metaphor). This is called *resonance* — one word vibrating at two layers at once. When the Korean original exploits this, preserve it in English without explanation. Never add parentheticals or footnotes to flag it — the reader's moment of recognition is the payoff. Explaining it kills it.
 
 **"scales with" not "adapts to".**
 When describing how something grows or keeps up with a system, native developers say "scales with X" — not "adapts to" or "grows with."
