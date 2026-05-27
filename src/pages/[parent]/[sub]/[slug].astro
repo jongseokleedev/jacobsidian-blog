@@ -12,7 +12,8 @@ export async function getStaticPaths() {
       const catKey = `${parent}-${sub}`;
       const posts = await getCollection(
         "posts",
-        ({ data }) => data.category === catKey && !data.draft
+        ({ data }) =>
+          data.category === catKey && !data.draft && data.lang !== "en"
       );
       for (const post of posts) {
         allPaths.push({
@@ -40,7 +41,9 @@ const { parent, sub, slug } = Astro.params;
 const koPath = `/${parent}/${sub}/${slug}`;
 const enPath = `/en/${parent}/${sub}/${slug}`;
 const hasEnVersion = all.some(
-  p => p.data.lang === "en" && slugifyStr(p.id.split("/").pop() ?? p.id) === slug
+  p =>
+    p.data.lang === "en" &&
+    slugifyStr((p.id.split("/").pop() ?? p.id).replace(/\.en$/, "")) === slug
 );
 const hreflangPairs = { ko: koPath, ...(hasEnVersion ? { en: enPath } : {}) };
 ---

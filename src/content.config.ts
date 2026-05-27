@@ -1,11 +1,20 @@
 import { defineCollection } from "astro:content";
 import { z } from "zod";
 import { glob } from "astro/loaders";
+import path from "path";
 
 export const POSTS_PATH = "src/data/posts";
 
 const posts = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.md", base: `./${POSTS_PATH}` }),
+  loader: glob({
+    pattern: "**/[^_]*.md",
+    base: `./${POSTS_PATH}`,
+    generateId: ({ entry }) => {
+      // Strip directory and .md extension, preserving locale suffix (e.g. "20210817-1336.en")
+      const basename = path.basename(entry, ".md");
+      return basename;
+    },
+  }),
   schema: ({ image }) =>
     z.object({
       author: z.string().optional(),

@@ -11,7 +11,8 @@ export async function getStaticPaths() {
       const catKey = `${parent}-${sub}`;
       const posts = await getCollection(
         "posts",
-        ({ data }) => data.category === catKey && !data.draft
+        ({ data }) =>
+          data.category === catKey && !data.draft && data.lang !== "en"
       );
       for (const post of posts) {
         allPaths.push({
