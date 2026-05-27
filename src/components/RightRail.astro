@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import { getCategoryMeta, PARENTS, parseCategory } from "@/utils/getCategories";
 import getSortedPosts from "@/utils/getSortedPosts";
 import GraphCanvas from "@/components/GraphCanvas.astro";
+import { EN_CATEGORIES } from "@/config";
+import { getLangFromUrl } from "@/i18n";
 
 type Variant = "discovery" | "category" | "reading";
 
@@ -14,6 +16,9 @@ interface Props {
 }
 
 const { variant, postId, categoryKey, headings = [] } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const prefix = lang === "en" ? "/en" : "";
 
 const rawPosts = await getCollection("posts");
 const allPosts = getSortedPosts(rawPosts);
@@ -65,16 +70,13 @@ const backlinks = postId
       .slice(0, 5)
   : [];
 
-// Category URL helper
-function catUrl(key: string) {
-  const { parent, sub } = parseCategory(key);
-  return `/${parent}/${sub}`;
-}
-
-// Post URL helper
+// Post URL helper — EN 모드에서 EN_CATEGORIES에 없는 포스트는 KO 경로로
 const postUrl = (post: (typeof allPosts)[number]) => {
   const slug = post.data.slug ?? post.id;
-  return `${catUrl(post.data.category)}/${slug}`;
+  const cat = post.data.category;
+  const { parent, sub } = parseCategory(cat);
+  const base = (lang === "en" && EN_CATEGORIES.has(cat as never)) ? "/en" : "";
+  return `${base}/${parent}/${sub}/${slug}`;
 };
 ---
 
@@ -187,16 +189,27 @@ const postUrl = (post: (typeof allPosts)[number]) => {
           {(() => {
             const { parent: activeParent } = categoryKey ? parseCategory(categoryKey) : { parent: "" };
             return Object.entries(PARENTS)
-              .filter(([parentKey]) => parentKey !== activeParent)
-              .map(([parentKey, parentMeta]) => (
-                <a
-                  href={`/${parentKey}/${Object.keys(parentMeta.subs)[0]}`}
-                  class="flex items-center gap-1.5 text-[13px] text-[color:var(--fg-mute)] hover:text-accent transition-colors"
-                >
-                  <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
-                  {parentMeta.label}
-                </a>
-              ));
+              .filter(([parentKey, pm]) => {
+                if (parentKey === activeParent) return false;
+                if (lang === "en") {
+                  return Object.keys(pm.subs).some(sub => EN_CATEGORIES.has(`${parentKey}-${sub}` as never));
+                }
+                return true;
+              })
+              .map(([parentKey, parentMeta]) => {
+                const firstSub = lang === "en"
+                  ? Object.keys(parentMeta.subs).find(sub => EN_CATEGORIES.has(`${parentKey}-${sub}` as never))!
+                  : Object.keys(parentMeta.subs)[0];
+                return (
+                  <a
+                    href={`${prefix}/${parentKey}/${firstSub}`}
+                    class="flex items-center gap-1.5 text-[13px] text-[color:var(--fg-mute)] hover:text-accent transition-colors"
+                  >
+                    <span class="cat-dot shrink-0" style={`background:${parentMeta.color}`} />
+                    {parentMeta.label}
+                  </a>
+                );
+              });
           })()}
         </nav>
       </section>

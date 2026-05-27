@@ -5,13 +5,31 @@ import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenu from "@/assets/icons/IconMenu.svg";
 import Logo from "./Logo.astro";
-import { SITE } from "@/config";
+import { SITE, EN_CATEGORIES } from "@/config";
 import { PARENTS } from "@/utils/getCategories";
 import { getLangFromUrl, getEnUrl, getKoUrl } from "@/i18n";
 
 const lang = getLangFromUrl(Astro.url);
 const toggleHref = lang === "ko" ? getEnUrl(Astro.url) : getKoUrl(Astro.url);
 const toggleLabel = lang === "ko" ? "EN" : "KR";
+const prefix = lang === "en" ? "/en" : "";
+
+// EN 모드에서는 EN_CATEGORIES에 포함된 parent만 노출
+const visibleParents = lang === "en"
+  ? Object.fromEntries(
+      Object.entries(PARENTS).filter(([parentKey, pm]) =>
+        Object.keys(pm.subs).some(sub => EN_CATEGORIES.has(`${parentKey}-${sub}` as never))
+      ).map(([parentKey, pm]) => [
+        parentKey,
+        {
+          ...pm,
+          subs: Object.fromEntries(
+            Object.entries(pm.subs).filter(([sub]) => EN_CATEGORIES.has(`${parentKey}-${sub}` as never))
+          ),
+        },
+      ])
+    )
+  : PARENTS;
 
 const { pathname } = Astro.url;
 
@@ -21,6 +39,10 @@ const currentPath =
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
+  // EN 모드: /en/essay/... 에서 /en/essay 를 active로 처리
+  if (lang === "en") {
+    return currentPath === path || (currentPathArray[1] !== undefined && currentPathArray[1] === pathArray[1]);
+  }
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 ---
@@ -128,13 +150,13 @@ const isActive = (path: string) => {
     <!-- 모바일 드롭다운 메뉴 -->
     <div id="menu-items" class="sm:hidden absolute left-0 right-0 top-full overflow-hidden bg-background/95 backdrop-blur-sm border-b border-border" style="max-height: 0; transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease; opacity: 0; z-index: 10;">
       <nav class="pb-4 px-4 flex flex-col">
-        {Object.entries(PARENTS).map(([parentKey, parentMeta]) => {
-          const isParentActive = isActive(`/${parentKey}`);
+        {Object.entries(visibleParents).map(([parentKey, parentMeta]) => {
+          const isParentActive = isActive(`${prefix}/${parentKey}`);
           return (
             <div class="mobile-cat-item" data-parent={parentKey}>
               <div class="flex items-center">
                 <a
-                  href={`/${parentKey}`}
+                  href={`${prefix}/${parentKey}`}
                   class:list={[
                     "flex-1 flex items-center gap-2 px-2 py-2.5 text-sm font-medium rounded transition-colors hover:text-accent",
                     isParentActive ? "text-accent" : "",
@@ -167,10 +189,10 @@ const isActive = (path: string) => {
                   {Object.entries(parentMeta.subs).map(([subKey, subMeta]) => (
                     <li>
                       <a
-                        href={`/${parentKey}/${subKey}`}
+                        href={`${prefix}/${parentKey}/${subKey}`}
                         class:list={[
                           "block text-[13px] py-2 pl-4 rounded-r transition-colors hover:text-accent",
-                          isActive(`/${parentKey}/${subKey}`)
+                          isActive(`${prefix}/${parentKey}/${subKey}`)
                             ? "text-accent font-medium"
                             : "text-[color:var(--fg-mute)]",
                         ]}
