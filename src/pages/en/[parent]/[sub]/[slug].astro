@@ -1,0 +1,43 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import PostDetails from "@/layouts/PostDetails.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { slugifyStr } from "@/utils/slugify";
+import { PARENTS } from "@/utils/getCategories";
+
+export async function getStaticPaths() {
+  const allPaths = [];
+  for (const [parent, pm] of Object.entries(PARENTS)) {
+    for (const sub of Object.keys(pm.subs)) {
+      const catKey = `${parent}-${sub}`;
+      const posts = await getCollection(
+        "posts",
+        ({ data }) => data.category === catKey && !data.draft && data.lang === "en"
+      );
+      for (const post of posts) {
+        allPaths.push({
+          params: {
+            parent,
+            sub,
+            slug: slugifyStr(post.id.split("/").pop() ?? post.id),
+          },
+          props: { post },
+        });
+      }
+    }
+  }
+  return allPaths;
+}
+
+type Props = { post: CollectionEntry<"posts"> };
+const { post } = Astro.props;
+const catKey = post.data.category;
+
+const all = await getCollection(
+  "posts",
+  ({ data }) => data.category === catKey && data.lang === "en"
+);
+const sortedPosts = getSortedPosts(all);
+---
+
+<PostDetails post={post} posts={sortedPosts} />
