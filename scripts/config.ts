@@ -7,6 +7,7 @@ export const VAULT_PATH = path.join(
 );
 
 const PUBLIC_BASE = "020.Area/022.Writing/022-1.Public";
+const PUBLIC_EN_BASE = "020.Area/022.Writing/022-2.Public-EN";
 
 export const POST_SOURCES = {
   "essay-thought": path.join(PUBLIC_BASE, "Essay/Thought"),
@@ -18,6 +19,18 @@ export const POST_SOURCES = {
   "review-cinema": path.join(PUBLIC_BASE, "Review/Cinema"),
   "fiction-novel": path.join(PUBLIC_BASE, "Fiction/Novel"),
   "fiction-tales": path.join(PUBLIC_BASE, "Fiction/Tales"),
+} as const;
+
+export const EN_POST_SOURCES = {
+  "essay-thought": path.join(PUBLIC_EN_BASE, "Essay/Thought"),
+  "essay-journal": path.join(PUBLIC_EN_BASE, "Essay/Journal"),
+  "tech-dev":      path.join(PUBLIC_EN_BASE, "Tech/Dev"),
+  "tech-work":     path.join(PUBLIC_EN_BASE, "Tech/Work"),
+  "tech-it":       path.join(PUBLIC_EN_BASE, "Tech/IT"),
+  "review-book":   path.join(PUBLIC_EN_BASE, "Review/Book"),
+  "review-cinema": path.join(PUBLIC_EN_BASE, "Review/Cinema"),
+  "fiction-novel": path.join(PUBLIC_EN_BASE, "Fiction/Novel"),
+  "fiction-tales": path.join(PUBLIC_EN_BASE, "Fiction/Tales"),
 } as const;
 
 export const ATTACHMENTS_SOURCE = "040.Archive/044.Attachments";

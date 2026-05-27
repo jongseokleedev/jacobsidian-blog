@@ -104,7 +104,7 @@ describe("cleanOrphans", () => {
     expect(entries).toEqual(["orphan.md"]);
   });
 
-  it("never removes .en.md files (English translations managed separately)", async () => {
+  it("never removes .en.md files when managing Korean posts (default suffix)", async () => {
     await fs.writeFile(path.join(dest, "keep.md"), "ok");
     await fs.writeFile(path.join(dest, "keep.en.md"), "english");
     await fs.writeFile(path.join(dest, "orphan.md"), "old");
@@ -115,6 +115,22 @@ describe("cleanOrphans", () => {
     });
 
     expect(removed).toEqual(["orphan.md"]);
+    const remaining = (await fs.readdir(dest)).sort();
+    expect(remaining).toEqual(["keep.en.md", "keep.md"]);
+  });
+
+  it("removes orphan .en.md files when suffix is .en.md", async () => {
+    await fs.writeFile(path.join(dest, "keep.md"), "ko");
+    await fs.writeFile(path.join(dest, "keep.en.md"), "english");
+    await fs.writeFile(path.join(dest, "orphan.en.md"), "old english");
+
+    const removed = await cleanOrphans({
+      destDir: dest,
+      keepSlugs: new Set(["keep"]),
+      suffix: ".en.md",
+    });
+
+    expect(removed).toEqual(["orphan.en.md"]);
     const remaining = (await fs.readdir(dest)).sort();
     expect(remaining).toEqual(["keep.en.md", "keep.md"]);
   });

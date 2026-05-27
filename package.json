@@ -16,6 +16,8 @@
     "astro": "astro",
     "sync": "tsx scripts/sync.ts",
     "sync:apply": "tsx scripts/sync.ts --apply",
+    "sync:en": "tsx scripts/sync-en.ts",
+    "sync:apply:en": "tsx scripts/sync-en.ts --apply",
     "vault:push": "pnpm sync:apply && git add src/data public/images public/graph.json && (git diff --cached --quiet && echo 'no vault changes to publish' || (git commit -m 'chore: sync vault' && git push))",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -31,12 +31,14 @@ export interface CleanOrphansOptions {
   destDir: string;
   keepSlugs: Set<string>;
   dryRun?: boolean;
+  /** Only touch files matching this suffix. Defaults to ".md" (excludes ".en.md"). */
+  suffix?: string;
 }
 
 export async function cleanOrphans(
   opts: CleanOrphansOptions
 ): Promise<string[]> {
-  const { destDir, keepSlugs, dryRun = false } = opts;
+  const { destDir, keepSlugs, dryRun = false, suffix = ".md" } = opts;
 
   let entries: string[];
   try {
@@ -47,9 +49,10 @@ export async function cleanOrphans(
 
   const removed: string[] = [];
   for (const entry of entries) {
-    if (!entry.endsWith(".md")) continue;
-    if (entry.endsWith(".en.md")) continue; // English translations managed separately
-    const slug = entry.slice(0, -".md".length);
+    if (!entry.endsWith(suffix)) continue;
+    // When managing plain *.md files, skip *.en.md (longer suffix takes priority)
+    if (suffix === ".md" && entry.endsWith(".en.md")) continue;
+    const slug = entry.slice(0, -suffix.length);
     if (keepSlugs.has(slug)) continue;
     removed.push(entry);
     if (!dryRun) {
