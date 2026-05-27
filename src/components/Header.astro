@@ -104,11 +104,13 @@ const isActive = (path: string) => {
         <a
           href={toggleHref}
           id="lang-toggle"
-          class="focus-outline flex items-center justify-center rounded border border-border px-2 py-1 text-[12px] font-mono hover:border-accent hover:text-accent transition-colors"
+          class="focus-outline flex items-center gap-1 rounded border border-border px-2 py-1 text-[12px] font-mono hover:border-accent transition-colors"
           aria-label={`Switch to ${toggleLabel}`}
           title={`Switch to ${toggleLabel}`}
         >
-          {toggleLabel}
+          <span class:list={[lang === "ko" ? "text-accent font-semibold" : "opacity-35"]}>KR</span>
+          <span class="opacity-25">/</span>
+          <span class:list={[lang === "en" ? "text-accent font-semibold" : "opacity-35"]}>EN</span>
         </a>
       </div>
 
