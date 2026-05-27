@@ -4,9 +4,14 @@ import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { PARENTS } from "@/utils/getCategories";
 import { slugifyStr } from "@/utils/slugify";
+import { EN_CATEGORIES } from "@/config";
 
 export async function getStaticPaths() {
-  return Object.keys(PARENTS).map(parent => ({ params: { parent } }));
+  // Only generate /en/[parent] for parents that have at least one EN-enabled sub-category
+  const enParents = [...new Set(
+    [...EN_CATEGORIES].map(cat => cat.split("-")[0])
+  )];
+  return enParents.map(parent => ({ params: { parent } }));
 }
 
 const { parent } = Astro.params;

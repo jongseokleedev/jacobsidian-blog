@@ -4,10 +4,13 @@ import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 import { slugifyStr } from "@/utils/slugify";
+import { EN_CATEGORIES } from "@/config";
 
 export async function getStaticPaths() {
   return Object.entries(PARENTS).flatMap(([parent, pm]) =>
-    Object.keys(pm.subs).map(sub => ({ params: { parent, sub } }))
+    Object.keys(pm.subs)
+      .filter(sub => EN_CATEGORIES.has(`${parent}-${sub}` as never))
+      .map(sub => ({ params: { parent, sub } }))
   );
 }
 

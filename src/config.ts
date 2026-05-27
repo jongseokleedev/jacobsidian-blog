@@ -1,3 +1,13 @@
+// Categories available in English. Controls /en/ page generation, sitemap, and list pages.
+// Add a category here when you start translating it.
+export const EN_CATEGORIES = new Set([
+  "essay-thought",
+  "essay-journal",
+  "tech-dev",
+  "tech-work",
+  "tech-it",
+] as const);
+
 export const SITE = {
   website: "https://jacobsidian.com/",
   author: "Jacob",

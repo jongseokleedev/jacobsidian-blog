@@ -4,13 +4,15 @@ import PostDetails from "@/layouts/PostDetails.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
 import { PARENTS } from "@/utils/getCategories";
+import { EN_CATEGORIES } from "@/config";
 
 export async function getStaticPaths() {
   const allPaths = [];
   for (const [parent, pm] of Object.entries(PARENTS)) {
     for (const sub of Object.keys(pm.subs)) {
       const catKey = `${parent}-${sub}`;
-      // All non-draft Korean posts get an /en/ route
+      if (!EN_CATEGORIES.has(catKey as never)) continue;
+      // Non-draft Korean posts in EN-enabled categories get an /en/ route
       const koPosts = await getCollection(
         "posts",
         ({ data }) => data.category === catKey && !data.draft && data.lang !== "en"

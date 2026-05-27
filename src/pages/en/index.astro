@@ -4,9 +4,13 @@ import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getPath } from "@/utils/getPath";
 import { PARENTS, getCategoryMeta, parseCategory } from "@/utils/getCategories";
+import { EN_CATEGORIES } from "@/config";
 
-// All non-draft Korean posts (source of truth for what exists)
-const allKo = await getCollection("posts", ({ data }) => !data.draft && data.lang !== "en");
+// Only EN-enabled categories
+const allKo = await getCollection(
+  "posts",
+  ({ data }) => !data.draft && data.lang !== "en" && EN_CATEGORIES.has(data.category as never)
+);
 // English posts indexed by id (without .en suffix) for lookup
 const allEn = await getCollection("posts", ({ data }) => !data.draft && data.lang === "en");
 const enById = new Map(allEn.map(p => [p.id.replace(/\.en$/, ""), p]));

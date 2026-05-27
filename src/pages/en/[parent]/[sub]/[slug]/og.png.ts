@@ -3,12 +3,14 @@ import { getCollection } from "astro:content";
 import { slugifyStr } from "@/utils/slugify";
 import { PARENTS } from "@/utils/getCategories";
 import { generateOgImageForPost } from "@/utils/generateOgImages";
+import { EN_CATEGORIES } from "@/config";
 
 export async function getStaticPaths() {
   const allPaths = [];
   for (const [parent, pm] of Object.entries(PARENTS)) {
     for (const sub of Object.keys(pm.subs)) {
       const catKey = `${parent}-${sub}`;
+      if (!EN_CATEGORIES.has(catKey as never)) continue;
 
       const koPosts = await getCollection(
         "posts",
