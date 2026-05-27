@@ -147,28 +147,37 @@ const tocHeadings = headings.filter(h => h.depth <= 3);
 
     function open() {
       drawer.classList.add("toc-is-open");
-      document.body.style.overflow = "hidden";
     }
     function close() {
       drawer.classList.remove("toc-is-open");
-      document.body.style.overflow = "";
     }
 
     openBtn.addEventListener("click", open);
     closeBtn.addEventListener("click", close);
     backdrop.addEventListener("click", close);
-    function smoothScrollTo(targetY, duration) {
-      const startY = window.scrollY;
+    function smoothScrollTo(targetY, duration, onComplete) {
+      const scrollEl = document.scrollingElement || document.documentElement;
+      const htmlEl = document.documentElement;
+      htmlEl.style.scrollBehavior = "auto";
+      const startY = scrollEl.scrollTop;
       const diff = targetY - startY;
-      if (diff === 0) return;
+      if (Math.abs(diff) < 1) {
+        htmlEl.style.scrollBehavior = "";
+        requestAnimationFrame(() => onComplete?.());
+        return;
+      }
       let startTime = null;
       function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
       function step(timestamp) {
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        window.scrollTo(0, startY + diff * easeOut(progress));
+        scrollEl.scrollTop = startY + diff * easeOut(progress);
         if (progress < 1) requestAnimationFrame(step);
+        else requestAnimationFrame(() => {
+          htmlEl.style.scrollBehavior = "";
+          onComplete?.();
+        });
       }
       requestAnimationFrame(step);
     }
@@ -186,8 +195,7 @@ const tocHeadings = headings.filter(h => h.depth <= 3);
         close();
         if (!target) return;
         const targetY = target.getBoundingClientRect().top + window.scrollY - 72;
-        smoothScrollTo(targetY, 300);
-        setTimeout(() => pulseHeading(target), 280);
+        smoothScrollTo(targetY, 600, () => pulseHeading(target));
       });
     });
     document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });

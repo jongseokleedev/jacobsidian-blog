@@ -191,13 +191,12 @@ html[data-theme="dark"] {
 }
 
 @keyframes toc-heading-pulse {
-  0%   { color: inherit; }
-  30%  { color: var(--accent); }
+  0%   { color: var(--accent); }
   100% { color: inherit; }
 }
 
 .toc-heading-pulse {
-  animation: toc-heading-pulse 700ms ease-out forwards;
+  animation: toc-heading-pulse 800ms ease-in-out forwards;
 }
 
 
