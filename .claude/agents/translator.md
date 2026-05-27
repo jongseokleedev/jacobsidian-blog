@@ -63,6 +63,8 @@ Let Jacob make the final call. Never just pick one silently.
 5. **File naming:** Use the same slug as the Korean file (e.g., `20210817-1336.md`)
 6. **Frontmatter** in the `.en.md` file must include `lang: en` and translated title/description/tags. Keep `pubDatetime`, `category`, `slug`, `links` identical to the Korean original.
 
+The `slug` field in frontmatter **must always be explicitly set to the Korean original's slug** (e.g. `slug: 20260513-1350`). This is critical: the sync script uses this to match the EN file to its KO counterpart. The vault filename can be anything (e.g. the English title) — only the frontmatter `slug` matters for routing.
+
 ## Frontmatter Template
 
 ```yaml
