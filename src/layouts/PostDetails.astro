@@ -11,6 +11,7 @@ import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
+import { getLangFromUrl } from "@/i18n";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import Comments from "@/components/comments/Comments.astro";
@@ -27,6 +28,7 @@ type Props = {
 };
 
 const { post, posts, hreflangPairs } = Astro.props;
+const currentLang = getLangFromUrl(Astro.url);
 
 const {
   title,
@@ -186,6 +188,7 @@ const nextPost =
     id="article"
     class="app-prose mt-8 w-full prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     data-pagefind-body
+    data-pagefind-filter={`lang:${currentLang}`}
     data-category={post.data.category}
     data-post-id={post.id}
     data-title={title}
