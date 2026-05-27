@@ -61,6 +61,14 @@ export default defineConfig({
     prefetchAll: false,
     defaultStrategy: "hover",
   },
+  i18n: {
+    defaultLocale: "ko",
+    locales: ["ko", "en"],
+    routing: {
+      prefixDefaultLocale: false,
+      redirectToDefaultLocale: false,
+    },
+  },
   image: {
     responsiveStyles: true,
     layout: "constrained",
