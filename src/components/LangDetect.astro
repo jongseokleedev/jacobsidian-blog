@@ -1,0 +1,34 @@
+---
+interface Props {
+  currentLang: "ko" | "en";
+}
+const { currentLang } = Astro.props;
+---
+
+{currentLang === "ko" && (
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("lang");
+        if (saved === "en") {
+          const path = location.pathname;
+          if (!path.startsWith("/en")) {
+            location.replace("/en" + (path === "/" ? "" : path));
+          }
+          return;
+        }
+        if (saved === "ko") return;
+
+        // First visit: check browser language
+        const browserLang = navigator.language || (navigator.languages && navigator.languages[0]) || "ko";
+        if (!browserLang.startsWith("ko")) {
+          localStorage.setItem("lang", "en");
+          const path = location.pathname;
+          location.replace("/en" + (path === "/" ? "" : path));
+        }
+      } catch (_) {
+        // localStorage may be blocked in some environments
+      }
+    })();
+  </script>
+)}

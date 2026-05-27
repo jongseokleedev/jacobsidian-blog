@@ -4,6 +4,7 @@ import Footer from "@/components/Footer.astro";
 import Sidebar from "@/components/Sidebar.astro";
 import RightRail from "@/components/RightRail.astro";
 import Layout from "./Layout.astro";
+import { getLangFromUrl } from "@/i18n";
 
 type RailVariant = "discovery" | "category" | "reading";
 
@@ -42,9 +43,11 @@ const {
   headings,
   hreflangPairs,
 } = Astro.props;
+
+const currentLang = getLangFromUrl(Astro.url);
 ---
 
-<Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage} {pubDatetime} {modDatetime} {tags} {breadcrumbs} {hreflangPairs}>
+<Layout title={title ?? "jacobsidian"} description={description} ogImage={ogImage} {pubDatetime} {modDatetime} {tags} {breadcrumbs} {hreflangPairs} {currentLang}>
   <slot name="head" slot="head" />
   <!-- FOUC 방지: 사이드바 상태를 paint 전에 CSS 변수로 적용 -->
   <script is:inline>

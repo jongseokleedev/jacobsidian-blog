@@ -5,6 +5,7 @@ import { SITE } from "@/config";
 import "@/styles/global.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro";
 import GoogleAdSense from "@/components/GoogleAdSense.astro";
+import LangDetect from "@/components/LangDetect.astro";
 
 type Props = {
   title?: string;
@@ -20,6 +21,7 @@ type Props = {
   breadcrumbs?: { name: string; url: string }[];
   scrollSmooth?: boolean;
   hreflangPairs?: { ko: string; en?: string };
+  currentLang?: "ko" | "en";
 };
 
 const {
@@ -36,6 +38,7 @@ const {
   breadcrumbs,
   scrollSmooth = false,
   hreflangPairs,
+  currentLang = "ko",
 } = Astro.props;
 
 const keywordsMeta = keywords?.length
@@ -98,6 +101,7 @@ const organizationLD = {
 >
   <head>
     <meta charset="UTF-8" />
+    <LangDetect currentLang={currentLang} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalURL} />
