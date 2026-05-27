@@ -1,5 +1,7 @@
 ---
 import { PARENTS, parseCategory } from "@/utils/getCategories";
+import { EN_CATEGORIES } from "@/config";
+import { getLangFromUrl } from "@/i18n";
 
 interface Props {
   activeCategory?: string;   // e.g. "essay-thought"
@@ -8,6 +10,27 @@ interface Props {
 }
 
 const { activeCategory, activePage } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const prefix = lang === "en" ? "/en" : "";
+
+const visibleParents = lang === "en"
+  ? Object.fromEntries(
+      Object.entries(PARENTS)
+        .filter(([parentKey, pm]) =>
+          Object.keys(pm.subs).some(sub => EN_CATEGORIES.has(`${parentKey}-${sub}` as never))
+        )
+        .map(([parentKey, pm]) => [
+          parentKey,
+          {
+            ...pm,
+            subs: Object.fromEntries(
+              Object.entries(pm.subs).filter(([sub]) => EN_CATEGORIES.has(`${parentKey}-${sub}` as never))
+            ),
+          },
+        ])
+    )
+  : PARENTS;
 ---
 
 <aside
@@ -18,7 +41,7 @@ const { activeCategory, activePage } = Astro.props;
 <div style="width:232px; height:100%; overflow-y:auto; padding:28px 24px 28px 28px;" class="flex flex-col">
   <!-- Home -->
   <a
-    href="/"
+    href={prefix || "/"}
     class:list={[
       "flex items-center gap-2 text-sm font-medium py-1.5 rounded transition-colors hover:text-accent",
       activePage === "home" ? "text-accent font-semibold" : "text-[color:var(--fg-mute)]",
@@ -47,7 +70,7 @@ const { activeCategory, activePage } = Astro.props;
   <hr class="my-2.5 border-border" />
 
   <!-- Category tree -->
-  {Object.entries(PARENTS).map(([parentKey, parentMeta]) => {
+  {Object.entries(visibleParents).map(([parentKey, parentMeta]) => {
     const { parent: activeParent } = activeCategory ? parseCategory(activeCategory) : { parent: "" };
     const isParentActive = activeParent === parentKey;
     return (
@@ -55,7 +78,7 @@ const { activeCategory, activePage } = Astro.props;
         <!-- Parent link + toggle button -->
         <div class="flex items-center">
           <a
-            href={`/${parentKey}`}
+            href={`${prefix}/${parentKey}`}
             class:list={[
               "flex items-center gap-2 py-1.5 text-sm rounded transition-colors flex-1 hover:text-accent",
               isParentActive ? "text-accent font-semibold" : "text-foreground",
@@ -103,7 +126,7 @@ const { activeCategory, activePage } = Astro.props;
               return (
                 <li>
                   <a
-                    href={`/${parentKey}/${subKey}`}
+                    href={`${prefix}/${parentKey}/${subKey}`}
                     class:list={[
                       "block text-[12.5px] py-1 pl-4 rounded-r transition-colors hover:text-accent",
                       isSubActive
