@@ -7,7 +7,7 @@ export const VAULT_PATH = path.join(
 );
 
 const PUBLIC_BASE = "020.Area/022.Writing/022-1.Public";
-const PUBLIC_EN_BASE = "020.Area/022.Writing/022-2.Public-EN";
+const PUBLIC_EN_BASE = "020.Area/022.Writing/022-3.Public-EN";
 
 export const POST_SOURCES = {
   "essay-thought": path.join(PUBLIC_BASE, "Essay/Thought"),
