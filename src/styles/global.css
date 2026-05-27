@@ -191,12 +191,14 @@ html[data-theme="dark"] {
 }
 
 @keyframes toc-heading-pulse {
-  0%   { color: var(--accent); }
-  100% { color: inherit; }
+  0%   { background-color: color-mix(in srgb, var(--accent) 20%, transparent); }
+  60%  { background-color: color-mix(in srgb, var(--accent) 20%, transparent); }
+  100% { background-color: transparent; }
 }
 
 .toc-heading-pulse {
-  animation: toc-heading-pulse 800ms ease-in-out forwards;
+  animation: toc-heading-pulse 1500ms ease-out forwards;
+  border-radius: 4px;
 }
 
 
