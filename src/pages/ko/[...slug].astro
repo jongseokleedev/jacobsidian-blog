@@ -34,6 +34,5 @@ export async function getStaticPaths() {
 }
 
 const slugParam = Astro.params.slug ?? "";
-const target = slugParam ? `/${slugParam}` : "/";
-return Astro.redirect(target, 301);
+return Astro.redirect(slugParam ? `/${slugParam}` : "/", 301);
 ---
