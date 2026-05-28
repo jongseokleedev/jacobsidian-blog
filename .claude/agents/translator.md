@@ -67,7 +67,9 @@ The `slug` field in frontmatter **must always be explicitly set to the Korean or
 
 ## Frontmatter Template
 
-```yaml
+**IMPORTANT:** Always include `status: draft` and the meta-bind buttons below the frontmatter. The `status: draft` prevents the post from being synced until Jacob explicitly publishes it via the Obsidian button. The buttons allow publishing directly from Obsidian using the `publish-post-en.md` Templater template.
+
+````markdown
 ---
 title: '[English title]'
 category: [same as KO]
@@ -78,9 +80,36 @@ tags:
   - [english tag 2]
 lang: en
 slug: [same as KO]
+status: draft
 links: [same as KO]
 ---
+
+```meta-bind-button
+label: "✅ Publish (EN)"
+style: primary
+id: mark-published-en
+hidden: false
+class: ""
+tooltip: "status → published, lang → en"
+actions:
+  - type: command
+    command: templater-obsidian:030.Resource/033.Template/publish-post-en.md
 ```
+
+```meta-bind-button
+label: "Revert to Draft ↺"
+style: default
+id: mark-draft-en
+hidden: false
+class: ""
+tooltip: "status → draft"
+actions:
+  - type: updateMetadata
+    bindTarget: status
+    evaluate: false
+    value: draft
+```
+````
 
 ## Tutor Principles (Accumulated)
 
