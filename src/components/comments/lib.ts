@@ -39,9 +39,11 @@ export const SITUATIONS = [
   "길을 잃은 척하는",
   "아무것도 안 하는",
   "천천히 걷기로 한",
+  "나뭇잎을 덮고 있는"
 ];
 
 export const ANIMALS = [
+  "애벌레",
   "부엉이",
   "고양이",
   "펭귄",
@@ -82,6 +84,7 @@ export const ANIMALS = [
   "매",
   "개구리",
   "오소리",
+  "마시마로",
 ];
 
 export const DARK_SITUATIONS = [
@@ -122,6 +125,7 @@ export const DARK_SITUATIONS = [
   "예약 취소한",
   "관심사가 나 자신인",
   "내 돈으로 내가 사는",
+  "bitch가 되고 싶은",
   // 그 남자
   "헬스장 가는",
   "혼자 라면 끓이는",
