@@ -272,21 +272,6 @@
       "pubDatetime": "2026-05-13T00:00:00.000Z"
     },
     {
-      "id": "20260514-1200",
-      "title": "갤럭시워치 톺아보기",
-      "url": "/tech/it/20260514-1200",
-      "type": "post",
-      "category": "tech-it",
-      "tags": [
-        "스마트워치",
-        "애플",
-        "삼성",
-        "웨어러블",
-        "하드웨어"
-      ],
-      "pubDatetime": "2026-05-15T00:00:00.000Z"
-    },
-    {
       "id": "20260514-1544",
       "title": "모두 인공지능 백신 맞았는데 아무도 똑똑해지지 않았다",
       "url": "/review/book/20260514-1544",
@@ -697,6 +682,21 @@
         "AI"
       ],
       "pubDatetime": "2026-05-24T00:00:00.000Z"
+    },
+    {
+      "id": "갤럭시워치-톺아보기",
+      "title": "갤럭시워치 톺아보기",
+      "url": "/tech/it/갤럭시워치-톺아보기",
+      "type": "post",
+      "category": "tech-it",
+      "tags": [
+        "스마트워치",
+        "애플",
+        "삼성",
+        "웨어러블",
+        "하드웨어"
+      ],
+      "pubDatetime": "2026-05-15T00:00:00.000Z"
     },
     {
       "id": "tag:독서",
@@ -1112,41 +1112,6 @@
       "tags": []
     },
     {
-      "id": "tag:스마트워치",
-      "title": "스마트워치",
-      "url": "/tags/스마트워치",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:애플",
-      "title": "애플",
-      "url": "/tags/애플",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:삼성",
-      "title": "삼성",
-      "url": "/tags/삼성",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:웨어러블",
-      "title": "웨어러블",
-      "url": "/tags/웨어러블",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:하드웨어",
-      "title": "하드웨어",
-      "url": "/tags/하드웨어",
-      "type": "tag",
-      "tags": []
-    },
-    {
       "id": "tag:미래",
       "title": "미래",
       "url": "/tags/미래",
@@ -1413,6 +1378,13 @@
       "tags": []
     },
     {
+      "id": "tag:애플",
+      "title": "애플",
+      "url": "/tags/애플",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:팀쿡",
       "title": "팀쿡",
       "url": "/tags/팀쿡",
@@ -1465,6 +1437,34 @@
       "id": "tag:IT",
       "title": "IT",
       "url": "/tags/IT",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:스마트워치",
+      "title": "스마트워치",
+      "url": "/tags/스마트워치",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:삼성",
+      "title": "삼성",
+      "url": "/tags/삼성",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:웨어러블",
+      "title": "웨어러블",
+      "url": "/tags/웨어러블",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:하드웨어",
+      "title": "하드웨어",
+      "url": "/tags/하드웨어",
       "type": "tag",
       "tags": []
     }
@@ -1623,16 +1623,6 @@
     {
       "source": "20260513-2148",
       "target": "20260513-1439",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "20260517-1323",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "20260210-2216",
       "type": "wikilink"
     },
     {
@@ -1807,7 +1797,7 @@
     },
     {
       "source": "20260517-1323",
-      "target": "20260514-1200",
+      "target": "갤럭시워치-톺아보기",
       "type": "wikilink"
     },
     {
@@ -1833,6 +1823,16 @@
     {
       "source": "20260521-2308",
       "target": "20260514-2111-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "20260517-1323",
+      "type": "wikilink"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "20260210-2216",
       "type": "wikilink"
     },
     {
@@ -2288,31 +2288,6 @@
     {
       "source": "20260513-2148",
       "target": "tag:육아",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "tag:스마트워치",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "tag:애플",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "tag:삼성",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "tag:웨어러블",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-1200",
-      "target": "tag:하드웨어",
       "type": "tag"
     },
     {
@@ -3023,6 +2998,31 @@
     {
       "source": "20260524-1158",
       "target": "tag:AI",
+      "type": "tag"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "tag:스마트워치",
+      "type": "tag"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "tag:애플",
+      "type": "tag"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "tag:삼성",
+      "type": "tag"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "tag:웨어러블",
+      "type": "tag"
+    },
+    {
+      "source": "갤럭시워치-톺아보기",
+      "target": "tag:하드웨어",
       "type": "tag"
     }
   ]
