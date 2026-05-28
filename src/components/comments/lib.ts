@@ -39,7 +39,7 @@ export const SITUATIONS = [
   "길을 잃은 척하는",
   "아무것도 안 하는",
   "천천히 걷기로 한",
-  "나뭇잎을 덮고 있는"
+  "잎사귀를 덮고 있는"
 ];
 
 export const ANIMALS = [
