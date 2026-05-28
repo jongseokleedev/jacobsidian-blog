@@ -5,7 +5,9 @@ interface Props {
 const { currentLang } = Astro.props;
 ---
 
-{currentLang === "ko" && (
+{/* EN 콘텐츠 준비 완료 전까지 브라우저 언어 감지 및 자동 리다이렉트 비활성화
+    복원하려면 아래 주석을 해제하세요.
+currentLang === "ko" && (
   <script>
     (function () {
       try {
@@ -26,9 +28,8 @@ const { currentLang } = Astro.props;
           const path = location.pathname;
           location.replace("/en" + (path === "/" ? "" : path));
         }
-      } catch (_) {
-        // localStorage may be blocked in some environments
-      }
+      } catch (_) {}
     })();
   </script>
-)}
+)
+*/}

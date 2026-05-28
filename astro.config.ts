@@ -19,6 +19,9 @@ export default defineConfig({
         if (!SITE.showArchives && page.includes("/archives")) return false;
         if (page.includes("/search")) return false;
         if (/\/tags\/?$/.test(page)) return false;
+        // EN 콘텐츠 준비 완료 전까지 /en/ 경로 sitemap 제외
+        // 복원하려면 아래 줄을 삭제하세요.
+        if (page.includes("/en/")) return false;
         return true;
       },
       changefreq: "weekly",

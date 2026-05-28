@@ -101,6 +101,8 @@ const isActive = (path: string) => {
             <path d="M15 3v18"/>
           </svg>
         </button>
+        {/* EN 콘텐츠 준비 완료 전까지 언어 토글 비노출
+            복원하려면 아래 주석을 해제하세요.
         <a
           href={toggleHref}
           id="lang-toggle"
@@ -112,6 +114,7 @@ const isActive = (path: string) => {
           <span class="opacity-25">/</span>
           <span class:list={[lang === "en" ? "text-accent font-semibold" : "opacity-35"]}>EN</span>
         </a>
+        */}
       </div>
 
       <!-- 모바일 우측: 검색 + 테마 + 햄버거 -->
@@ -219,6 +222,8 @@ const isActive = (path: string) => {
           <span class="w-1.5 h-1.5 rounded-full shrink-0 opacity-0" aria-hidden="true" />
           About
         </a>
+        {/* EN 콘텐츠 준비 완료 전까지 언어 토글 비노출 (모바일)
+            복원하려면 아래 주석을 해제하세요.
         <div class="flex items-center justify-between px-2 py-2.5 mt-1 border-t border-border">
           <span class="text-[12px] font-mono" style="color: var(--fg-faint);">Language</span>
           <a
@@ -231,6 +236,7 @@ const isActive = (path: string) => {
             <span class:list={["transition-colors", lang === "en" ? "text-accent font-semibold" : ""]}>EN</span>
           </a>
         </div>
+        */}
       </nav>
     </div>
   </div>
