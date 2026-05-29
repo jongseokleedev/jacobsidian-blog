@@ -226,22 +226,6 @@
       "pubDatetime": "2026-02-10T00:00:00.000Z"
     },
     {
-      "id": "20260513-1350",
-      "title": "왜 AI 시대의 협업 도구는 코드 기반이어야 하는가",
-      "url": "/tech/it/20260513-1350",
-      "type": "post",
-      "category": "tech-it",
-      "tags": [
-        "AI",
-        "개발",
-        "커리어",
-        "협업",
-        "디자인",
-        "Figma"
-      ],
-      "pubDatetime": "2026-05-15T00:00:00.000Z"
-    },
-    {
       "id": "20260513-1439",
       "title": "쓸만한 인간",
       "url": "/review/book/20260513-1439",
@@ -1063,27 +1047,6 @@
       "tags": []
     },
     {
-      "id": "tag:AI",
-      "title": "AI",
-      "url": "/tags/AI",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:디자인",
-      "title": "디자인",
-      "url": "/tags/디자인",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:Figma",
-      "title": "Figma",
-      "url": "/tags/Figma",
-      "type": "tag",
-      "tags": []
-    },
-    {
       "id": "tag:자기계발",
       "title": "자기계발",
       "url": "/tags/자기계발",
@@ -1112,6 +1075,13 @@
       "tags": []
     },
     {
+      "id": "tag:AI",
+      "title": "AI",
+      "url": "/tags/AI",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:미래",
       "title": "미래",
       "url": "/tags/미래",
@@ -1122,6 +1092,13 @@
       "id": "tag:기술비판",
       "title": "기술비판",
       "url": "/tags/기술비판",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:디자인",
+      "title": "디자인",
+      "url": "/tags/디자인",
       "type": "tag",
       "tags": []
     },
@@ -1601,21 +1578,6 @@
       "type": "wikilink"
     },
     {
-      "source": "20260210-2216",
-      "target": "20260513-1350",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "20260514-1544",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "20260514-1548",
-      "type": "wikilink"
-    },
-    {
       "source": "20260513-1439",
       "target": "20260514-2113-2",
       "type": "wikilink"
@@ -1636,11 +1598,6 @@
       "type": "wikilink"
     },
     {
-      "source": "20260514-1544",
-      "target": "20260513-1350",
-      "type": "wikilink"
-    },
-    {
       "source": "20260514-1548",
       "target": "20260514-2112-3",
       "type": "wikilink"
@@ -1648,11 +1605,6 @@
     {
       "source": "20260514-1548",
       "target": "20260514-1549",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260514-1549",
-      "target": "20260513-1350",
       "type": "wikilink"
     },
     {
@@ -2208,36 +2160,6 @@
     {
       "source": "20260210-2216",
       "target": "tag:리더십",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "tag:AI",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "tag:개발",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "tag:커리어",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "tag:협업",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "tag:디자인",
-      "type": "tag"
-    },
-    {
-      "source": "20260513-1350",
-      "target": "tag:Figma",
       "type": "tag"
     },
     {
