@@ -1,4 +1,5 @@
 import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import sharp from "sharp";
 import fs from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
@@ -53,9 +54,12 @@ function parseArgs(argv: string[]): SyncOptions {
   return { apply: argv.includes("--apply") };
 }
 
+const WEBP_CONVERTIBLE = /\.(png|jpg|jpeg|gif|avif)$/i;
+
 function createImageResolver(
   imagesDest: string,
   copiedImages: Set<string>,
+  conversionQueue: Promise<void>[],
   dryRun: boolean
 ): ImageResolver {
   const attachmentsRoot = path.join(VAULT_PATH, ATTACHMENTS_SOURCE);
@@ -63,14 +67,24 @@ function createImageResolver(
     const srcPath = path.join(attachmentsRoot, name);
     if (!existsSync(srcPath)) return null;
 
-    if (!copiedImages.has(name)) {
-      copiedImages.add(name);
+    const shouldConvert = WEBP_CONVERTIBLE.test(name);
+    const destName = shouldConvert ? name.replace(WEBP_CONVERTIBLE, ".webp") : name;
+    const destPath = path.join(imagesDest, destName);
+
+    if (!copiedImages.has(destName)) {
+      copiedImages.add(destName);
       if (!dryRun) {
         mkdirSync(imagesDest, { recursive: true });
-        copyFileSync(srcPath, path.join(imagesDest, name));
+        if (shouldConvert) {
+          conversionQueue.push(
+            sharp(srcPath).webp({ quality: 85 }).toFile(destPath).then(() => undefined)
+          );
+        } else {
+          copyFileSync(srcPath, destPath);
+        }
       }
     }
-    return `${PUBLIC_IMAGE_URL}/${encodeURIComponent(name)}`;
+    return `${PUBLIC_IMAGE_URL}/${encodeURIComponent(destName)}`;
   };
 }
 
@@ -145,7 +159,8 @@ async function run(options: SyncOptions) {
   const noteBodyResolver: NoteBodyResolver = name => bodyByName.get(name) ?? null;
 
   const copiedImages = new Set<string>();
-  const imageResolver = createImageResolver(imagesDest, copiedImages, dryRun);
+  const conversionQueue: Promise<void>[] = [];
+  const imageResolver = createImageResolver(imagesDest, copiedImages, conversionQueue, dryRun);
 
   function applyTransforms(body: string): string {
     let out = body;
@@ -226,6 +241,10 @@ async function run(options: SyncOptions) {
     console.log(
       `  + post  [${r.item.category}] ${r.slug}  ← ${path.relative(VAULT_PATH, r.item.absolutePath)}`
     );
+  }
+
+  if (conversionQueue.length > 0) {
+    await Promise.all(conversionQueue);
   }
 
   if (copiedImages.size > 0) {
