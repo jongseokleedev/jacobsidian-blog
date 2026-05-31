@@ -668,6 +668,22 @@
       "pubDatetime": "2026-05-24T00:00:00.000Z"
     },
     {
+      "id": "20260531-1812",
+      "title": "생명이 있는 것은 다 아름답다",
+      "url": "/review/book/20260531-1812",
+      "type": "post",
+      "category": "review-book",
+      "tags": [
+        "book",
+        "독서",
+        "삶",
+        "사회",
+        "철학",
+        "과학"
+      ],
+      "pubDatetime": "2026-05-31T00:00:00.000Z"
+    },
+    {
       "id": "갤럭시워치-톺아보기",
       "title": "갤럭시워치 톺아보기",
       "url": "/tech/it/갤럭시워치-톺아보기",
@@ -1775,6 +1791,21 @@
     {
       "source": "20260521-2308",
       "target": "20260514-2111-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "20230901-1323",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "20260514-2113-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "20260514-2112-2",
       "type": "wikilink"
     },
     {
@@ -2920,6 +2951,36 @@
     {
       "source": "20260524-1158",
       "target": "tag:AI",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "tag:철학",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-1812",
+      "target": "tag:과학",
       "type": "tag"
     },
     {
