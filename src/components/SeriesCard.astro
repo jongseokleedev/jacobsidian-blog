@@ -15,12 +15,12 @@ const { name, subtitle, description, href, chapterCount, color } = Astro.props;
 <a
   href={href}
   class="group flex flex-col rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
-  style="max-width: 280px; width: 100%;"
+  style="max-width: 200px; width: 100%;"
 >
   <!-- 책 표지 -->
   <div
     class="flex flex-col justify-between px-5 py-5"
-    style={`min-height: 140px; background: linear-gradient(160deg, color-mix(in srgb, ${color} 24%, transparent), color-mix(in srgb, ${color} 8%, transparent));`}
+    style={`min-height: 180px; background: linear-gradient(160deg, color-mix(in srgb, ${color} 24%, transparent), color-mix(in srgb, ${color} 8%, transparent));`}
   >
     <span
       class="text-[9px] font-mono tracking-widest uppercase self-start px-1.5 py-0.5 rounded"
