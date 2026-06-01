@@ -87,10 +87,10 @@ const color = catMeta?.color ?? "var(--accent)";
         >
           <div class="flex items-center justify-between sm:contents">
             <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
-              {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+              {String(post.data.seriesOrder ?? i + 1).padStart(2, "0")}
             </span>
             <span class="font-mono text-[11px] sm:hidden" style="color: var(--fg-faint);">
-              {String(post.data.seriesOrder ?? i + 1).padStart(2, "0")}
+              {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
             </span>
           </div>
           <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
@@ -98,7 +98,7 @@ const color = catMeta?.color ?? "var(--accent)";
             {post.data.title}
           </span>
           <span class="hidden sm:block font-mono text-[11px] tabular-nums whitespace-nowrap self-center text-right" style="color: var(--fg-faint);">
-            {String(post.data.seriesOrder ?? i + 1).padStart(2, "0")}
+            {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
           </span>
         </a>
       </li>
