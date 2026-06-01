@@ -95,6 +95,21 @@ const nextPost =
   currentPostIndex !== -1 && currentPostIndex < posts.length - 1
     ? posts[currentPostIndex + 1]
     : null;
+
+/* ========== Series ========== */
+
+const seriesName = post.data.series;
+const seriesChapters = seriesName
+  ? posts
+      .filter(p => p.data.series === seriesName && !p.data.draft)
+      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
+const seriesIndex = seriesChapters.findIndex(p => p.id === post.id);
+const prevChapter = seriesIndex > 0 ? seriesChapters[seriesIndex - 1] : null;
+const nextChapter = seriesIndex !== -1 && seriesIndex < seriesChapters.length - 1
+  ? seriesChapters[seriesIndex + 1]
+  : null;
+const seriesSlug = seriesName ? seriesName.replace(/\s+/g, "-").toLowerCase() : null;
 ---
 
 <BlogShell
@@ -114,13 +129,23 @@ const nextPost =
 >
   <!-- Back link -->
   <a
-    href={`/${catUrlPath}`}
+    href={seriesSlug ? `/series/${seriesSlug}` : `/${catUrlPath}`}
     class="flex items-center gap-1 text-sm mb-4 transition-colors hover:text-accent"
     style="color: var(--fg-mute);"
   >
     <IconChevronLeft class="size-3.5" />
-    {catMeta?.label ?? catUrlPath}
+    {seriesName ?? (catMeta?.label ?? catUrlPath)}
   </a>
+
+  <!-- Series chapter indicator -->
+  {seriesName && seriesChapters.length > 0 && (
+    <div class="mb-5 flex items-center gap-2 text-[12px]" style="color: var(--fg-mute);">
+      <span>◎</span>
+      <span>{seriesName}</span>
+      <span>·</span>
+      <span>{seriesIndex + 1} / {seriesChapters.length}화</span>
+    </div>
+  )}
 
   <!-- English fallback notice -->
   {koFallback && (
@@ -271,6 +296,43 @@ const nextPost =
         .filter(t => t !== "post" && t !== "book" && t !== "others")
         .map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
     </ul>
+  )}
+
+  <!-- Series chapter navigation -->
+  {seriesName && (prevChapter || nextChapter) && (
+    <>
+      <hr class="my-6 border-dashed" />
+      <div data-pagefind-ignore class="rounded-lg border border-border overflow-hidden mb-2">
+        <a
+          href={`/series/${seriesSlug}`}
+          class="flex items-center justify-between px-4 py-2.5 border-b border-border text-[12px] font-medium hover:text-accent transition-colors"
+          style="color: var(--fg-mute);"
+        >
+          <span>◎ {seriesName}</span>
+          <span>목차 보기 →</span>
+        </a>
+        <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border">
+          {prevChapter ? (
+            <a href={getPath(prevChapter)} class="flex items-start gap-3 px-4 py-3 hover:bg-border/30 transition-colors">
+              <IconChevronLeft class="size-3.5 mt-0.5 shrink-0" style="color: var(--fg-mute);" />
+              <div class="min-w-0">
+                <p class="text-[11px] mb-0.5" style="color: var(--fg-mute);">{prevChapter.data.seriesOrder}화</p>
+                <p class="text-sm font-medium truncate">{prevChapter.data.title}</p>
+              </div>
+            </a>
+          ) : <div />}
+          {nextChapter && (
+            <a href={getPath(nextChapter)} class="flex items-start justify-end gap-3 px-4 py-3 hover:bg-border/30 transition-colors text-end">
+              <div class="min-w-0">
+                <p class="text-[11px] mb-0.5" style="color: var(--fg-mute);">{nextChapter.data.seriesOrder}화</p>
+                <p class="text-sm font-medium truncate">{nextChapter.data.title}</p>
+              </div>
+              <IconChevronRight class="size-3.5 mt-0.5 shrink-0" style="color: var(--fg-mute);" />
+            </a>
+          )}
+        </div>
+      </div>
+    </>
   )}
 
   <!-- Previous/Next Post Buttons -->

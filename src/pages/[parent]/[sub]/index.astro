@@ -16,6 +16,47 @@ const meta = getCategoryMeta(catKey)!;
 
 const all = await getCollection("posts", ({ data }) => data.category === catKey && !data.draft);
 const posts = getSortedPosts(all);
+
+// Group series posts into single display items
+type PostItem = { kind: "post"; post: (typeof posts)[number] };
+type SeriesItem = {
+  kind: "series";
+  name: string;
+  slug: string;
+  chapters: (typeof posts)[number][];
+  latestDate: Date;
+};
+type DisplayItem = PostItem | SeriesItem;
+
+const seriesMap = new Map<string, (typeof posts)[number][]>();
+const displayItems: DisplayItem[] = [];
+const seenSeries = new Set<string>();
+
+for (const post of posts) {
+  if (post.data.series) {
+    const arr = seriesMap.get(post.data.series) ?? [];
+    arr.push(post);
+    seriesMap.set(post.data.series, arr);
+  }
+}
+
+for (const post of posts) {
+  if (!post.data.series) {
+    displayItems.push({ kind: "post", post });
+  } else if (!seenSeries.has(post.data.series)) {
+    seenSeries.add(post.data.series);
+    const chapters = (seriesMap.get(post.data.series) ?? []).sort(
+      (a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0)
+    );
+    displayItems.push({
+      kind: "series",
+      name: post.data.series,
+      slug: post.data.series.replace(/\s+/g, "-").toLowerCase(),
+      chapters,
+      latestDate: new Date(post.data.pubDatetime),
+    });
+  }
+}
 ---
 
 <BlogShell mode="discovery" rail="category" activeCategory={catKey} title={meta.label}>
@@ -47,27 +88,50 @@ const posts = getSortedPosts(all);
     </div>
   )}
 
-  {posts.length > 0 ? (
+  {displayItems.length > 0 ? (
     <section>
       <ul id="post-list" class="archives-list">
-        {posts.map(({ data, id }, i) => (
-          <li data-tags={JSON.stringify(data.tags ?? [])} class={i >= 10 ? "hidden" : ""}>
-            <a
-              href={`/${parent}/${sub}/${id.split("/").pop()}`}
-              class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
-              style="border-color: var(--border-soft);"
-            >
-              <div class="flex items-center justify-between sm:contents">
-                <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
-                  {new Date(data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+        {displayItems.map((item, i) => (
+          <li data-tags={JSON.stringify(item.kind === "post" ? (item.post.data.tags ?? []) : ["series"])} class={i >= 10 ? "hidden" : ""}>
+            {item.kind === "post" ? (
+              <a
+                href={`/${parent}/${sub}/${item.post.id.split("/").pop()}`}
+                class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+                style="border-color: var(--border-soft);"
+              >
+                <div class="flex items-center justify-between sm:contents">
+                  <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+                    {new Date(item.post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                  </span>
+                </div>
+                <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+                  <span class="cat-dot shrink-0" style={`background: ${meta.color}`} />
+                  {item.post.data.title}
                 </span>
-              </div>
-              <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
-                <span class="cat-dot shrink-0" style={`background: ${meta.color}`} />
-                {data.title}
-              </span>
-              <span class="hidden sm:block" />
-            </a>
+                <span class="hidden sm:block" />
+              </a>
+            ) : (
+              <a
+                href={`/series/${item.slug}`}
+                class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
+                style="border-color: var(--border-soft);"
+              >
+                <div class="flex items-center justify-between sm:contents">
+                  <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+                    {item.latestDate.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+                  </span>
+                </div>
+                <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border" style={`color: ${meta.color}; border-color: ${meta.color}; opacity: 0.8;`}>
+                    연재
+                  </span>
+                  {item.name}
+                </span>
+                <span class="hidden sm:block text-[12px] tabular-nums" style="color: var(--fg-faint);">
+                  {item.chapters.length}화
+                </span>
+              </a>
+            )}
           </li>
         ))}
       </ul>

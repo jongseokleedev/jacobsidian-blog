@@ -10,10 +10,21 @@ type Props = {
 
 const { variant: Heading = "h2", ...entry } = Astro.props;
 const { data } = entry;
-const { title, description, pubDatetime, modDatetime, timezone } = data;
+const { title, description, pubDatetime, modDatetime, timezone, series, seriesOrder } = data;
 ---
 
 <li class="my-6">
+  {series && (
+    <a
+      href={`/series/${series.replace(/\s+/g, "-").toLowerCase()}`}
+      class="inline-flex items-center gap-1 mb-1 text-[11px] font-medium tracking-wide uppercase transition-colors hover:text-accent"
+      style="color: var(--fg-mute);"
+    >
+      <span>◎</span>
+      <span>{series}</span>
+      {seriesOrder && <span>· {seriesOrder}화</span>}
+    </a>
+  )}
   <a
     href={getPath(entry as CollectionEntry<"posts">)}
     class:list={[

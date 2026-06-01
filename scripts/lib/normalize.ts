@@ -64,6 +64,8 @@ export interface NormalizedPost {
   featured?: boolean;
   draft?: boolean;
   links?: string[];
+  series?: string;
+  seriesOrder?: number;
 }
 
 export function normalizePostFrontmatter(
@@ -92,6 +94,9 @@ export function normalizePostFrontmatter(
   if (Array.isArray(fm.links) && (fm.links as unknown[]).length > 0) {
     out.links = (fm.links as unknown[]).map(l => String(l));
   }
+
+  if (typeof fm.series === "string" && fm.series.trim()) out.series = fm.series.trim();
+  if (typeof fm.series_order === "number") out.seriesOrder = fm.series_order;
 
   return out;
 }

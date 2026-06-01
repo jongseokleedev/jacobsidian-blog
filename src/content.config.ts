@@ -45,6 +45,8 @@ const posts = defineCollection({
       disableComments: z.boolean().optional(),
       timezone: z.string().optional(),
       lang: z.enum(["ko", "en"]).optional().default("ko"),
+      series: z.string().optional(),
+      seriesOrder: z.number().optional(),
     }),
 });
 
