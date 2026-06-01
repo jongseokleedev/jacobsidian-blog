@@ -1606,10 +1606,11 @@
       "tags": []
     },
     {
-      "id": "tag:어느 개발자의 인문학",
+      "id": "series:어느 개발자의 인문학",
       "title": "어느 개발자의 인문학",
-      "url": "/tags/어느 개발자의 인문학",
-      "type": "tag",
+      "url": "/series/어느-개발자의-인문학",
+      "type": "series",
+      "category": "essay-thought",
       "tags": []
     }
   ],
@@ -3171,8 +3172,8 @@
     },
     {
       "source": "20260531-2256",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-2301",
@@ -3186,8 +3187,8 @@
     },
     {
       "source": "20260531-2301",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-2303",
@@ -3201,8 +3202,8 @@
     },
     {
       "source": "20260531-2303",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-2309",
@@ -3216,8 +3217,8 @@
     },
     {
       "source": "20260531-2309",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-2323",
@@ -3231,8 +3232,8 @@
     },
     {
       "source": "20260531-2323",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-2339",
@@ -3246,8 +3247,8 @@
     },
     {
       "source": "20260531-2339",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260601-0115",
@@ -3261,8 +3262,8 @@
     },
     {
       "source": "20260601-0115",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260601-0127",
@@ -3276,8 +3277,8 @@
     },
     {
       "source": "20260601-0127",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260601-0145",
@@ -3291,8 +3292,8 @@
     },
     {
       "source": "20260601-0145",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260601-0158",
@@ -3306,8 +3307,8 @@
     },
     {
       "source": "20260601-0158",
-      "target": "tag:어느 개발자의 인문학",
-      "type": "tag"
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     }
   ]
 }
