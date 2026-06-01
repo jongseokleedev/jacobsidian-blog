@@ -32,8 +32,11 @@ export const EN_POST_SOURCES = {
 
 export const ATTACHMENTS_SOURCE = "040.Archive/044.Attachments";
 
+export const SERIES_SOURCE = path.join(PUBLIC_BASE, "Series");
+
 export const CONTENT_DEST = {
   posts: "src/data/posts",
+  series: "src/data/series",
   images: "public/images",
 } as const;
 

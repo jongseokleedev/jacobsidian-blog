@@ -8,11 +8,12 @@ import {
   ATTACHMENTS_SOURCE,
   CONTENT_DEST,
   POST_SOURCES,
+  SERIES_SOURCE,
   PUBLIC_IMAGE_URL,
   VAULT_PATH,
   type PostCategory,
 } from "./config";
-import { discoverPosts } from "./lib/discover";
+import { discoverPosts, discoverSeries } from "./lib/discover";
 import {
   normalizePostFrontmatter,
   pickSlug,
@@ -94,9 +95,12 @@ async function run(options: SyncOptions) {
   console.log(`\n[sync] ${mode} — vault: ${VAULT_PATH}\n`);
 
   const postsDest = path.join(PROJECT_ROOT, CONTENT_DEST.posts);
+  const seriesDest = path.join(PROJECT_ROOT, CONTENT_DEST.series);
   const imagesDest = path.join(PROJECT_ROOT, CONTENT_DEST.images);
 
   const posts = await discoverPosts(VAULT_PATH, POST_SOURCES);
+  const seriesItems = await discoverSeries(VAULT_PATH, SERIES_SOURCE);
+  console.log(`[sync] discovered ${seriesItems.length} series file(s)`);
   console.log(`[sync] discovered ${posts.length} post(s)`);
 
   // Pass 1: decide slugs + build link/body maps
@@ -243,6 +247,29 @@ async function run(options: SyncOptions) {
     );
   }
 
+  // Write series files
+  const seriesSlugs = new Set<string>();
+  for (const s of seriesItems) {
+    const slug = String(s.frontmatter.slug ?? "").trim() ||
+      String(s.frontmatter.title ?? "untitled").replace(/\s+/g, "-").toLowerCase();
+    seriesSlugs.add(slug);
+    const frontmatter = {
+      title: String(s.frontmatter.title ?? "Untitled"),
+      slug,
+      category: String(s.frontmatter.category ?? ""),
+      description: String(s.frontmatter.description ?? ""),
+    };
+    await writeContent({
+      destDir: seriesDest,
+      slug,
+      frontmatter,
+      body: applyTransforms(s.body),
+      dryRun,
+    });
+    console.log(`  + series ${slug}  ← ${path.relative(VAULT_PATH, s.absolutePath)}`);
+  }
+  await cleanOrphans({ destDir: seriesDest, keepSlugs: seriesSlugs, dryRun });
+
   if (conversionQueue.length > 0) {
     await Promise.all(conversionQueue);
   }
@@ -269,7 +296,7 @@ async function run(options: SyncOptions) {
     const gitOut = (args: string[]) => execFileSync("git", args, { cwd: PROJECT_ROOT }).toString().trim();
     try {
       execFileSync("tsx", ["scripts/generateGraph.ts"], { cwd: PROJECT_ROOT, stdio: "inherit" });
-      git(["add", "src/data/", "public/images/", "public/graph.json"]);
+      git(["add", "src/data/", "public/images/", "public/graph.json", "src/data/series/"]);
       const diff = gitOut(["diff", "--cached", "--name-only"]);
       if (!diff) {
         console.log("[sync] nothing to commit — content is up to date.\n");

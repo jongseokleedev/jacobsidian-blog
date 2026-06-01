@@ -12,6 +12,13 @@ export interface DiscoveredPost {
   body: string;
 }
 
+export interface DiscoveredSeries {
+  absolutePath: string;
+  relativePath: string;
+  frontmatter: Record<string, unknown>;
+  body: string;
+}
+
 export interface DiscoveredBook {
   absolutePath: string;
   relativePath: string;
@@ -91,6 +98,33 @@ export async function discoverPosts(
         body,
       });
     }
+  }
+
+  return results;
+}
+
+export async function discoverSeries(
+  vaultPath: string,
+  source: string
+): Promise<DiscoveredSeries[]> {
+  const sourceDir = path.join(vaultPath, source);
+  if (!(await exists(sourceDir))) return [];
+
+  const files = await fg("**/*.md", { cwd: sourceDir, absolute: true, dot: false });
+  const results: DiscoveredSeries[] = [];
+
+  for (const absolutePath of files) {
+    const { frontmatter, body } = await readMarkdown(absolutePath);
+    const isPublished =
+      frontmatter.status === "published" || frontmatter.published === true;
+    if (!isPublished) continue;
+
+    results.push({
+      absolutePath,
+      relativePath: path.relative(vaultPath, absolutePath),
+      frontmatter,
+      body,
+    });
   }
 
   return results;

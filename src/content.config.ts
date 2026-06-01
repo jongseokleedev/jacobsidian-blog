@@ -3,6 +3,8 @@ import { z } from "zod";
 import { glob } from "astro/loaders";
 import path from "path";
 
+export const SERIES_PATH = "src/data/series";
+
 export const POSTS_PATH = "src/data/posts";
 
 const posts = defineCollection({
@@ -50,4 +52,18 @@ const posts = defineCollection({
     }),
 });
 
-export const collections = { posts };
+const series = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.md",
+    base: `./${SERIES_PATH}`,
+    generateId: ({ entry }) => path.basename(entry, ".md"),
+  }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string().optional(),
+    category: z.string().optional(),
+    description: z.string().optional(),
+  }),
+});
+
+export const collections = { posts, series };

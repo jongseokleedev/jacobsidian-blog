@@ -1,14 +1,14 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import { getPath } from "@/utils/getPath";
 import Datetime from "@/components/Datetime.astro";
 import { SITE } from "@/config";
 
 export async function getStaticPaths() {
-  const all = await getCollection("posts");
+  const allPosts = await getCollection("posts");
   const seriesSet = new Set<string>();
-  for (const post of all) {
+  for (const post of allPosts) {
     if (post.data.series) seriesSet.add(post.data.series);
   }
   return Array.from(seriesSet).map(series => ({
@@ -18,27 +18,39 @@ export async function getStaticPaths() {
 }
 
 const { series } = Astro.props as { series: string };
+const slug = series.replace(/\s+/g, "-").toLowerCase();
 
-const all = await getCollection("posts", ({ data }) => data.series === series);
-const chapters = all
+const allPosts = await getCollection("posts", ({ data }) => data.series === series);
+const chapters = allPosts
   .filter(p => !p.data.draft)
   .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0));
-
-const totalCount = all.filter(p => p.data.series === series).length;
 const publishedCount = chapters.length;
+const totalCount = allPosts.length;
+
+// 볼트에서 sync된 시리즈 소개글 (없으면 null)
+const allSeries = await getCollection("series");
+const seriesMeta = allSeries.find(s => s.id === slug || s.data.slug === slug) ?? null;
+const { Content: SeriesIntro } = seriesMeta ? await render(seriesMeta) : { Content: null };
 ---
 
 <BlogShell
   mode="discovery"
   rail="discovery"
   title={`${series} | ${SITE.title}`}
-  description={`${series} 시리즈 — 총 ${publishedCount}편`}
+  description={seriesMeta?.data.description || `${series} 시리즈 — 총 ${publishedCount}편`}
 >
   <div class="max-w-xl mx-auto py-10">
     <!-- 시리즈 헤더 -->
     <div class="mb-10">
       <p class="text-[11px] font-medium uppercase tracking-widest mb-3" style="color: var(--fg-mute);">Series</p>
       <h1 class="text-3xl font-bold tracking-tight mb-4">{series}</h1>
+
+      {SeriesIntro && (
+        <div class="app-prose text-[15px] leading-relaxed mb-5" style="color: var(--fg-mute);">
+          <SeriesIntro />
+        </div>
+      )}
+
       <p class="text-sm" style="color: var(--fg-mute);">
         {publishedCount}편 발행
         {publishedCount < totalCount && ` · ${totalCount - publishedCount}편 준비 중`}
