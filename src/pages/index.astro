@@ -177,11 +177,12 @@ const latestPosts = standalonePosts
           class="featured-tab shrink-0 rounded-full border border-border px-3 py-1 text-[13px] transition-all hover:border-accent hover:text-accent"
           data-tab="trending"
         >Trending</button>
-        <div class="carousel-header-divider"></div>
-        <button id="carousel-prev-btn" class="carousel-header-nav" aria-label="이전 카드" data-hidden>
+        <!-- 데스크탑에서만 헤더에 화살표 표시 -->
+        <div class="carousel-header-divider hidden sm:block"></div>
+        <button id="carousel-prev-btn" class="carousel-header-nav hidden sm:flex" aria-label="이전 카드" data-hidden>
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
-        <button id="carousel-next-btn" class="carousel-header-nav" aria-label="다음 카드">
+        <button id="carousel-next-btn" class="carousel-header-nav hidden sm:flex" aria-label="다음 카드">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
@@ -214,6 +215,16 @@ const latestPosts = standalonePosts
       <div class="featured-carousel">
         <div id="trending-carousel-track" class="featured-carousel-track"></div>
       </div>
+    </div>
+
+    <!-- 모바일 전용 화살표 (카드 아래) -->
+    <div class="flex sm:hidden justify-end gap-2 mt-3">
+      <button id="carousel-prev-btn-mobile" class="carousel-header-nav" aria-label="이전 카드" data-hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button id="carousel-next-btn-mobile" class="carousel-header-nav" aria-label="다음 카드">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
     </div>
   </section>
@@ -643,6 +654,8 @@ const latestPosts = standalonePosts
   function initCarouselNav() {
     const prev = document.getElementById("carousel-prev-btn") as HTMLButtonElement | null;
     const next = document.getElementById("carousel-next-btn") as HTMLButtonElement | null;
+    const prevMobile = document.getElementById("carousel-prev-btn-mobile") as HTMLButtonElement | null;
+    const nextMobile = document.getElementById("carousel-next-btn-mobile") as HTMLButtonElement | null;
     if (!prev || !next) return;
 
     const activeCarousel = () =>
@@ -657,10 +670,12 @@ const latestPosts = standalonePosts
       const carousel = activeCarousel();
       if (!carousel) return;
       const { scrollLeft, scrollWidth, clientWidth } = carousel;
-      scrollLeft < 8 ? prev.setAttribute("data-hidden", "") : prev.removeAttribute("data-hidden");
-      scrollLeft > scrollWidth - clientWidth - 8
-        ? next.setAttribute("data-hidden", "")
-        : next.removeAttribute("data-hidden");
+      const atStart = scrollLeft < 8;
+      const atEnd = scrollLeft > scrollWidth - clientWidth - 8;
+      atStart ? prev.setAttribute("data-hidden", "") : prev.removeAttribute("data-hidden");
+      atEnd ? next.setAttribute("data-hidden", "") : next.removeAttribute("data-hidden");
+      prevMobile && (atStart ? prevMobile.setAttribute("data-hidden", "") : prevMobile.removeAttribute("data-hidden"));
+      nextMobile && (atEnd ? nextMobile.setAttribute("data-hidden", "") : nextMobile.removeAttribute("data-hidden"));
     };
 
     prev.addEventListener("click", () => {
@@ -668,6 +683,14 @@ const latestPosts = standalonePosts
       if (c) c.scrollBy({ left: -cardWidth(c), behavior: "smooth" });
     });
     next.addEventListener("click", () => {
+      const c = activeCarousel();
+      if (c) c.scrollBy({ left: cardWidth(c), behavior: "smooth" });
+    });
+    prevMobile?.addEventListener("click", () => {
+      const c = activeCarousel();
+      if (c) c.scrollBy({ left: -cardWidth(c), behavior: "smooth" });
+    });
+    nextMobile?.addEventListener("click", () => {
       const c = activeCarousel();
       if (c) c.scrollBy({ left: cardWidth(c), behavior: "smooth" });
     });
