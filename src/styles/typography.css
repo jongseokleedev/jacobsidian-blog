@@ -123,7 +123,7 @@
 
     img {
       @apply mx-auto border border-border;
-      max-width: 100%;
+      max-width: min(100%, 600px);
       height: auto;
     }
 
