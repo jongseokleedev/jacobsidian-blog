@@ -133,11 +133,34 @@ const latestPosts = standalonePosts
   </section>
 
 
-  <!-- Featured -->
+  <!-- Curated: Series + Featured -->
   <section class="py-10 border-b border-border">
+    <div class="bd-overline mb-6">Curated</div>
+
+    <!-- Series subsection -->
+    {seriesItems.length > 0 && (
+      <div class="mb-8">
+        <h2 class="text-base font-semibold tracking-tight mb-4">Series</h2>
+        <div class="flex flex-wrap gap-4">
+          {seriesItems.map(s => (
+            <SeriesCard
+              name={s.name}
+              subtitle={s.subtitle}
+              description={s.description}
+              href={`/series/${s.slug}`}
+              chapterCount={s.chapterCount}
+              color={s.color}
+              latestDate={s.latestDate}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Featured subsection -->
+    <div>
     <div class="flex items-end justify-between mb-5">
       <div>
-        <div class="bd-overline mb-1">Curated</div>
         <h2 class="text-base font-semibold tracking-tight">Featured</h2>
       </div>
       <div class="flex items-center gap-2">
@@ -191,32 +214,8 @@ const latestPosts = standalonePosts
         <div id="trending-carousel-track" class="featured-carousel-track"></div>
       </div>
     </div>
+    </div>
   </section>
-
-  <!-- Series -->
-  {seriesItems.length > 0 && (
-    <section class="py-10 border-b border-border">
-      <div class="flex items-end justify-between mb-5">
-        <div>
-          <div class="bd-overline mb-1">Curated</div>
-          <h2 class="text-base font-semibold tracking-tight">Series</h2>
-        </div>
-      </div>
-      <div class="flex flex-wrap gap-4">
-        {seriesItems.map(s => (
-          <SeriesCard
-            name={s.name}
-            subtitle={s.subtitle}
-            description={s.description}
-            href={`/series/${s.slug}`}
-            chapterCount={s.chapterCount}
-            color={s.color}
-            latestDate={s.latestDate}
-          />
-        ))}
-      </div>
-    </section>
-  )}
 
   <!-- Archives -->
   {allItems.length > 0 && (
