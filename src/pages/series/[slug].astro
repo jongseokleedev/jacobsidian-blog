@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import { getPath } from "@/utils/getPath";
-import Datetime from "@/components/Datetime.astro";
 import { getCategoryMeta, parseCategory } from "@/utils/getCategories";
 import { SITE } from "@/config";
 
@@ -88,6 +87,9 @@ const color = catMeta?.color ?? "var(--accent)";
         >
           <div class="flex items-center justify-between sm:contents">
             <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
+              {new Date(post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
+            </span>
+            <span class="font-mono text-[11px] sm:hidden" style="color: var(--fg-faint);">
               {String(post.data.seriesOrder ?? i + 1).padStart(2, "0")}
             </span>
           </div>
@@ -95,8 +97,8 @@ const color = catMeta?.color ?? "var(--accent)";
             <span class="cat-dot shrink-0" style={`background: ${color}`} />
             {post.data.title}
           </span>
-          <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
-            <Datetime pubDatetime={post.data.pubDatetime} />
+          <span class="hidden sm:block font-mono text-[11px] tabular-nums whitespace-nowrap self-center text-right" style="color: var(--fg-faint);">
+            {String(post.data.seriesOrder ?? i + 1).padStart(2, "0")}
           </span>
         </a>
       </li>
