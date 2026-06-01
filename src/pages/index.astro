@@ -274,8 +274,8 @@ const latestPosts = standalonePosts
               <!-- 제목 (모바일: 2행 전체 너비, 데스크탑: 중간 컬럼) -->
               <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
                 <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
-                {item.series && <span class="font-normal shrink-0" style="color: var(--fg-faint);">{item.series} · </span>}
                 {item.title}
+                {item.series && <span class="font-normal shrink-0" style="color: var(--fg-faint);"> · {item.series}</span>}
               </span>
               <!-- 카테고리 레이블: 데스크탑에서만 표시 -->
               <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
