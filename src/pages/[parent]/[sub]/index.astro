@@ -104,7 +104,7 @@ for (const post of posts) {
       {displayItems.some(i => i.kind === "series") && (
         <section class="pb-8 mb-2 border-b border-border">
           <div class="bd-overline mb-1">Series</div>
-          <h2 class="text-base font-semibold tracking-tight mb-4">연재</h2>
+          <h2 class="text-base font-semibold tracking-tight mb-4">Series</h2>
           <div class="flex flex-wrap gap-4">
             {displayItems.filter(i => i.kind === "series").map(item => item.kind === "series" && (
               <SeriesCard
@@ -127,7 +127,7 @@ for (const post of posts) {
           {displayItems.some(i => i.kind === "series") && (
             <>
               <div class="bd-overline mb-1">Posts</div>
-              <h2 class="text-base font-semibold tracking-tight mb-2">글</h2>
+              <h2 class="text-base font-semibold tracking-tight mb-2">Posts</h2>
             </>
           )}
           <ul id="post-list" class="archives-list">
