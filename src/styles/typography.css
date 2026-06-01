@@ -90,13 +90,17 @@
 
     /* 본문 내 각주 번호 위첨자 */
     sup:has(> a[data-footnote-ref]) {
-      font-size: 0.7em;
+      font-size: 0.72em;
       vertical-align: super;
       line-height: 0;
+      font-variant-numeric: tabular-nums;
 
       a {
         text-decoration: none;
         color: var(--fg-mute);
+        font-family: ui-monospace, monospace;
+        &::before { content: "["; }
+        &::after  { content: "]"; }
         &:hover { color: var(--accent); }
       }
     }
