@@ -275,11 +275,10 @@ const latestPosts = standalonePosts
               <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
                 <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
                 {item.title}
-                {item.series && <span class="font-normal shrink-0" style="color: var(--fg-faint);"> · {item.series}</span>}
               </span>
               <!-- 카테고리 레이블: 데스크탑에서만 표시 -->
-              <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
-                {item.label}
+              <span class="hidden sm:block font-mono text-[11px] self-center text-right truncate" style="color: var(--fg-faint);">
+                {item.series ? `${item.series} · ${item.label}` : item.label}
               </span>
             </a>
           </li>
