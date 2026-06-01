@@ -33,6 +33,8 @@ async function loadItems(dir: string) {
         type: "post" as const,
         category,
         pubDatetime,
+        series: (data.series as string | undefined),
+        seriesSlug: (data.seriesSlug as string | undefined),
       };
     })
   );

@@ -156,11 +156,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const nodeRadius = n => {
       if (n.type === "tag") return 4;
+      if (n.type === "series") return 9;
       return Math.min(5 + (degree.get(n.id) ?? 0) * 1.5, 14);
     };
 
     function nodeColor(n) {
       if (n.type === "tag") return "#888888";
+      if (n.type === "series") {
+        const parent = n.category?.split("-")[0] ?? n.category;
+        return CATEGORY_COLORS[parent] ?? "#aaaaaa";
+      }
       const parent = n.category?.split("-")[0] ?? n.category;
       return CATEGORY_COLORS[parent] ?? "#aaaaaa";
     }
@@ -464,12 +469,25 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         ctx.globalAlpha = opacity;
         if (n.type === "tag") {
           drawDiamond(n.x, n.y, r);
+          ctx.fillStyle = baseColor;
+          ctx.fill();
+        } else if (n.type === "series") {
+          // 시리즈 허브: 링(outline) + 반투명 내부
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = baseColor + "30";
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.strokeStyle = baseColor;
+          ctx.lineWidth = 2;
+          ctx.stroke();
         } else {
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = baseColor;
+          ctx.fill();
         }
-        ctx.fillStyle = baseColor;
-        ctx.fill();
         ctx.restore();
 
 
@@ -556,8 +574,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     });
 
     const sim = d3.forceSimulation(nodesCopy)
-      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => e.type === "tag" ? 30 : 60))
-      .force("charge", d3.forceManyBody().strength(n => n.type === "tag" ? -30 : -120))
+      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => {
+        if (e.type === "series") return 28;
+        if (e.type === "tag") return 30;
+        return 60;
+      }).strength(e => e.type === "series" ? 1.2 : 1))
+      .force("charge", d3.forceManyBody().strength(n => {
+        if (n.type === "tag") return -30;
+        if (n.type === "series") return -60;
+        return -120;
+      }))
       .force("center", d3.forceCenter(rect.width / 2, rect.height / 2))
       .force("collision", d3.forceCollide(n => nodeRadius(n) + 4));
 
