@@ -15,43 +15,57 @@ const dateStr = latestDate.toLocaleDateString("ko-KR", { year: "numeric", month:
 
 <a
   href={href}
-  class="group block rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
+  class="group flex rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
+  style="min-height: 180px;"
 >
-  <div class="flex">
-    <!-- 책 등 (spine) -->
+  <!-- 책 커버 영역 -->
+  <div
+    class="shrink-0 relative flex flex-col justify-between p-4"
+    style={`width: 36%; background: color-mix(in srgb, ${color} 14%, transparent);`}
+  >
+    <!-- 세로 제목 -->
+    <p
+      class="font-bold text-[15px] leading-snug tracking-tight group-hover:text-accent transition-colors"
+      style="word-break: keep-all;"
+    >
+      {name}
+    </p>
+
+    <!-- 하단 화수 -->
+    <span
+      class="font-mono text-[10px] px-1.5 py-0.5 rounded self-start"
+      style={`color: ${color}; background: color-mix(in srgb, ${color} 15%, transparent);`}
+    >
+      {chapterCount}편
+    </span>
+
+    <!-- 오른쪽 경계선 (책 등 느낌) -->
     <div
-      class="shrink-0 w-1 transition-all group-hover:w-1.5"
-      style={`background: ${color};`}
+      class="absolute right-0 top-0 bottom-0 w-[3px]"
+      style={`background: linear-gradient(to bottom, ${color}, color-mix(in srgb, ${color} 30%, transparent));`}
     />
+  </div>
 
-    <div class="flex-1 px-5 py-4 min-w-0">
-      <!-- 상단 메타 -->
-      <div class="flex items-center gap-2 mb-3">
-        <span class="text-[10px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded" style={`color: ${color}; background: color-mix(in srgb, ${color} 10%, transparent);`}>
-          Series
-        </span>
-        <span class="text-[11px] font-mono" style="color: var(--fg-faint);">{dateStr}</span>
-      </div>
-
-      <!-- 제목 + 부제 -->
-      <p class="font-bold text-[17px] leading-snug tracking-tight group-hover:text-accent transition-colors mb-0.5">
-        {name}
+  <!-- 내지 영역 -->
+  <div class="flex-1 flex flex-col justify-between p-4 min-w-0">
+    <div>
+      <p class="text-[10px] font-mono tracking-widest uppercase mb-2" style="color: var(--fg-faint);">
+        Series · {dateStr}
       </p>
       {subtitle && (
-        <p class="text-[13px] mb-2" style="color: var(--fg-mute);">{subtitle}</p>
+        <p class="font-semibold text-[14px] leading-snug mb-2">
+          {subtitle}
+        </p>
       )}
-
-      <!-- 설명 -->
       {description && (
-        <p class="text-[13px] leading-relaxed line-clamp-2 mb-3" style="color: var(--fg-mute);">
+        <p class="text-[12.5px] leading-relaxed line-clamp-3" style="color: var(--fg-mute);">
           {description}
         </p>
       )}
-
-      <!-- 화수 -->
-      <p class="text-[11px] font-mono" style="color: var(--fg-faint);">
-        {chapterCount}편 수록
-      </p>
     </div>
+
+    <p class="text-[11px] mt-3" style="color: var(--fg-faint);">
+      전편 읽기 →
+    </p>
   </div>
 </a>
