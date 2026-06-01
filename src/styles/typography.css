@@ -56,6 +56,51 @@
       margin-bottom: 1.75em;
     }
 
+    /* 각주 섹션 */
+    .footnotes {
+      margin-top: 2.5em;
+      padding-top: 1em;
+      border-top: 1px solid var(--border);
+
+      ol {
+        padding-left: 1.25em;
+        margin: 0;
+      }
+
+      li {
+        font-size: 0.8rem;
+        color: var(--fg-mute);
+        line-height: 1.6;
+        margin-bottom: 0.25em;
+
+        p {
+          margin-bottom: 0.25em;
+          display: inline;
+        }
+      }
+
+      /* 각주 참조 링크 (↩) */
+      .data-footnote-backref {
+        margin-left: 0.25em;
+        text-decoration: none;
+        opacity: 0.5;
+        &:hover { opacity: 1; }
+      }
+    }
+
+    /* 본문 내 각주 번호 위첨자 */
+    sup:has(> a[data-footnote-ref]) {
+      font-size: 0.7em;
+      vertical-align: super;
+      line-height: 0;
+
+      a {
+        text-decoration: none;
+        color: var(--fg-mute);
+        &:hover { color: var(--accent); }
+      }
+    }
+
     a {
       @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
     }
