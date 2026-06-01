@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
+import { getSeriesSlug } from "@/utils/getSeriesSlug";
 
 export async function getStaticPaths() {
   return Object.entries(PARENTS).flatMap(([parent, pm]) =>
@@ -51,7 +52,7 @@ for (const post of posts) {
     displayItems.push({
       kind: "series",
       name: post.data.series,
-      slug: post.data.series.replace(/\s+/g, "-").toLowerCase(),
+      slug: await getSeriesSlug(post.data.series),
       chapters,
       latestDate: new Date(post.data.pubDatetime),
     });
