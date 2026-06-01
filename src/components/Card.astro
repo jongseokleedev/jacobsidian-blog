@@ -19,12 +19,11 @@ const seriesSlug = series ? await getSeriesSlug(series) : null;
   {series && seriesSlug && (
     <a
       href={`/series/${seriesSlug}`}
-      class="inline-flex items-center gap-1 mb-1 text-[11px] font-medium tracking-wide uppercase transition-colors hover:text-accent"
-      style="color: var(--fg-mute);"
+      class="inline-flex items-center gap-1.5 mb-1.5 text-[11.5px] transition-colors hover:text-accent"
+      style="color: var(--fg-faint);"
     >
-      <span>◎</span>
+      {seriesOrder && <span class="font-mono">{seriesOrder}.</span>}
       <span>{series}</span>
-      {seriesOrder && <span>· {seriesOrder}화</span>}
     </a>
   )}
   <a

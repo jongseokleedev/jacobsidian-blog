@@ -4,6 +4,7 @@ import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 import { getSeriesSlug } from "@/utils/getSeriesSlug";
+import SeriesCard from "@/components/SeriesCard.astro";
 
 export async function getStaticPaths() {
   return Object.entries(PARENTS).flatMap(([parent, pm]) =>
@@ -24,10 +25,15 @@ type SeriesItem = {
   kind: "series";
   name: string;
   slug: string;
+  subtitle?: string;
+  description?: string;
   chapters: (typeof posts)[number][];
   latestDate: Date;
 };
 type DisplayItem = PostItem | SeriesItem;
+
+const allSeriesMeta = await getCollection("series");
+const seriesMetaByTitle = new Map(allSeriesMeta.map(s => [s.data.title, s.data]));
 
 const seriesMap = new Map<string, (typeof posts)[number][]>();
 const displayItems: DisplayItem[] = [];
@@ -49,10 +55,13 @@ for (const post of posts) {
     const chapters = (seriesMap.get(post.data.series) ?? []).sort(
       (a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0)
     );
+    const sMeta = seriesMetaByTitle.get(post.data.series);
     displayItems.push({
       kind: "series",
       name: post.data.series,
       slug: await getSeriesSlug(post.data.series),
+      subtitle: sMeta?.subtitle,
+      description: sMeta?.description,
       chapters,
       latestDate: new Date(post.data.pubDatetime),
     });
@@ -112,26 +121,17 @@ for (const post of posts) {
                 <span class="hidden sm:block" />
               </a>
             ) : (
-              <a
-                href={`/series/${item.slug}`}
-                class="group post-grid-home py-[10px] border-b transition-colors duration-150 hover:text-accent"
-                style="border-color: var(--border-soft);"
-              >
-                <div class="flex items-center justify-between sm:contents">
-                  <span class="font-mono text-[11px] tabular-nums whitespace-nowrap" style="color: var(--fg-faint);">
-                    {item.latestDate.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
-                  </span>
-                </div>
-                <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
-                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border" style={`color: ${meta.color}; border-color: ${meta.color}; opacity: 0.8;`}>
-                    연재
-                  </span>
-                  {item.name}
-                </span>
-                <span class="hidden sm:block text-[12px] tabular-nums" style="color: var(--fg-faint);">
-                  {item.chapters.length}화
-                </span>
-              </a>
+              <div class="py-3 border-b" style="border-color: var(--border-soft);">
+                <SeriesCard
+                  name={item.name}
+                  subtitle={item.subtitle}
+                  description={item.description}
+                  href={`/series/${item.slug}`}
+                  chapterCount={item.chapters.length}
+                  color={meta.color}
+                  latestDate={item.latestDate}
+                />
+              </div>
             )}
           </li>
         ))}

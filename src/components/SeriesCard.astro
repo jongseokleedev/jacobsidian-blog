@@ -1,0 +1,57 @@
+---
+interface Props {
+  name: string;
+  subtitle?: string;
+  description?: string;
+  href: string;
+  chapterCount: number;
+  color: string;
+  latestDate: Date;
+}
+
+const { name, subtitle, description, href, chapterCount, color, latestDate } = Astro.props;
+const dateStr = latestDate.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
+---
+
+<a
+  href={href}
+  class="group block rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
+>
+  <div class="flex">
+    <!-- 책 등 (spine) -->
+    <div
+      class="shrink-0 w-1 transition-all group-hover:w-1.5"
+      style={`background: ${color};`}
+    />
+
+    <div class="flex-1 px-5 py-4 min-w-0">
+      <!-- 상단 메타 -->
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-[10px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded" style={`color: ${color}; background: color-mix(in srgb, ${color} 10%, transparent);`}>
+          Series
+        </span>
+        <span class="text-[11px] font-mono" style="color: var(--fg-faint);">{dateStr}</span>
+      </div>
+
+      <!-- 제목 + 부제 -->
+      <p class="font-bold text-[17px] leading-snug tracking-tight group-hover:text-accent transition-colors mb-0.5">
+        {name}
+      </p>
+      {subtitle && (
+        <p class="text-[13px] mb-2" style="color: var(--fg-mute);">{subtitle}</p>
+      )}
+
+      <!-- 설명 -->
+      {description && (
+        <p class="text-[13px] leading-relaxed line-clamp-2 mb-3" style="color: var(--fg-mute);">
+          {description}
+        </p>
+      )}
+
+      <!-- 화수 -->
+      <p class="text-[11px] font-mono" style="color: var(--fg-faint);">
+        {chapterCount}편 수록
+      </p>
+    </div>
+  </div>
+</a>
