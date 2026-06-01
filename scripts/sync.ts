@@ -253,12 +253,15 @@ async function run(options: SyncOptions) {
     const slug = String(s.frontmatter.slug ?? "").trim() ||
       String(s.frontmatter.title ?? "untitled").replace(/\s+/g, "-").toLowerCase();
     seriesSlugs.add(slug);
-    const frontmatter = {
+    const frontmatter: Record<string, string> = {
       title: String(s.frontmatter.title ?? "Untitled"),
       slug,
       category: String(s.frontmatter.category ?? ""),
       description: String(s.frontmatter.description ?? ""),
     };
+    if (typeof s.frontmatter.subtitle === "string" && s.frontmatter.subtitle.trim()) {
+      frontmatter.subtitle = s.frontmatter.subtitle.trim();
+    }
     await writeContent({
       destDir: seriesDest,
       slug,

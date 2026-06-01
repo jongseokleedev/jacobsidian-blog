@@ -60,6 +60,7 @@ const series = defineCollection({
   }),
   schema: z.object({
     title: z.string(),
+    subtitle: z.string().optional(),
     slug: z.string().optional(),
     category: z.string().optional(),
     description: z.string().optional(),

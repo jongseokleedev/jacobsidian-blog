@@ -43,7 +43,10 @@ const { Content: SeriesIntro } = seriesMeta ? await render(seriesMeta) : { Conte
     <!-- 시리즈 헤더 -->
     <div class="mb-10">
       <p class="text-[11px] font-medium uppercase tracking-widest mb-3" style="color: var(--fg-mute);">Series</p>
-      <h1 class="text-3xl font-bold tracking-tight mb-4">{series}</h1>
+      <h1 class="text-3xl font-bold tracking-tight mb-1">{series}</h1>
+      {seriesMeta?.data.subtitle && (
+        <p class="text-base mb-4" style="color: var(--fg-mute);">{seriesMeta.data.subtitle}</p>
+      )}
 
       {SeriesIntro && (
         <div class="app-prose text-[15px] leading-relaxed mb-5" style="color: var(--fg-mute);">
