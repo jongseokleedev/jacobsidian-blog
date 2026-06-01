@@ -467,6 +467,15 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           ctx.fillStyle = baseColor;
           ctx.fill();
         } else if (n.type === "series") {
+          // outer orbit ring — signals "hub / upper layer"
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+          ctx.strokeStyle = baseColor + "55";
+          ctx.lineWidth = 1;
+          ctx.setLineDash([3, 3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          // filled node (same as regular)
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
           ctx.fillStyle = baseColor;
