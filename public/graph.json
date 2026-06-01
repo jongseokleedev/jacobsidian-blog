@@ -700,8 +700,21 @@
     },
     {
       "id": "20260531-2301",
-      "title": "git",
+      "title": "git - 수백 명이 한 코드를 함께 고치는 법",
       "url": "/essay/thought/20260531-2301",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "id": "20260531-2303",
+      "title": "commit - 개발자들은 매일 정원을 가꾼다",
+      "url": "/essay/thought/20260531-2303",
       "type": "post",
       "category": "essay-thought",
       "tags": [
@@ -3055,6 +3068,21 @@
     },
     {
       "source": "20260531-2301",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260531-2303",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-2303",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-2303",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     }
