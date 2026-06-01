@@ -156,16 +156,11 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 
     const nodeRadius = n => {
       if (n.type === "tag") return 4;
-      if (n.type === "series") return 13;
       return Math.min(5 + (degree.get(n.id) ?? 0) * 1.5, 14);
     };
 
     function nodeColor(n) {
       if (n.type === "tag") return "#888888";
-      if (n.type === "series") {
-        const parent = n.category?.split("-")[0] ?? n.category;
-        return CATEGORY_COLORS[parent] ?? "#aaaaaa";
-      }
       const parent = n.category?.split("-")[0] ?? n.category;
       return CATEGORY_COLORS[parent] ?? "#aaaaaa";
     }
@@ -472,20 +467,10 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
           ctx.fillStyle = baseColor;
           ctx.fill();
         } else if (n.type === "series") {
-          // 시리즈 허브: 채워진 원 + 굵은 테두리 + 외곽 글로우
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r + 4, 0, Math.PI * 2);
-          ctx.fillStyle = baseColor + "1a";
-          ctx.fill();
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.fillStyle = baseColor + "55";
+          ctx.fillStyle = baseColor;
           ctx.fill();
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-          ctx.strokeStyle = baseColor;
-          ctx.lineWidth = 2.5;
-          ctx.stroke();
         } else {
           ctx.beginPath();
           ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
@@ -515,18 +500,16 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         if (n.x == null || n.type === "tag") continue;
         const isHovered = hoveredNode?.id === n.id;
         const isHop1 = hop1?.has(n.id);
-        const isSeries = n.type === "series";
-
         let alpha;
         if (isHovered) {
           alpha = 1;
         } else if (isMini) {
-          alpha = isSeries ? 0.85 : 0; // mini graph: series labels always visible
+          alpha = 0; // mini graph: labels only on hover
         } else if (hop1) {
           if (isHop1) alpha = 0.75;
-          else alpha = isSeries ? 0.55 : 0;
+          else alpha = 0;
         } else {
-          alpha = isSeries ? Math.max(0.75, zoomLabelAlpha) : zoomLabelAlpha;
+          alpha = zoomLabelAlpha;
         }
 
         if (alpha <= 0.01) continue;
@@ -535,8 +518,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
         ctx.globalAlpha = alpha;
 
         const p = hoverProgress.get(n.id) ?? 0;
-        const fontSize = isSeries ? 10 + p * 3 : 9 + p * 4; // series: 10px base
-        const weight = (isSeries || p > 0.5) ? "600 " : "";
+        const fontSize = 9 + p * 4; // 9px → 13px
+        const weight = p > 0.5 ? "600 " : "";
         ctx.font = `${weight}${fontSize}px sans-serif`;
         const maxChars = Math.round(20 + p * 8);
         const label = n.title?.length > maxChars ? n.title.slice(0, maxChars - 1) + "…" : n.title;
@@ -579,15 +562,8 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     });
 
     const sim = d3.forceSimulation(nodesCopy)
-      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => {
-        if (e.type === "series") return 50;
-        if (e.type === "tag") return 30;
-        return 60;
-      }).strength(e => e.type === "series" ? 0.8 : 1))
-      .force("charge", d3.forceManyBody().strength(n => {
-        if (n.type === "tag") return -30;
-        return -120;
-      }))
+      .force("link", d3.forceLink(edgesCopy).id(d => d.id).distance(e => e.type === "tag" ? 30 : 60))
+      .force("charge", d3.forceManyBody().strength(n => n.type === "tag" ? -30 : -120))
       .force("center", d3.forceCenter(rect.width / 2, rect.height / 2))
       .force("collision", d3.forceCollide(n => nodeRadius(n) + 4));
 
