@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
+import { getSeriesSlug } from "@/utils/getSeriesSlug";
 import Datetime from "./Datetime.astro";
 import ViewCount from "./ViewCount.astro";
 
@@ -11,12 +12,13 @@ type Props = {
 const { variant: Heading = "h2", ...entry } = Astro.props;
 const { data } = entry;
 const { title, description, pubDatetime, modDatetime, timezone, series, seriesOrder } = data;
+const seriesSlug = series ? await getSeriesSlug(series) : null;
 ---
 
 <li class="my-6">
-  {series && (
+  {series && seriesSlug && (
     <a
-      href={`/series/${series.replace(/\s+/g, "-").toLowerCase()}`}
+      href={`/series/${seriesSlug}`}
       class="inline-flex items-center gap-1 mb-1 text-[11px] font-medium tracking-wide uppercase transition-colors hover:text-accent"
       style="color: var(--fg-mute);"
     >

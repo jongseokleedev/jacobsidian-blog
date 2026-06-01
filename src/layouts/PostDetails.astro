@@ -12,6 +12,7 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import { getLangFromUrl } from "@/i18n";
+import { getSeriesSlug } from "@/utils/getSeriesSlug";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import Comments from "@/components/comments/Comments.astro";
@@ -109,7 +110,7 @@ const prevChapter = seriesIndex > 0 ? seriesChapters[seriesIndex - 1] : null;
 const nextChapter = seriesIndex !== -1 && seriesIndex < seriesChapters.length - 1
   ? seriesChapters[seriesIndex + 1]
   : null;
-const seriesSlug = seriesName ? seriesName.replace(/\s+/g, "-").toLowerCase() : null;
+const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
 ---
 
 <BlogShell
