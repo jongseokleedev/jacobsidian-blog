@@ -9,62 +9,43 @@ interface Props {
   latestDate: Date;
 }
 
-const { name, subtitle, description, href, chapterCount, color, latestDate } = Astro.props;
-const dateStr = latestDate.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
+const { name, subtitle, description, href, chapterCount, color } = Astro.props;
 ---
 
 <a
   href={href}
-  class="group flex rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
-  style="min-height: 200px; max-width: 320px; width: 100%;"
+  class="group flex flex-col rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
+  style="max-width: 280px; width: 100%;"
 >
-  <!-- 책 커버 영역 -->
+  <!-- 커버 영역 -->
   <div
-    class="shrink-0 relative flex flex-col justify-between p-4"
-    style={`width: 36%; background: color-mix(in srgb, ${color} 14%, transparent);`}
+    class="flex items-end px-5 pt-6 pb-4"
+    style={`height: 100px; background: linear-gradient(160deg, color-mix(in srgb, ${color} 22%, transparent), color-mix(in srgb, ${color} 8%, transparent));`}
   >
-    <!-- 세로 제목 -->
-    <p
-      class="font-bold text-[15px] leading-snug tracking-tight group-hover:text-accent transition-colors"
-      style="word-break: keep-all;"
-    >
-      {name}
-    </p>
-
-    <!-- 하단 화수 -->
     <span
-      class="font-mono text-[10px] px-1.5 py-0.5 rounded self-start"
+      class="text-[10px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded"
       style={`color: ${color}; background: color-mix(in srgb, ${color} 15%, transparent);`}
     >
-      {chapterCount}편
+      Series · {chapterCount}편
     </span>
-
-    <!-- 오른쪽 경계선 (책 등 느낌) -->
-    <div
-      class="absolute right-0 top-0 bottom-0 w-[3px]"
-      style={`background: linear-gradient(to bottom, ${color}, color-mix(in srgb, ${color} 30%, transparent));`}
-    />
   </div>
 
-  <!-- 내지 영역 -->
-  <div class="flex-1 flex flex-col justify-between p-4 min-w-0">
-    <div>
-      <p class="text-[10px] font-mono tracking-widest uppercase mb-2" style="color: var(--fg-faint);">
-        Series · {dateStr}
+  <!-- 텍스트 영역 -->
+  <div class="flex flex-col flex-1 px-5 pt-4 pb-5 gap-1">
+    <p class="font-bold text-[16px] leading-snug tracking-tight group-hover:text-accent transition-colors">
+      {name}
+    </p>
+    {subtitle && (
+      <p class="text-[12.5px] leading-snug" style="color: var(--fg-mute);">
+        {subtitle}
       </p>
-      {subtitle && (
-        <p class="font-semibold text-[14px] leading-snug mb-2">
-          {subtitle}
-        </p>
-      )}
-      {description && (
-        <p class="text-[12.5px] leading-relaxed line-clamp-3" style="color: var(--fg-mute);">
-          {description}
-        </p>
-      )}
-    </div>
-
-    <p class="text-[11px] mt-3" style="color: var(--fg-faint);">
+    )}
+    {description && (
+      <p class="text-[12px] leading-relaxed line-clamp-3 mt-2" style="color: var(--fg-faint);">
+        {description}
+      </p>
+    )}
+    <p class="text-[11px] mt-auto pt-3" style="color: var(--fg-faint);">
       전편 읽기 →
     </p>
   </div>
