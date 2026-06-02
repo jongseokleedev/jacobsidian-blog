@@ -32,6 +32,7 @@ public/pagefind
 *.png
 !public/images/*.png
 !public/jacob_profile.png
+!public/apple-touch-icon.png
 candidates/
 .worktrees/
 docs/plans/
