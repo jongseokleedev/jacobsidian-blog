@@ -651,7 +651,8 @@
       "tags": [
         "essay",
         "dev",
-        "개발자의-인문학"
+        "개발자의-인문학",
+        "어느 개발자의 인문학"
       ],
       "pubDatetime": "2026-05-20T00:00:00.000Z"
     },
@@ -1532,14 +1533,6 @@
       "title": "IT",
       "url": "/tags/IT",
       "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "series:개발자의 인문학",
-      "title": "개발자의 인문학",
-      "url": "/series/개발자의-인문학",
-      "type": "series",
-      "category": "essay-thought",
       "tags": []
     },
     {
@@ -3034,7 +3027,7 @@
     },
     {
       "source": "20260520-1706",
-      "target": "series:개발자의 인문학",
+      "target": "series:어느 개발자의 인문학",
       "type": "series"
     },
     {
