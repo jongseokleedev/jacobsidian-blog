@@ -29,7 +29,8 @@ const { targetType, targetId } = Astro.props;
 
   function applyReactionStyle(btn: HTMLButtonElement, reacted: boolean) {
     btn.style.borderColor = reacted ? "var(--accent)" : "var(--border)";
-    btn.style.color = reacted ? "var(--accent)" : "var(--fg-mute)";
+    const countSpan = btn.querySelector<HTMLElement>(".reaction-count");
+    if (countSpan) countSpan.style.color = reacted ? "var(--accent)" : "var(--fg-mute)";
   }
 
   function makeReactionBtn(emoji: string, count: number, reacted: boolean): HTMLButtonElement {
@@ -37,7 +38,6 @@ const { targetType, targetId } = Astro.props;
     btn.type = "button";
     btn.dataset.emoji = emoji;
     btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors hover:opacity-80 cursor-pointer";
-    applyReactionStyle(btn, reacted);
 
     const emojiSpan = document.createElement("span");
     emojiSpan.textContent = emoji;
@@ -48,6 +48,7 @@ const { targetType, targetId } = Astro.props;
 
     btn.appendChild(emojiSpan);
     btn.appendChild(countSpan);
+    applyReactionStyle(btn, reacted);
     return btn;
   }
 
