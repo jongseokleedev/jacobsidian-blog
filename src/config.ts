@@ -14,7 +14,7 @@ export const SITE = {
   profile: "https://www.linkedin.com/in/jacob-baa05b2b0/",
   desc: "jacobsidian - 글쓰기를 좋아하는 어느 개발자의 기록 저장소",
   title: "jacobsidian",
-  ogImage: "",
+  ogImage: "og.png",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 5,
