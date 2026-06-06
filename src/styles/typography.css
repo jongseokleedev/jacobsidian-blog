@@ -16,6 +16,7 @@
     text-rendering: optimizeLegibility;
 
     @media (min-width: 640px) {
+      font-size: 18px;
       line-height: 1.8;
     }
 
@@ -61,6 +62,9 @@
       margin-top: 2.5em;
       padding-top: 1em;
       border-top: 1px solid var(--border);
+
+      /* Markdown 렌더러가 자동 삽입하는 <hr> 제거 */
+      > hr { display: none; }
 
       ol {
         padding-left: 1.25em;
