@@ -713,6 +713,19 @@
       "pubDatetime": "2026-05-31T00:00:00.000Z"
     },
     {
+      "id": "20260531-2256",
+      "title": "pull request -혹시 가져가 주시겠어요?",
+      "url": "/essay/thought/20260531-2256",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-06T00:00:00.000Z"
+    },
+    {
       "id": "20260531-2301",
       "title": "git - 수백 명이 한 코드를 함께 고치는 법",
       "url": "/essay/thought/20260531-2301",
@@ -3109,6 +3122,21 @@
       "source": "20260531-1812",
       "target": "tag:과학",
       "type": "tag"
+    },
+    {
+      "source": "20260531-2256",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-2256",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260531-2256",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-2301",
