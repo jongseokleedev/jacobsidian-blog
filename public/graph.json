@@ -318,24 +318,8 @@
       "pubDatetime": "2026-05-14T00:00:00.000Z"
     },
     {
-      "id": "20260514-2111-2",
-      "title": "아비투스",
-      "url": "/review/book/20260514-2111-2",
-      "type": "post",
-      "category": "review-book",
-      "tags": [
-        "독서",
-        "사회",
-        "삶",
-        "사회자본",
-        "계층",
-        "자기계발"
-      ],
-      "pubDatetime": "2026-04-30T00:00:00.000Z"
-    },
-    {
       "id": "20260514-2111",
-      "title": "아무튼, 후드티",
+      "title": "아비투스",
       "url": "/review/book/20260514-2111",
       "type": "post",
       "category": "review-book",
@@ -344,9 +328,13 @@
         "에세이",
         "삶",
         "패션",
-        "일상"
+        "일상",
+        "사회",
+        "사회자본",
+        "계층",
+        "자기계발"
       ],
-      "pubDatetime": "2025-01-04T00:00:00.000Z"
+      "pubDatetime": "2026-04-30T00:00:00.000Z"
     },
     {
       "id": "20260514-2112-2",
@@ -500,23 +488,8 @@
       "pubDatetime": "2025-03-15T00:00:00.000Z"
     },
     {
-      "id": "20260515-1017-2",
-      "title": "실용주의 프로그래머",
-      "url": "/review/book/20260515-1017-2",
-      "type": "post",
-      "category": "review-book",
-      "tags": [
-        "독서",
-        "개발",
-        "커리어",
-        "프로그래밍",
-        "소프트웨어공학"
-      ],
-      "pubDatetime": "2025-12-02T00:00:00.000Z"
-    },
-    {
       "id": "20260515-1017",
-      "title": "소년이 온다",
+      "title": "실용주의 프로그래머",
       "url": "/review/book/20260515-1017",
       "type": "post",
       "category": "review-book",
@@ -526,29 +499,17 @@
         "역사",
         "소설",
         "한강",
-        "5.18"
-      ],
-      "pubDatetime": "2024-02-14T00:00:00.000Z"
-    },
-    {
-      "id": "20260516-1250-2",
-      "title": "우리, 프로그래머들",
-      "url": "/review/book/20260516-1250-2",
-      "type": "post",
-      "category": "review-book",
-      "tags": [
+        "5.18",
         "개발",
-        "프로그래밍",
-        "기술",
-        "독서",
         "커리어",
-        "book"
+        "프로그래밍",
+        "소프트웨어공학"
       ],
-      "pubDatetime": "2026-01-30T00:00:00.000Z"
+      "pubDatetime": "2025-12-02T00:00:00.000Z"
     },
     {
       "id": "20260516-1250",
-      "title": "시대예보 경량문명의 탄생",
+      "title": "우리, 프로그래머들",
       "url": "/review/book/20260516-1250",
       "type": "post",
       "category": "review-book",
@@ -559,9 +520,12 @@
         "미래",
         "트렌드",
         "문명",
-        "book"
+        "book",
+        "프로그래밍",
+        "개발",
+        "기술"
       ],
-      "pubDatetime": "2024-06-17T00:00:00.000Z"
+      "pubDatetime": "2026-01-30T00:00:00.000Z"
     },
     {
       "id": "20260517-1256",
@@ -1227,6 +1191,13 @@
       "tags": []
     },
     {
+      "id": "tag:패션",
+      "title": "패션",
+      "url": "/tags/패션",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:사회자본",
       "title": "사회자본",
       "url": "/tags/사회자본",
@@ -1237,13 +1208,6 @@
       "id": "tag:계층",
       "title": "계층",
       "url": "/tags/계층",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:패션",
-      "title": "패션",
-      "url": "/tags/패션",
       "type": "tag",
       "tags": []
     },
@@ -1381,20 +1345,6 @@
       "tags": []
     },
     {
-      "id": "tag:프로그래밍",
-      "title": "프로그래밍",
-      "url": "/tags/프로그래밍",
-      "type": "tag",
-      "tags": []
-    },
-    {
-      "id": "tag:소프트웨어공학",
-      "title": "소프트웨어공학",
-      "url": "/tags/소프트웨어공학",
-      "type": "tag",
-      "tags": []
-    },
-    {
       "id": "tag:역사",
       "title": "역사",
       "url": "/tags/역사",
@@ -1416,16 +1366,16 @@
       "tags": []
     },
     {
-      "id": "tag:기술",
-      "title": "기술",
-      "url": "/tags/기술",
+      "id": "tag:프로그래밍",
+      "title": "프로그래밍",
+      "url": "/tags/프로그래밍",
       "type": "tag",
       "tags": []
     },
     {
-      "id": "tag:book",
-      "title": "book",
-      "url": "/tags/book",
+      "id": "tag:소프트웨어공학",
+      "title": "소프트웨어공학",
+      "url": "/tags/소프트웨어공학",
       "type": "tag",
       "tags": []
     },
@@ -1440,6 +1390,20 @@
       "id": "tag:문명",
       "title": "문명",
       "url": "/tags/문명",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:book",
+      "title": "book",
+      "url": "/tags/book",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:기술",
+      "title": "기술",
+      "url": "/tags/기술",
       "type": "tag",
       "tags": []
     },
@@ -1585,7 +1549,7 @@
     },
     {
       "source": "20230817-2136",
-      "target": "20260514-2111-2",
+      "target": "20260514-2111",
       "type": "wikilink"
     },
     {
@@ -1680,7 +1644,7 @@
     },
     {
       "source": "20250915-1014",
-      "target": "20260515-1017-2",
+      "target": "20260515-1017",
       "type": "wikilink"
     },
     {
@@ -1729,18 +1693,13 @@
       "type": "wikilink"
     },
     {
-      "source": "20260514-2111-2",
+      "source": "20260514-2111",
       "target": "20260514-2112-2",
       "type": "wikilink"
     },
     {
-      "source": "20260514-2111-2",
-      "target": "20260516-1250",
-      "type": "wikilink"
-    },
-    {
       "source": "20260514-2112-2",
-      "target": "20260514-2111-2",
+      "target": "20260514-2111",
       "type": "wikilink"
     },
     {
@@ -1824,23 +1783,13 @@
       "type": "wikilink"
     },
     {
-      "source": "20260515-1017-2",
-      "target": "20260516-1250-2",
-      "type": "wikilink"
-    },
-    {
       "source": "20260515-1017",
-      "target": "20260514-2113-2",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260516-1250-2",
-      "target": "20260515-1017-2",
+      "target": "20260516-1250",
       "type": "wikilink"
     },
     {
       "source": "20260516-1250",
-      "target": "20260514-2111-2",
+      "target": "20260515-1017",
       "type": "wikilink"
     },
     {
@@ -1850,22 +1799,17 @@
     },
     {
       "source": "20260517-1256",
-      "target": "20260516-1250",
-      "type": "wikilink"
-    },
-    {
-      "source": "20260517-1256",
       "target": "20260514-2113-3",
       "type": "wikilink"
     },
     {
       "source": "20260517-1307",
-      "target": "20260515-1017-2",
+      "target": "20260515-1017",
       "type": "wikilink"
     },
     {
       "source": "20260517-1307",
-      "target": "20260516-1250-2",
+      "target": "20260516-1250",
       "type": "wikilink"
     },
     {
@@ -1895,7 +1839,7 @@
     },
     {
       "source": "20260521-2308",
-      "target": "20260514-2111-2",
+      "target": "20260514-2111",
       "type": "wikilink"
     },
     {
@@ -2449,36 +2393,6 @@
       "type": "tag"
     },
     {
-      "source": "20260514-2111-2",
-      "target": "tag:독서",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-2111-2",
-      "target": "tag:사회",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-2111-2",
-      "target": "tag:삶",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-2111-2",
-      "target": "tag:사회자본",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-2111-2",
-      "target": "tag:계층",
-      "type": "tag"
-    },
-    {
-      "source": "20260514-2111-2",
-      "target": "tag:자기계발",
-      "type": "tag"
-    },
-    {
       "source": "20260514-2111",
       "target": "tag:독서",
       "type": "tag"
@@ -2501,6 +2415,26 @@
     {
       "source": "20260514-2111",
       "target": "tag:일상",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:사회",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:사회자본",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:계층",
+      "type": "tag"
+    },
+    {
+      "source": "20260514-2111",
+      "target": "tag:자기계발",
       "type": "tag"
     },
     {
@@ -2759,31 +2693,6 @@
       "type": "tag"
     },
     {
-      "source": "20260515-1017-2",
-      "target": "tag:독서",
-      "type": "tag"
-    },
-    {
-      "source": "20260515-1017-2",
-      "target": "tag:개발",
-      "type": "tag"
-    },
-    {
-      "source": "20260515-1017-2",
-      "target": "tag:커리어",
-      "type": "tag"
-    },
-    {
-      "source": "20260515-1017-2",
-      "target": "tag:프로그래밍",
-      "type": "tag"
-    },
-    {
-      "source": "20260515-1017-2",
-      "target": "tag:소프트웨어공학",
-      "type": "tag"
-    },
-    {
       "source": "20260515-1017",
       "target": "tag:독서",
       "type": "tag"
@@ -2814,33 +2723,23 @@
       "type": "tag"
     },
     {
-      "source": "20260516-1250-2",
+      "source": "20260515-1017",
       "target": "tag:개발",
       "type": "tag"
     },
     {
-      "source": "20260516-1250-2",
-      "target": "tag:프로그래밍",
-      "type": "tag"
-    },
-    {
-      "source": "20260516-1250-2",
-      "target": "tag:기술",
-      "type": "tag"
-    },
-    {
-      "source": "20260516-1250-2",
-      "target": "tag:독서",
-      "type": "tag"
-    },
-    {
-      "source": "20260516-1250-2",
+      "source": "20260515-1017",
       "target": "tag:커리어",
       "type": "tag"
     },
     {
-      "source": "20260516-1250-2",
-      "target": "tag:book",
+      "source": "20260515-1017",
+      "target": "tag:프로그래밍",
+      "type": "tag"
+    },
+    {
+      "source": "20260515-1017",
+      "target": "tag:소프트웨어공학",
       "type": "tag"
     },
     {
@@ -2876,6 +2775,21 @@
     {
       "source": "20260516-1250",
       "target": "tag:book",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:프로그래밍",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:개발",
+      "type": "tag"
+    },
+    {
+      "source": "20260516-1250",
+      "target": "tag:기술",
       "type": "tag"
     },
     {
