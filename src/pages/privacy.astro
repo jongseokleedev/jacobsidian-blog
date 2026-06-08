@@ -1,0 +1,124 @@
+---
+import BlogShell from "@/layouts/BlogShell.astro";
+import { SITE } from "@/config";
+---
+
+<BlogShell
+  title={`Privacy Policy | ${SITE.title}`}
+  mode="discovery"
+  rail="discovery"
+>
+  <h1 class="text-[28px] font-bold tracking-tight mb-8">Privacy Policy</h1>
+
+  <div class="flex flex-col gap-6 text-[15px] leading-relaxed" style="color: var(--fg-mute);">
+
+    <section class="flex flex-col gap-3">
+      <p class="bd-overline">개요</p>
+      <p>
+        jacobsidian.com(이하 "본 사이트")은 방문자의 개인정보를 소중히 여기며,
+        관련 법령에 따라 적절히 보호합니다. 본 개인정보처리방침은
+        본 사이트에서 수집하는 정보의 종류와 사용 목적을 안내합니다.
+      </p>
+    </section>
+
+    <section class="flex flex-col gap-3 pt-6 border-t border-border">
+      <p class="bd-overline">수집하는 정보</p>
+      <p>본 사이트는 아래와 같은 방식으로 데이터를 수집합니다.</p>
+      <ul class="flex flex-col gap-2 pl-4">
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>댓글:</strong> 댓글 작성 시 닉네임과 댓글 내용이 수집되어 Supabase 데이터베이스에 저장됩니다. 이메일 등 식별 정보는 요구하지 않습니다.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>조회수:</strong> 게시글 조회 시 방문 기록이 익명으로 집계됩니다.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>Google Analytics:</strong> 페이지 조회수, 방문 경로 등 익명화된 사용 통계가 수집됩니다.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>Google AdSense:</strong> 광고 게재를 위해 Google이 쿠키를 사용하여 방문 기록 및 관심사 기반 데이터를 수집할 수 있습니다.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>서버 로그:</strong> 방문 시 IP 주소, 브라우저 종류, 접속 시간 등의 기본 로그가 자동으로 기록될 수 있습니다.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="flex flex-col gap-3 pt-6 border-t border-border">
+      <p class="bd-overline">데이터 보유 기간</p>
+      <ul class="flex flex-col gap-2 pl-4">
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>댓글 데이터:</strong> 서비스 운영 기간 동안 보관하며, 삭제 요청 시 즉시 삭제합니다.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>서버 로그:</strong> 최대 90일간 보관 후 자동 삭제됩니다.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="shrink-0" style="color: var(--cat-tech);">—</span>
+          <span><strong>Google Analytics / AdSense 데이터:</strong> Google의 데이터 보유 정책에 따릅니다.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="flex flex-col gap-3 pt-6 border-t border-border">
+      <p class="bd-overline">쿠키</p>
+      <p>
+        본 사이트는 광고 및 분석 서비스 제공을 위해 제3자(Google)의 쿠키를 사용합니다.
+        쿠키 사용을 원하지 않으실 경우, 브라우저 설정에서 쿠키를 비활성화할 수 있습니다.
+        단, 일부 기능이 제한될 수 있습니다.
+      </p>
+    </section>
+
+    <section class="flex flex-col gap-3 pt-6 border-t border-border">
+      <p class="bd-overline">광고</p>
+      <p>
+        본 사이트는 Google AdSense를 통해 광고를 게재합니다. Google은 본 사이트 및
+        다른 사이트 방문 기록을 바탕으로 관심사 기반 광고를 제공할 수 있습니다.
+        Google의 광고 및 개인정보 처리에 대한 자세한 내용은
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline underline-offset-2"
+        >Google 개인정보처리방침</a>에서 확인하실 수 있습니다.
+      </p>
+      <p>
+        EU/EEA 거주자의 경우, Google의 동의 관리 도구를 통해 맞춤 광고 데이터 수집에
+        동의하거나 거부할 수 있습니다.
+      </p>
+    </section>
+
+    <section class="flex flex-col gap-3 pt-6 border-t border-border">
+      <p class="bd-overline">외부 링크</p>
+      <p>
+        본 사이트는 외부 사이트로의 링크를 포함할 수 있습니다.
+        외부 사이트의 개인정보 처리방침은 본 사이트와 무관하며,
+        해당 사이트의 방침을 별도로 확인하시기 바랍니다.
+      </p>
+    </section>
+
+    <section class="flex flex-col gap-3 pt-6 border-t border-border">
+      <p class="bd-overline">문의</p>
+      <p>
+        개인정보 처리에 관한 문의 또는 댓글 삭제 요청은 아래 이메일로 연락해 주세요.
+      </p>
+      <p>
+        <a
+          href="mailto:jongsuklee45@gmail.com"
+          class="underline underline-offset-2"
+        >jongsuklee45@gmail.com</a>
+      </p>
+    </section>
+
+    <p class="pt-6 border-t border-border text-[13px]" style="color: var(--fg-subtle, var(--fg-mute));">
+      최종 업데이트: 2026년 6월
+    </p>
+
+  </div>
+</BlogShell>
