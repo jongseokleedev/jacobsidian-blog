@@ -167,6 +167,45 @@ export function saveNickname(nick: string): void {
   localStorage.setItem("jb:comment-nickname", nick);
 }
 
+async function generateFingerprint(): Promise<string> {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  let canvasSig = "";
+  if (ctx) {
+    ctx.textBaseline = "top";
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#f60";
+    ctx.fillRect(125, 1, 62, 20);
+    ctx.fillStyle = "#069";
+    ctx.fillText("jacobsidian", 2, 15);
+    canvasSig = canvas.toDataURL().slice(-32);
+  }
+
+  const signals = [
+    navigator.userAgent,
+    `${screen.width}x${screen.height}x${screen.colorDepth}`,
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
+    navigator.language,
+    String(navigator.hardwareConcurrency ?? ""),
+    canvasSig,
+  ].join("|");
+
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(signals));
+  return Array.from(new Uint8Array(buf))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 16);
+}
+
+export async function getFingerprint(): Promise<string> {
+  if (typeof localStorage === "undefined") return "";
+  const saved = localStorage.getItem("jb:fingerprint");
+  if (saved) return saved;
+  const fp = await generateFingerprint();
+  localStorage.setItem("jb:fingerprint", fp);
+  return fp;
+}
+
 import { createClient } from "@supabase/supabase-js";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
@@ -189,6 +228,7 @@ export interface Comment {
   body: string;
   created_at: string;
   like_count: number;
+  fingerprint_id?: string | null;
 }
 
 export function getLikedIds(): Set<string> {
