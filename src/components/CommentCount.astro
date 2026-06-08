@@ -1,0 +1,42 @@
+---
+interface Props { postId: string; }
+const { postId } = Astro.props;
+---
+<span class="comment-count-mount" data-post-id={postId}></span>
+
+<script>
+  import { getSupabase } from "@/components/comments/lib";
+
+  async function loadCommentCounts() {
+    const mounts = document.querySelectorAll<HTMLElement>(".comment-count-mount");
+    if (!mounts.length) return;
+
+    const postIds = [...new Set([...mounts].map(el => el.dataset.postId!))];
+    const sb = getSupabase();
+
+    const { data } = await sb
+      .from("comments")
+      .select("post_id")
+      .in("post_id", postIds)
+      .is("honeypot", null);
+
+    if (!data) return;
+
+    const counts: Record<string, number> = {};
+    for (const row of data as { post_id: string }[]) {
+      counts[row.post_id] = (counts[row.post_id] ?? 0) + 1;
+    }
+
+    for (const postId of postIds) {
+      const count = counts[postId] ?? 0;
+      if (count === 0) continue;
+      document.querySelectorAll<HTMLElement>(`.comment-count-mount[data-post-id="${postId}"]`).forEach(el => {
+        el.textContent = `💬 ${count}`;
+        el.className = "text-xs";
+        el.style.color = "var(--fg-mute)";
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", loadCommentCounts);
+</script>

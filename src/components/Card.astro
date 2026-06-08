@@ -4,6 +4,7 @@ import { getPath } from "@/utils/getPath";
 import { getSeriesSlug } from "@/utils/getSeriesSlug";
 import Datetime from "./Datetime.astro";
 import ViewCount from "./ViewCount.astro";
+import CommentCount from "./CommentCount.astro";
 
 type Props = {
   variant?: "h2" | "h3";
@@ -39,6 +40,7 @@ const seriesSlug = series ? await getSeriesSlug(series) : null;
   <div class="flex items-center gap-2">
     <Datetime {pubDatetime} {modDatetime} {timezone} />
     <ViewCount postId={entry.id} />
+    <CommentCount postId={entry.id} />
   </div>
   <p>{description}</p>
 </li>
