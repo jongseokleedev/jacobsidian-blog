@@ -17,6 +17,7 @@ import { discoverPosts, discoverSeries } from "./lib/discover";
 import {
   normalizePostFrontmatter,
   pickSlug,
+  stripControlChars,
 } from "./lib/normalize";
 import { buildLinkMap, type LinkEntry } from "./lib/linkMap";
 import {
@@ -168,6 +169,9 @@ async function run(options: SyncOptions) {
 
   function applyTransforms(body: string): string {
     let out = body;
+    // Strip C0/C1 control characters (e.g. U+0008 backspace from IME glitches)
+    // preserving tab (0x09), LF (0x0A), CR (0x0D)
+    out = stripControlChars(out);
     out = stripLeadingH1(out);
     out = transformCallouts(out);
     out = transformTransclusions(out, noteBodyResolver);
@@ -254,16 +258,16 @@ async function run(options: SyncOptions) {
       String(s.frontmatter.title ?? "untitled").replace(/\s+/g, "-").toLowerCase();
     seriesSlugs.add(slug);
     const frontmatter: Record<string, string> = {
-      title: String(s.frontmatter.title ?? "Untitled"),
+      title: stripControlChars(String(s.frontmatter.title ?? "Untitled")),
       slug,
-      category: String(s.frontmatter.category ?? ""),
-      description: String(s.frontmatter.description ?? ""),
+      category: stripControlChars(String(s.frontmatter.category ?? "")),
+      description: stripControlChars(String(s.frontmatter.description ?? "")),
     };
     if (typeof s.frontmatter.subtitle === "string" && s.frontmatter.subtitle.trim()) {
-      frontmatter.subtitle = s.frontmatter.subtitle.trim();
+      frontmatter.subtitle = stripControlChars(s.frontmatter.subtitle.trim());
     }
     if (typeof s.frontmatter.next_title === "string" && s.frontmatter.next_title.trim()) {
-      frontmatter.next_title = s.frontmatter.next_title.trim();
+      frontmatter.next_title = stripControlChars(s.frontmatter.next_title.trim());
     }
     await writeContent({
       destDir: seriesDest,

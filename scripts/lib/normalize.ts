@@ -1,6 +1,10 @@
 import path from "node:path";
 import type { PostCategory } from "../config";
 
+export function stripControlChars(s: string): string {
+  return s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, "");
+}
+
 export function slugify(input: string): string {
   return input
     .replace(/\.md$/i, "")
@@ -74,11 +78,11 @@ export function normalizePostFrontmatter(
   slug: string
 ): NormalizedPost {
   const out: NormalizedPost = {
-    title: String(fm.title ?? "Untitled"),
+    title: stripControlChars(String(fm.title ?? "Untitled")),
     slug,
     category,
     pubDatetime: pickPubDatetime(fm),
-    description: String(fm.description ?? ""),
+    description: stripControlChars(String(fm.description ?? "")),
   };
 
   const mod = toIsoDate(fm.modified ?? fm.updated);
