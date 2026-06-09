@@ -452,14 +452,24 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
   initGraphOverlay();
   document.addEventListener("astro:after-swap", initGraphOverlay);
 
+  function buildShareUrl(medium: string): string {
+    const url = new URL(location.href);
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach(
+      (k) => url.searchParams.delete(k)
+    );
+    url.searchParams.set("utm_source", "share");
+    url.searchParams.set("utm_medium", medium);
+    return url.toString();
+  }
+
   function initShareButton() {
     const btn = document.getElementById("share-btn");
     if (!btn) return;
     btn.addEventListener("click", async () => {
       if (navigator.share) {
-        await navigator.share({ title: document.title, url: location.href });
+        await navigator.share({ title: document.title, url: buildShareUrl("native") });
       } else {
-        await navigator.clipboard.writeText(location.href);
+        await navigator.clipboard.writeText(buildShareUrl("copy"));
         const label = btn.querySelector("span") as HTMLElement | null;
         if (label) {
           const orig = label.textContent;
