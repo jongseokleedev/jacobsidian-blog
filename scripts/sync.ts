@@ -262,6 +262,9 @@ async function run(options: SyncOptions) {
     if (typeof s.frontmatter.subtitle === "string" && s.frontmatter.subtitle.trim()) {
       frontmatter.subtitle = s.frontmatter.subtitle.trim();
     }
+    if (typeof s.frontmatter.next_title === "string" && s.frontmatter.next_title.trim()) {
+      frontmatter.next_title = s.frontmatter.next_title.trim();
+    }
     await writeContent({
       destDir: seriesDest,
       slug,
