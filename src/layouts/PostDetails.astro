@@ -206,11 +206,14 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
           class="flex items-center gap-1.5 text-sm text-foreground/40 hover:text-accent transition-colors"
           style="min-width:44px; min-height:44px; justify-content:center;"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="share-icon" xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
-          <span class="max-sm:hidden">Share</span>
+          <svg id="share-check-icon" xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span id="share-label" class="max-sm:hidden">Share</span>
         </button>
       </div>
     </div>
@@ -462,6 +465,20 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
     return url.toString();
   }
 
+  function showCopiedFeedback() {
+    const shareIcon = document.getElementById("share-icon");
+    const checkIcon = document.getElementById("share-check-icon");
+    const label = document.getElementById("share-label");
+    if (shareIcon) shareIcon.classList.add("hidden");
+    if (checkIcon) checkIcon.classList.remove("hidden");
+    if (label) label.textContent = "Copied!";
+    setTimeout(() => {
+      if (shareIcon) shareIcon.classList.remove("hidden");
+      if (checkIcon) checkIcon.classList.add("hidden");
+      if (label) label.textContent = "Share";
+    }, 1500);
+  }
+
   function initShareButton() {
     const btn = document.getElementById("share-btn");
     if (!btn) return;
@@ -470,12 +487,7 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
         await navigator.share({ title: document.title, url: buildShareUrl("native") });
       } else {
         await navigator.clipboard.writeText(buildShareUrl("copy"));
-        const label = btn.querySelector("span") as HTMLElement | null;
-        if (label) {
-          const orig = label.textContent;
-          label.textContent = "Copied!";
-          setTimeout(() => { label.textContent = orig; }, 1500);
-        }
+        showCopiedFeedback();
       }
     });
   }
