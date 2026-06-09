@@ -27,6 +27,7 @@ type SeriesItem = {
   slug: string;
   subtitle?: string;
   description?: string;
+  ongoing?: boolean;
   chapters: (typeof posts)[number][];
   latestDate: Date;
 };
@@ -62,6 +63,7 @@ for (const post of posts) {
       slug: await getSeriesSlug(post.data.series),
       subtitle: sMeta?.subtitle,
       description: sMeta?.description,
+      ongoing: !!sMeta?.nextTitle,
       chapters,
       latestDate: new Date(post.data.pubDatetime),
     });
@@ -115,6 +117,7 @@ for (const post of posts) {
                 chapterCount={item.chapters.length}
                 color={meta.color}
                 latestDate={item.latestDate}
+                ongoing={item.ongoing}
               />
             ))}
           </div>

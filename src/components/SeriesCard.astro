@@ -7,9 +7,10 @@ interface Props {
   chapterCount: number;
   color: string;
   latestDate: Date;
+  ongoing?: boolean;
 }
 
-const { name, subtitle, description, href, chapterCount, color } = Astro.props;
+const { name, subtitle, description, href, chapterCount, color, ongoing } = Astro.props;
 ---
 
 <a
@@ -22,12 +23,20 @@ const { name, subtitle, description, href, chapterCount, color } = Astro.props;
     class="flex flex-col gap-2 px-5 py-5"
     style={`min-height: 160px; background: linear-gradient(160deg, color-mix(in srgb, ${color} 22%, transparent), color-mix(in srgb, ${color} 7%, transparent));`}
   >
-    <span
-      class="text-[9px] font-mono tracking-widest uppercase self-start px-1.5 py-0.5 rounded"
-      style={`color: ${color}; background: color-mix(in srgb, ${color} 18%, transparent);`}
-    >
-      Series
-    </span>
+    <div class="flex items-center gap-1.5 self-start flex-wrap">
+      <span
+        class="text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded"
+        style={`color: ${color}; background: color-mix(in srgb, ${color} 18%, transparent);`}
+      >
+        Series
+      </span>
+      {ongoing && (
+        <span class="text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded"
+          style="color: var(--fg-mute); background: var(--muted);">
+          연재중
+        </span>
+      )}
+    </div>
 
     <div class="flex flex-col gap-0.5 mt-1">
       <p class="font-bold text-[16px] leading-snug tracking-tight group-hover:text-accent transition-colors">

@@ -27,6 +27,7 @@ const seriesItems = await Promise.all(
       slug: await getSeriesSlug(s.data.title),
       chapterCount: chapters.length,
       color: catMeta?.color ?? "var(--fg-faint)",
+      ongoing: !!s.data.nextTitle,
       latestDate: chapters.length
         ? new Date(Math.max(...chapters.map(p => new Date(p.data.pubDatetime).getTime())))
         : new Date(),
@@ -152,6 +153,7 @@ const latestPosts = standalonePosts
               chapterCount={s.chapterCount}
               color={s.color}
               latestDate={s.latestDate}
+              ongoing={s.ongoing}
             />
           ))}
         </div>
