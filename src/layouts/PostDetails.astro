@@ -201,20 +201,83 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
           <span id="pin-btn-label" class="max-sm:hidden">Pin</span>
         </button>
         <!-- Share -->
-        <button
-          id="share-btn"
-          class="flex items-center gap-1.5 text-sm text-foreground/40 hover:text-accent transition-colors"
-          style="min-width:44px; min-height:44px; justify-content:center;"
-        >
-          <svg id="share-icon" xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-          </svg>
-          <svg id="share-check-icon" xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          <span id="share-label" class="max-sm:hidden">Share</span>
-        </button>
+        <div class="relative" id="share-container">
+          <button
+            id="share-btn"
+            aria-haspopup="true"
+            aria-expanded="false"
+            class="flex items-center gap-1.5 text-sm text-foreground/40 hover:text-accent transition-colors"
+            style="min-width:44px; min-height:44px; justify-content:center;"
+          >
+            <svg id="share-icon" xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+            <svg id="share-check-icon" xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="share-label" class="max-sm:hidden">Share</span>
+          </button>
+
+          <div
+            id="share-dropdown"
+            class="hidden absolute right-0 top-full mt-1 z-50 min-w-[160px] rounded-lg border border-(--border) bg-(--background) shadow-lg py-1"
+            role="menu"
+          >
+            <button
+              id="share-copy"
+              class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/70 hover:text-foreground hover:bg-(--muted) transition-colors"
+              role="menuitem"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
+              링크 복사
+            </button>
+
+            <a
+              id="share-twitter"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/70 hover:text-foreground hover:bg-(--muted) transition-colors"
+              role="menuitem"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              X (Twitter)
+            </a>
+
+            <a
+              id="share-kakao"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/70 hover:text-foreground hover:bg-(--muted) transition-colors"
+              role="menuitem"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.566 5.08 3.938 6.538L5.1 21l4.688-2.85c.72.11 1.46.17 2.212.17 5.523 0 10-3.477 10-7.77C22 6.477 17.523 3 12 3z"/>
+              </svg>
+              카카오톡
+            </a>
+
+            <a
+              id="share-facebook"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/70 hover:text-foreground hover:bg-(--muted) transition-colors"
+              role="menuitem"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              Facebook
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     </div>
@@ -479,17 +542,58 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
     }, 1500);
   }
 
+  // Module-level — abort previous listeners to prevent accumulation on astro:after-swap
+  let shareAbortCtrl: AbortController | null = null;
+
   function initShareButton() {
+    // Abort previous listeners to prevent accumulation on astro:after-swap
+    shareAbortCtrl?.abort();
+    shareAbortCtrl = new AbortController();
+    const signal = shareAbortCtrl.signal;
+
     const btn = document.getElementById("share-btn");
-    if (!btn) return;
-    btn.addEventListener("click", async () => {
-      if (navigator.share) {
-        await navigator.share({ title: document.title, url: buildShareUrl("native") });
+    const dropdown = document.getElementById("share-dropdown");
+    const container = document.getElementById("share-container");
+    if (!btn || !dropdown) return;
+
+    function closeDropdown() {
+      dropdown!.classList.add("hidden");
+      btn!.setAttribute("aria-expanded", "false");
+    }
+
+    function openDropdown() {
+      const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(buildShareUrl("twitter"))}&text=${encodeURIComponent(document.title)}`;
+      const kakaoUrl = `https://story.kakao.com/share?url=${encodeURIComponent(buildShareUrl("kakao"))}`;
+      const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(buildShareUrl("facebook"))}`;
+      (document.getElementById("share-twitter") as HTMLAnchorElement).href = twitterUrl;
+      (document.getElementById("share-kakao") as HTMLAnchorElement).href = kakaoUrl;
+      (document.getElementById("share-facebook") as HTMLAnchorElement).href = fbUrl;
+      dropdown!.classList.remove("hidden");
+      btn!.setAttribute("aria-expanded", "true");
+    }
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!dropdown!.classList.contains("hidden")) {
+        closeDropdown();
       } else {
-        await navigator.clipboard.writeText(buildShareUrl("copy"));
-        showCopiedFeedback();
+        openDropdown();
       }
-    });
+    }, { signal });
+
+    document.getElementById("share-copy")?.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(buildShareUrl("copy"));
+      closeDropdown();
+      showCopiedFeedback();
+    }, { signal });
+
+    document.addEventListener("click", (e) => {
+      if (!container?.contains(e.target as Node)) closeDropdown();
+    }, { signal });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDropdown();
+    }, { signal });
   }
   initShareButton();
   document.addEventListener("astro:after-swap", initShareButton);
