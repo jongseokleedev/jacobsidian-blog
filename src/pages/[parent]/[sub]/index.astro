@@ -63,7 +63,7 @@ for (const post of posts) {
       slug: await getSeriesSlug(post.data.series),
       subtitle: sMeta?.subtitle,
       description: sMeta?.description,
-      ongoing: !!sMeta?.nextTitle,
+      ongoing: !!sMeta?.next_title,
       chapters,
       latestDate: new Date(post.data.pubDatetime),
     });

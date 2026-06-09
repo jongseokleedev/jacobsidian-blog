@@ -64,7 +64,7 @@ const series = defineCollection({
     slug: z.string().optional(),
     category: z.string().optional(),
     description: z.string().optional(),
-    nextTitle: z.string().optional(),
+    next_title: z.string().optional(),
   }),
 });
 
