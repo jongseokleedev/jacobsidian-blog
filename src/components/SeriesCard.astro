@@ -20,10 +20,10 @@ const { name, subtitle, description, href, chapterCount, color, ongoing } = Astr
 >
   <!-- 커버 -->
   <div
-    class="flex flex-col gap-2 px-5 py-5"
+    class="flex flex-col gap-2 px-5 py-5 relative"
     style={`min-height: 160px; background: linear-gradient(160deg, color-mix(in srgb, ${color} 22%, transparent), color-mix(in srgb, ${color} 7%, transparent));`}
   >
-    <div class="flex items-center gap-1.5 self-start flex-wrap">
+    <div class="flex items-center justify-between">
       <span
         class="text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded"
         style={`color: ${color}; background: color-mix(in srgb, ${color} 18%, transparent);`}
@@ -31,8 +31,11 @@ const { name, subtitle, description, href, chapterCount, color, ongoing } = Astr
         Series
       </span>
       {ongoing && (
-        <span class="text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded"
-          style="color: var(--fg-mute); background: var(--muted);">
+        <span
+          class="inline-flex items-center gap-1 text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded"
+          style={`color: ${color}; background: color-mix(in srgb, ${color} 14%, transparent); border: 1px solid color-mix(in srgb, ${color} 30%, transparent);`}
+        >
+          <span class="ongoing-dot" style={`background: ${color}; --dot-color: ${color};`}></span>
           연재중
         </span>
       )}
@@ -63,3 +66,24 @@ const { name, subtitle, description, href, chapterCount, color, ongoing } = Astr
     </div>
   </div>
 </a>
+
+<style>
+  .ongoing-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+    animation: ongoing-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes ongoing-pulse {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 var(--dot-color);
+    }
+    50% {
+      opacity: 0.75;
+      box-shadow: 0 0 6px 2px color-mix(in srgb, var(--dot-color) 60%, transparent);
+    }
+  }
+</style>
