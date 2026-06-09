@@ -608,7 +608,7 @@
     },
     {
       "id": "20260520-1706",
-      "title": "코드에서 사람을 읽는 일",
+      "title": "머리말 - 코드에서 사람을 읽는 일",
       "url": "/essay/thought/20260520-1706",
       "type": "post",
       "category": "essay-thought",
@@ -659,6 +659,32 @@
         "AI"
       ],
       "pubDatetime": "2026-05-24T00:00:00.000Z"
+    },
+    {
+      "id": "20260525-1003",
+      "title": "software - '무르다'는 이름",
+      "url": "/essay/thought/20260525-1003",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-05-25T00:00:00.000Z"
+    },
+    {
+      "id": "20260526-1036",
+      "title": "developer - 세상에 개발자는 많지만",
+      "url": "/essay/thought/20260526-1036",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-05-26T00:00:00.000Z"
     },
     {
       "id": "20260531-1812",
@@ -3006,6 +3032,36 @@
       "source": "20260524-1158",
       "target": "tag:AI",
       "type": "tag"
+    },
+    {
+      "source": "20260525-1003",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260525-1003",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260525-1003",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260526-1036",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260526-1036",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260526-1036",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260531-1812",
