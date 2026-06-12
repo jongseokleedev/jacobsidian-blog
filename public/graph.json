@@ -755,6 +755,19 @@
       "pubDatetime": "2026-06-05T00:00:00.000Z"
     },
     {
+      "id": "20260612-1723",
+      "title": "open source - 잠그는 대신, 오히려 활짝 열어두는 것",
+      "url": "/essay/thought/20260612-1723",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-12T00:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -3150,6 +3163,21 @@
     },
     {
       "source": "20260531-2309",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260612-1723",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260612-1723",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260612-1723",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     }
