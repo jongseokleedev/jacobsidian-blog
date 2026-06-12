@@ -17,9 +17,13 @@ const { targetType, targetId } = Astro.props;
     style="border: 1px solid var(--border);"
     aria-label="이모지 반응 추가"
   >
-    <span style="font-size:1.1rem; line-height:1;">😊</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="color:var(--fg-mute); flex-shrink:0;">
-      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--fg-mute); flex-shrink:0;">
+      <path d="M22 11v1a10 10 0 1 1-9-10"/>
+      <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+      <line x1="9" x2="9.01" y1="9" y2="9"/>
+      <line x1="15" x2="15.01" y1="9" y2="9"/>
+      <path d="M16 5h6"/>
+      <path d="M19 2v6"/>
     </svg>
   </button>
 </div>
@@ -28,18 +32,23 @@ const { targetType, targetId } = Astro.props;
   import { fetchReactions, toggleReaction, getMyReactions } from "@/components/comments/lib";
 
   function applyReactionStyle(btn: HTMLButtonElement, reacted: boolean) {
-    btn.style.borderColor = reacted ? "var(--accent)" : "var(--border)";
+    btn.style.border = `1px solid ${reacted ? "var(--accent)" : "var(--border)"}`;
+    btn.style.background = reacted ? "var(--accent-soft)" : "transparent";
     const countSpan = btn.querySelector<HTMLElement>(".reaction-count");
-    if (countSpan) countSpan.style.color = reacted ? "var(--accent)" : "var(--fg-mute)";
+    if (countSpan) {
+      countSpan.style.color = reacted ? "var(--accent)" : "var(--fg-mute)";
+      countSpan.style.fontWeight = reacted ? "600" : "400";
+    }
   }
 
   function makeReactionBtn(emoji: string, count: number, reacted: boolean): HTMLButtonElement {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.dataset.emoji = emoji;
-    btn.className = "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full transition-colors hover:opacity-80 cursor-pointer";
+    btn.className = "flex items-center gap-1.5 text-sm px-2.5 py-1 rounded-full transition-colors hover:opacity-80 cursor-pointer";
 
     const emojiSpan = document.createElement("span");
+    emojiSpan.style.cssText = "font-size:1.1rem; line-height:1;";
     emojiSpan.textContent = emoji;
 
     const countSpan = document.createElement("span");

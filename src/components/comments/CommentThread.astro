@@ -26,9 +26,13 @@ const getReplies = (parentId: string) => comments.filter(c => c.parent_id === pa
 <ul class:list={["space-y-4", isReply && "mt-3 space-y-3"]}>
   {topLevel.map(comment => (
     <li
-      class:list={["comment-item", isReply && "reply-item pl-3 py-2 rounded-lg"]}
+      class:list={["comment-item", isReply ? "reply-item pl-3 py-2 rounded-lg" : "px-4 py-3.5 rounded-xl"]}
       data-id={comment.id}
-      style={isReply ? "border-left: 2px solid var(--border); background: var(--muted);" : ""}
+      style={
+        isReply
+          ? "border-left: 2px solid var(--border); background: var(--muted);"
+          : "background: color-mix(in srgb, var(--muted) 45%, transparent); border: 1px solid var(--border);"
+      }
     >
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 flex-wrap">
@@ -62,9 +66,13 @@ const getReplies = (parentId: string) => comments.filter(c => c.parent_id === pa
           style="border: 1px solid var(--border);"
           aria-label="이모지 반응 추가"
         >
-          <span style="font-size:1.1rem; line-height:1;">😊</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="color:var(--fg-mute); flex-shrink:0;">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--fg-mute); flex-shrink:0;">
+            <path d="M22 11v1a10 10 0 1 1-9-10"/>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+            <line x1="9" x2="9.01" y1="9" y2="9"/>
+            <line x1="15" x2="15.01" y1="9" y2="9"/>
+            <path d="M16 5h6"/>
+            <path d="M19 2v6"/>
           </svg>
         </button>
       </div>

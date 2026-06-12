@@ -75,8 +75,12 @@ try {
 
   function buildCommentEl(comment: Comment, isReply: boolean): HTMLLIElement {
     const li = document.createElement("li");
-    li.className = isReply ? "comment-item reply-item pl-3 py-2 rounded-lg" : "comment-item";
-    if (isReply) li.style.cssText = "border-left: 2px solid var(--border); background: var(--muted);";
+    li.className = isReply
+      ? "comment-item reply-item pl-3 py-2 rounded-lg"
+      : "comment-item px-4 py-3.5 rounded-xl";
+    li.style.cssText = isReply
+      ? "border-left: 2px solid var(--border); background: var(--muted);"
+      : "background: color-mix(in srgb, var(--muted) 45%, transparent); border: 1px solid var(--border);";
     li.dataset.id = comment.id;
 
     const header = document.createElement("div");
@@ -148,24 +152,29 @@ try {
     reactionAddBtn.className = "reaction-add-btn flex items-center gap-0.5 px-3 py-1.5 rounded-full transition-colors hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 cursor-pointer";
     reactionAddBtn.style.cssText = "border: 1px solid var(--border);";
     reactionAddBtn.setAttribute("aria-label", "이모지 반응 추가");
-    const emojiSpan = document.createElement("span");
-    emojiSpan.textContent = "😊";
-    emojiSpan.style.cssText = "font-size:1.1rem; line-height:1;";
-    const plusSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    plusSvg.setAttribute("width", "12");
-    plusSvg.setAttribute("height", "12");
-    plusSvg.setAttribute("viewBox", "0 0 24 24");
-    plusSvg.setAttribute("fill", "none");
-    plusSvg.setAttribute("stroke", "currentColor");
-    plusSvg.setAttribute("stroke-width", "2.5");
-    plusSvg.setAttribute("stroke-linecap", "round");
-    plusSvg.style.cssText = "color:var(--fg-mute); flex-shrink:0;";
-    const l1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    l1.setAttribute("x1", "12"); l1.setAttribute("y1", "5"); l1.setAttribute("x2", "12"); l1.setAttribute("y2", "19");
-    const l2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    l2.setAttribute("x1", "5"); l2.setAttribute("y1", "12"); l2.setAttribute("x2", "19"); l2.setAttribute("y2", "12");
-    plusSvg.appendChild(l1); plusSvg.appendChild(l2);
-    reactionAddBtn.appendChild(emojiSpan); reactionAddBtn.appendChild(plusSvg);
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const addIcon = document.createElementNS(SVG_NS, "svg");
+    addIcon.setAttribute("width", "16");
+    addIcon.setAttribute("height", "16");
+    addIcon.setAttribute("viewBox", "0 0 24 24");
+    addIcon.setAttribute("fill", "none");
+    addIcon.setAttribute("stroke", "currentColor");
+    addIcon.setAttribute("stroke-width", "2");
+    addIcon.setAttribute("stroke-linecap", "round");
+    addIcon.setAttribute("stroke-linejoin", "round");
+    addIcon.style.cssText = "color:var(--fg-mute); flex-shrink:0;";
+    for (const d of ["M22 11v1a10 10 0 1 1-9-10", "M8 14s1.5 2 4 2 4-2 4-2", "M16 5h6", "M19 2v6"]) {
+      const p = document.createElementNS(SVG_NS, "path");
+      p.setAttribute("d", d);
+      addIcon.appendChild(p);
+    }
+    for (const x of ["9", "15"]) {
+      const eye = document.createElementNS(SVG_NS, "line");
+      eye.setAttribute("x1", x); eye.setAttribute("x2", `${x}.01`);
+      eye.setAttribute("y1", "9"); eye.setAttribute("y2", "9");
+      addIcon.appendChild(eye);
+    }
+    reactionAddBtn.appendChild(addIcon);
     reactionWrap.appendChild(reactionAddBtn);
     li.appendChild(reactionWrap);
 
