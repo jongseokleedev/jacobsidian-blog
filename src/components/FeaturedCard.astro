@@ -8,6 +8,8 @@ interface Props {
     date: Date;
     label: string;
     color: string;
+    series?: string;
+    seriesOrder?: number;
   };
   index?: number;
   carousel?: boolean;
@@ -73,7 +75,19 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
         </>
       )}
     </div>
-    <p class="font-semibold text-[14px] leading-snug line-clamp-3 group-hover:text-accent transition-colors">{item.title}</p>
+    <p class:list={["font-semibold text-[14px] leading-snug group-hover:text-accent transition-colors", item.series ? "line-clamp-2" : "line-clamp-3"]}>{item.title}</p>
+    {item.series && (
+      <span
+        class="mt-auto inline-flex max-w-full items-center gap-1 self-start rounded-full px-2 py-0.5 text-[10.5px] sm:text-[11px] leading-tight"
+        style={`color: color-mix(in srgb, ${item.color} 50%, var(--fg-mute)); background: color-mix(in srgb, ${item.color} 4%, transparent); border: 1px solid color-mix(in srgb, ${item.color} 10%, transparent)`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3 shrink-0" aria-hidden="true">
+          <path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 12 10 5 10-5" /><path d="m2 17 10 5 10-5" />
+        </svg>
+        <span class="truncate">{item.series}</span>
+        {item.seriesOrder && <span class="font-mono shrink-0 opacity-70">#{item.seriesOrder}</span>}
+      </span>
+    )}
     <p class="text-[12.5px] leading-snug line-clamp-2 mt-auto" style="color: var(--fg-mute);">{item.description}</p>
   </div>
 </a>

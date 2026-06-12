@@ -78,8 +78,8 @@ const topPosts = scoredPosts.slice(0, 10).map(({ post }) => ({
   color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
 }));
 
-// Featured: latest posts, 시리즈 글 제외
-const latestPosts = standalonePosts
+// Featured: latest posts (시리즈 글 포함)
+const latestPosts = posts
   .slice(0, 10)
   .map(post => ({
     href: getPath(post),
@@ -91,6 +91,8 @@ const latestPosts = standalonePosts
     category: post.data.category,
     label: getCategoryMeta(post.data.category)?.label ?? post.data.category,
     color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
+    series: post.data.series as string | undefined,
+    seriesOrder: post.data.seriesOrder as number | undefined,
   }));
 ---
 
