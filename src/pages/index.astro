@@ -287,7 +287,7 @@ const latestPosts = posts
                 </span>
               </div>
               <!-- 제목 (모바일: 2행 전체 너비, 데스크탑: 중간 컬럼) -->
-              <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+              <span class="font-medium text-[14px] sm:truncate self-center flex items-center gap-2 min-w-0 transition-transform duration-150 group-hover:translate-x-[3px]">
                 <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
                 <span class="truncate">{item.title}</span>
                 {item.series && (

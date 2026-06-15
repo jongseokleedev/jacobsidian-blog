@@ -145,7 +145,7 @@ for (const post of posts) {
                       {new Date(item.post.data.pubDatetime).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })}
                     </span>
                   </div>
-                  <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+                  <span class="font-medium text-[14px] sm:truncate self-center flex items-center gap-2 min-w-0 transition-transform duration-150 group-hover:translate-x-[3px]">
                     <span class="cat-dot shrink-0" style={`background: ${meta.color}`} />
                     <span class="truncate">{item.post.data.title}</span>
                     {item.post.data.series && (
