@@ -768,6 +768,19 @@
       "pubDatetime": "2026-06-12T00:00:00.000Z"
     },
     {
+      "id": "20260615-1539",
+      "title": "테스트 - 개발자는 실패를 먼저 상상한다",
+      "url": "/essay/thought/20260615-1539",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-15T00:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -3178,6 +3191,21 @@
     },
     {
       "source": "20260612-1723",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260615-1539",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260615-1539",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260615-1539",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     }
