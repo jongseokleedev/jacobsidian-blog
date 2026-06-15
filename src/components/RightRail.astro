@@ -134,6 +134,18 @@ const postUrl = (post: (typeof allPosts)[number]) => {
           </div>
           <div>
             <p id="stats-today" class="font-mono text-[22px] leading-none text-[color:var(--accent)]">—</p>
+            <script is:inline>
+              (function () {
+                try {
+                  const todayKst = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+                  const cached = JSON.parse(localStorage.getItem("jb:today") || "null");
+                  if (cached && cached.date === todayKst && typeof cached.value === "number") {
+                    const el = document.getElementById("stats-today");
+                    if (el) el.textContent = String(cached.value);
+                  }
+                } catch (_) { /* ignore */ }
+              })();
+            </script>
             <p class="text-[11px] mt-1 text-[color:var(--fg-faint)]">today</p>
           </div>
           <div>
@@ -327,7 +339,24 @@ const postUrl = (post: (typeof allPosts)[number]) => {
         .gte("visited_at", sinceUtc);
       if (error || !data) return;
       const unique = new Set((data as { visitor_id: string | null }[]).map(r => r.visitor_id).filter(Boolean));
-      el.textContent = String(unique.size);
+      const count = unique.size;
+      const from = Number.parseInt(el.textContent || "", 10);
+      const start = Number.isFinite(from) ? from : 0;
+      if (start === count) {
+        el.textContent = String(count);
+      } else {
+        const duration = 400;
+        const t0 = performance.now();
+        const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+        const step = (now: number) => {
+          const p = Math.min((now - t0) / duration, 1);
+          el.textContent = String(Math.round(start + (count - start) * easeOut(p)));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+      const todayKst = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+      localStorage.setItem("jb:today", JSON.stringify({ date: todayKst, value: count }));
     } catch { /* silent */ }
   }
 
