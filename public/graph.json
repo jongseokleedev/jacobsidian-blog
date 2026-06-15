@@ -755,6 +755,17 @@
       "pubDatetime": "2026-06-05T00:00:00.000Z"
     },
     {
+      "id": "20260603-1329",
+      "title": "IT 회사 사람들 - 정원철",
+      "url": "/fiction/novel/20260603-1329",
+      "type": "post",
+      "category": "fiction-novel",
+      "tags": [
+        "post"
+      ],
+      "pubDatetime": "2026-06-16T00:00:00.000Z"
+    },
+    {
       "id": "20260612-1723",
       "title": "open source - 잠그는 대신, 오히려 활짝 열어두는 것",
       "url": "/essay/thought/20260612-1723",
@@ -3178,6 +3189,11 @@
       "source": "20260531-2309",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
+    },
+    {
+      "source": "20260603-1329",
+      "target": "tag:post",
+      "type": "tag"
     },
     {
       "source": "20260612-1723",
