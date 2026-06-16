@@ -1,14 +1,12 @@
 import satori from "satori";
 import { SITE } from "@/config";
 import { getCategoryMeta, getParentMeta } from "@/utils/getCategories";
-import { getDescription } from "@/utils/getDescription";
 import loadGoogleFonts from "../loadGoogleFont";
 
 // Brand palette (obsidian dark)
 const BG     = "#0d0c0a";
 const FG     = "#efece5";
-const MUTED  = "rgba(239,236,229,0.45)";
-const DESC   = "rgba(239,236,229,0.72)";
+const MUTED  = "rgba(239,236,229,0.38)";
 const BORDER = "#272420";
 
 // Category accent colors per parent
@@ -40,24 +38,6 @@ function logoMark(size, color) {
   };
 }
 
-// Series mark (3-layer stack icon)
-function seriesMark(size, color) {
-  return {
-    type: "svg",
-    props: {
-      viewBox: "0 0 24 24",
-      width:   String(size),
-      height:  String(size),
-      fill:    "none",
-      children: [
-        { type: "path", props: { d: "M12 2 2 7l10 5 10-5-10-5Z", stroke: color, strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" } },
-        { type: "path", props: { d: "m2 12 10 5 10-5",            stroke: color, strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" } },
-        { type: "path", props: { d: "m2 17 10 5 10-5",            stroke: color, strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" } },
-      ],
-    },
-  };
-}
-
 // Wordmark — mirrors .jsd-wm: jac(thin) + ob(bold) + sidian(thin)
 function wordmark(fontSize, color) {
   const thin = { fontWeight: 300, opacity: 0.55, color, fontFamily: "Inter" };
@@ -81,50 +61,8 @@ function wordmark(fontSize, color) {
   };
 }
 
-// Subtle dot grid background (Obsidian-style)
-function dotGrid() {
-  const dots = [];
-  const cols = 30;
-  const rows = 16;
-  const stepX = 1200 / cols;
-  const stepY = 630 / rows;
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      dots.push({
-        type: "circle",
-        props: {
-          cx: String(c * stepX + stepX / 2),
-          cy: String(r * stepY + stepY / 2),
-          r: "1",
-          fill: FG,
-          opacity: "0.05",
-        },
-      });
-    }
-  }
-  return {
-    type: "svg",
-    props: {
-      width: "1200",
-      height: "630",
-      viewBox: "0 0 1200 630",
-      style: { position: "absolute", top: 0, left: 0 },
-      children: dots,
-    },
-  };
-}
-
-// Truncate while preserving word/character boundary
-function clamp(s, max) {
-  if (!s) return "";
-  const t = s.trim();
-  if (t.length <= max) return t;
-  return t.slice(0, max - 1).trimEnd() + "…";
-}
-
 export default async post => {
-  const { title, category, pubDatetime, series } = post.data;
-  const description = getDescription(post, 200);
+  const { title, category, pubDatetime } = post.data;
 
   const catMeta    = getCategoryMeta(category);
   const parentKey  = category.split("-")[0];
@@ -138,18 +76,7 @@ export default async post => {
     year: "numeric", month: "2-digit", day: "2-digit",
   });
 
-  const descText = clamp(description, 120);
-  const seriesText = series ? clamp(series, 36) : "";
-
-  // Title sizing — adjust based on length AND whether desc is present
-  let titleSize;
-  if (title.length > 40) titleSize = 50;
-  else if (title.length > 28) titleSize = 58;
-  else titleSize = 68;
-  if (descText) titleSize = Math.max(48, titleSize - 4);
-
-  // Collect ALL text characters to ensure font glyphs are loaded
-  const extraChars = title + " " + (descText || "") + " " + (seriesText || "") + " " + catLabel;
+  const titleSize = title.length > 28 ? 52 : 64;
 
   return satori(
     {
@@ -166,9 +93,6 @@ export default async post => {
           position:      "relative",
         },
         children: [
-          // Subtle dot grid texture
-          dotGrid(),
-
           // Top accent line
           {
             type: "div",
@@ -225,78 +149,27 @@ export default async post => {
             },
           },
 
-          // Main content block: series badge + title + description
+          // Post title
           {
             type: "div",
             props: {
-              style: {
-                display:       "flex",
-                flex:          1,
-                flexDirection: "column",
-                justifyContent:"center",
-                gap:           "20px",
-                maxWidth:      "1020px",
-              },
-              children: [
-                // Series badge (only if series)
-                ...(seriesText ? [{
-                  type: "div",
-                  props: {
-                    style: {
-                      display:      "flex",
-                      alignItems:   "center",
-                      alignSelf:    "flex-start",
-                      gap:          "8px",
-                      padding:      "5px 12px",
-                      borderRadius: "999px",
-                      background:   `${catColor}1f`,
-                      border:       `1px solid ${catColor}55`,
-                      color:        catColor,
-                      fontFamily:   "Inter",
-                      fontWeight:   400,
-                      fontSize:     18,
-                    },
-                    children: [
-                      seriesMark(16, catColor),
-                      { type: "span", props: { style: { fontFamily: "Noto Sans KR" }, children: seriesText } },
-                    ],
+              style: { display: "flex", flex: 1, alignItems: "center" },
+              children: {
+                type: "p",
+                props: {
+                  style: {
+                    fontSize:    titleSize,
+                    fontWeight:  700,
+                    color:       FG,
+                    lineHeight:  1.3,
+                    fontFamily:  "Noto Sans KR",
+                    maxWidth:    "980px",
+                    overflow:    "hidden",
+                    margin:      0,
                   },
-                }] : []),
-
-                // Title
-                {
-                  type: "p",
-                  props: {
-                    style: {
-                      fontSize:    titleSize,
-                      fontWeight:  700,
-                      color:       FG,
-                      lineHeight:  1.25,
-                      fontFamily:  "Noto Sans KR",
-                      margin:      0,
-                      letterSpacing: "-0.02em",
-                    },
-                    children: title,
-                  },
+                  children: title,
                 },
-
-                // Description (only if present)
-                ...(descText ? [{
-                  type: "p",
-                  props: {
-                    style: {
-                      fontSize:    24,
-                      fontWeight:  400,
-                      color:       DESC,
-                      lineHeight:  1.45,
-                      fontFamily:  "Noto Sans KR",
-                      margin:      0,
-                      maxWidth:    "920px",
-                    },
-                    children: descText,
-                  },
-                }] : []),
-              ],
+              },
             },
           },
 
@@ -313,7 +186,7 @@ export default async post => {
               },
               children: [
                 { type: "span", props: { style: { fontSize: 17, color: MUTED }, children: dateStr } },
-                { type: "span", props: { style: { fontSize: 17, color: MUTED }, children: SITE.website.replace(/https?:\/\//, "").replace(/\/$/, "") } },
+                { type: "span", props: { style: { fontSize: 17, color: MUTED }, children: SITE.website.replace(/https?:\/\//, "") } },
               ],
             },
           },
@@ -327,7 +200,6 @@ export default async post => {
                 inset:        "24px",
                 border:       `1px solid ${BORDER}`,
                 borderRadius: "12px",
-                pointerEvents: "none",
               },
             },
           },
@@ -338,7 +210,7 @@ export default async post => {
       width:     1200,
       height:    630,
       embedFont: true,
-      fonts:     await loadGoogleFonts(extraChars),
+      fonts:     await loadGoogleFonts(title),
     }
   );
 };
