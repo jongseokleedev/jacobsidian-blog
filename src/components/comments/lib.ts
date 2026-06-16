@@ -242,9 +242,18 @@ export async function toggleLike(id: string): Promise<{ liked: boolean; count: n
   const delta = nowLiked ? 1 : -1;
   if (nowLiked) { liked.add(id); } else { liked.delete(id); }
   localStorage.setItem("jb:comment-likes", JSON.stringify([...liked]));
+  const fingerprint_id = await getFingerprint();
+  const sb = getSupabase();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (getSupabase() as any).rpc("increment_like", { comment_id: id, delta });
-  const { data } = await getSupabase().from("comments").select("like_count").eq("id", id).single();
+  await (sb as any).rpc("increment_like", { comment_id: id, delta });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (sb as any).from("comment_like_events").insert({
+    comment_id: id,
+    delta,
+    fingerprint_id: fingerprint_id || null,
+  }).then(() => {});
+  const { data } = await sb.from("comments").select("like_count").eq("id", id).single();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return { liked: nowLiked, count: (data as any)?.like_count ?? 0 };
 }
 
@@ -300,12 +309,22 @@ export async function toggleReaction(
   const delta = reacted ? 1 : -1;
   if (reacted) { mine.add(emoji); } else { mine.delete(emoji); }
   saveMyReactions(targetKey, mine);
+  const fingerprint_id = await getFingerprint();
+  const sb = getSupabase();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (getSupabase() as any).rpc("increment_reaction", {
+  await (sb as any).rpc("increment_reaction", {
     p_target_type: targetType,
     p_target_id: targetId,
     p_emoji: emoji,
     p_delta: delta,
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (sb as any).from("reaction_events").insert({
+    target_type: targetType,
+    target_id: targetId,
+    emoji,
+    delta,
+    fingerprint_id: fingerprint_id || null,
+  }).then(() => {});
   return { reacted };
 }

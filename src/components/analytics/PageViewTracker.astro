@@ -16,7 +16,7 @@ const { postId } = Astro.props;
     const postId = el.dataset.postId;
     if (!postId) return;
 
-    const { getSupabase } = await import("@/components/comments/lib");
+    const { getSupabase, getFingerprint } = await import("@/components/comments/lib");
     const db = getSupabase();
 
     const ref = document.referrer;
@@ -31,11 +31,13 @@ const { postId } = Astro.props;
       localStorage.setItem("visitor_id", visitorId);
     }
 
+    const fingerprintId = (await getFingerprint()) || null;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const table = (db as any).from("page_views");
 
     try {
-      await table.insert({ post_id: postId, referrer, scroll_depth: 0, visitor_id: visitorId });
+      await table.insert({ post_id: postId, referrer, scroll_depth: 0, visitor_id: visitorId, fingerprint_id: fingerprintId });
     } catch { /* fire and forget */ }
 
     const milestones = new Set<number>();
@@ -46,7 +48,7 @@ const { postId } = Astro.props;
       for (const m of [25, 50, 75, 100]) {
         if (pct >= m && !milestones.has(m)) {
           milestones.add(m);
-          table.insert({ post_id: postId, referrer, scroll_depth: m, visitor_id: visitorId }).then(() => {});
+          table.insert({ post_id: postId, referrer, scroll_depth: m, visitor_id: visitorId, fingerprint_id: fingerprintId }).then(() => {});
         }
       }
       if (milestones.size === 4) {
