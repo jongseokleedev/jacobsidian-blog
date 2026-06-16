@@ -168,8 +168,8 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
       {post.data.category === "review-book" && (
         <p class="mt-1 text-base text-foreground/50">{author}</p>
       )}
-    {description && (
-      <p class="mt-2 text-base text-foreground/60 leading-relaxed">{description}</p>
+    {post.data.description && (
+      <p class="mt-2 text-base text-foreground/60 leading-relaxed">{post.data.description}</p>
     )}
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
