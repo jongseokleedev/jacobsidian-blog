@@ -769,7 +769,7 @@
     },
     {
       "id": "20260615-1539",
-      "title": "테스트 - 개발자는 실패를 먼저 상상한다",
+      "title": "테스트 - 생각하지 않은 것을 생각하는 일",
       "url": "/essay/thought/20260615-1539",
       "type": "post",
       "category": "essay-thought",
@@ -779,6 +779,19 @@
         "어느 개발자의 인문학"
       ],
       "pubDatetime": "2026-06-14T15:00:00.000Z"
+    },
+    {
+      "id": "20260616-1613",
+      "title": "log - 기록은 기억보다 정직하다",
+      "url": "/essay/thought/20260616-1613",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-15T15:00:00.000Z"
     },
     {
       "id": "tag:독서",
@@ -3206,6 +3219,21 @@
     },
     {
       "source": "20260615-1539",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260616-1613",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260616-1613",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260616-1613",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     }
