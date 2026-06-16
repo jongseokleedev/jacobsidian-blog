@@ -283,7 +283,7 @@ const latestPosts = posts
                   })}
                 </span>
                 <span class="font-mono text-[11px] sm:hidden" style="color: var(--fg-faint);">
-                  {item.series ?? item.label}
+                  {item.label}
                 </span>
               </div>
               <!-- 제목 (모바일: 2행 전체 너비, 데스크탑: 중간 컬럼) -->
@@ -292,7 +292,7 @@ const latestPosts = posts
                 <span class="truncate">{item.title}</span>
                 {item.series && (
                   <span
-                    class="inline-flex shrink-0 items-center gap-1 rounded-full px-1.5 py-px font-mono text-[10px] leading-tight"
+                    class="hidden sm:inline-flex shrink-0 items-center gap-1 rounded-full px-1.5 py-px font-mono text-[10px] leading-tight"
                     style={`color: color-mix(in srgb, ${item.color} 50%, var(--fg-mute)); background: color-mix(in srgb, ${item.color} 4%, transparent); border: 1px solid color-mix(in srgb, ${item.color} 10%, transparent)`}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-2.5 shrink-0" aria-hidden="true">
@@ -302,9 +302,20 @@ const latestPosts = posts
                   </span>
                 )}
               </span>
+              {item.series && (
+                <span
+                  class="sm:hidden mt-1 ml-[14px] inline-flex w-fit items-center gap-1 rounded-full px-1.5 py-px font-mono text-[10px] leading-tight"
+                  style={`color: color-mix(in srgb, ${item.color} 50%, var(--fg-mute)); background: color-mix(in srgb, ${item.color} 4%, transparent); border: 1px solid color-mix(in srgb, ${item.color} 10%, transparent)`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-2.5 shrink-0" aria-hidden="true">
+                    <path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 12 10 5 10-5" /><path d="m2 17 10 5 10-5" />
+                  </svg>
+                  <span class="max-w-[200px] truncate">{item.series}</span>
+                </span>
+              )}
               <!-- 카테고리 레이블: 데스크탑에서만 표시 -->
               <span class="hidden sm:block font-mono text-[11px] self-center text-right truncate" style="color: var(--fg-faint);">
-                {item.series ? `${item.series} · ${item.label}` : item.label}
+                {item.label}
               </span>
             </a>
           </li>
