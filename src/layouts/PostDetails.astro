@@ -6,6 +6,7 @@ import Datetime from "@/components/Datetime.astro";
 import EditPost from "@/components/EditPost.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
+import { getDescription } from "@/utils/getDescription";
 import { slugifyStr } from "@/utils/slugify";
 import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
@@ -35,7 +36,6 @@ const currentLang = getLangFromUrl(Astro.url);
 const {
   title,
   author,
-  description,
   ogImage: initOgImage,
   pubDatetime,
   modDatetime,
@@ -45,6 +45,7 @@ const {
 } = post.data;
 
 const { Content, headings } = await render(post);
+const description = getDescription(post);
 
 const readingTime = Math.max(1, Math.ceil((post.body ?? "").split(/\s+/).length / 200));
 
