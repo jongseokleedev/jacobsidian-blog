@@ -238,6 +238,11 @@ async function run(options: SyncOptions) {
       git(["commit", "-m", `content: sync English posts from Obsidian vault (${date})`]);
       git(["push", "origin", "main"]);
       console.log("[sync:en] deployed successfully.\n");
+      try {
+        execFileSync("tsx", ["scripts/indexnow.ts"], { cwd: PROJECT_ROOT, stdio: "inherit" });
+      } catch {
+        // IndexNow 실패는 배포를 막지 않음
+      }
     } catch (err) {
       console.error("[sync:en] deploy failed:", err);
       process.exit(1);

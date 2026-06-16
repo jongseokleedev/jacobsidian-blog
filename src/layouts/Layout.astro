@@ -45,51 +45,84 @@ const keywordsMeta = keywords?.length
   ? keywords.join(", ")
   : tags?.filter(t => t !== "others").join(", ");
 
-const breadcrumbLD = breadcrumbs?.length
-  ? {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumbs.map((crumb, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: crumb.name,
-        item: crumb.url,
-      })),
-    }
-  : null;
-
 const socialImageURL = new URL(ogImage, Astro.url);
+const siteLang = currentLang === "en" ? "en" : "ko";
+const personId = `${SITE.website.replace(/\/$/, "")}/#person`;
+const websiteId = `${SITE.website.replace(/\/$/, "")}/#website`;
 
-const structuredData = pubDatetime
-  ? {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      headline: title,
-      image: `${socialImageURL}`,
-      datePublished: pubDatetime.toISOString(),
-      ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-      author: [
-        {
-          "@type": "Person",
-          name: author,
-          ...(profile && { url: profile }),
-        },
-      ],
-    }
-  : {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: title,
-      url: `${canonicalURL}`,
-    };
-
-const organizationLD = {
-  "@context": "https://schema.org",
+const personLD = {
   "@type": "Person",
+  "@id": personId,
   name: SITE.author,
   url: SITE.website,
   description: SITE.desc,
-  sameAs: ["https://www.linkedin.com/in/jacob-baa05b2b0/"],
+  sameAs: Array.from(
+    new Set(
+      [profile, "https://www.linkedin.com/in/jacob-baa05b2b0/", "https://github.com/jongseokleedev"]
+        .filter(Boolean) as string[]
+    )
+  ),
+};
+
+const websiteLD = {
+  "@type": "WebSite",
+  "@id": websiteId,
+  url: SITE.website,
+  name: SITE.title,
+  description: SITE.desc,
+  inLanguage: siteLang,
+  publisher: { "@id": personId },
+};
+
+const articleLD = pubDatetime
+  ? {
+      "@type": "BlogPosting",
+      "@id": `${canonicalURL}#article`,
+      mainEntityOfPage: `${canonicalURL}`,
+      headline: title,
+      description,
+      image: {
+        "@type": "ImageObject",
+        url: `${socialImageURL}`,
+        width: 1200,
+        height: 630,
+      },
+      datePublished: pubDatetime.toISOString(),
+      ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+      ...(!modDatetime && { dateModified: pubDatetime.toISOString() }),
+      inLanguage: siteLang,
+      ...(tags?.length && { keywords: tags.filter(t => t !== "others").join(", ") }),
+      author: { "@id": personId },
+      publisher: { "@id": personId },
+      isPartOf: { "@id": websiteId },
+    }
+  : null;
+
+const breadcrumbInner = breadcrumbs?.length
+  ? breadcrumbs.map((crumb, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: crumb.name,
+      item: crumb.url,
+    }))
+  : null;
+
+const graph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    personLD,
+    websiteLD,
+    ...(articleLD ? [articleLD] : []),
+    ...(breadcrumbInner
+      ? [
+          {
+            "@type": "BreadcrumbList",
+            "@id": `${canonicalURL}#breadcrumb`,
+            itemListElement: breadcrumbInner,
+          },
+        ]
+      : []),
+  ],
 };
 ---
 
@@ -181,11 +214,7 @@ const organizationLD = {
     <meta property="twitter:image" content={socialImageURL} />
 
     <!-- Google JSON-LD Structured data -->
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationLD)} />
-    {breadcrumbLD && (
-      <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLD)} />
-    )}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(graph)} />
 
     <!-- Enable RSS feed auto-discovery  -->
     <!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery -->
