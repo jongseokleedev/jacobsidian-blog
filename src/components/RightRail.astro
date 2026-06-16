@@ -321,6 +321,18 @@ const postUrl = (post: (typeof allPosts)[number]) => {
     const el = document.getElementById("stats-today");
     if (!el) return;
 
+    const todayKst = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+
+    // SPA 네비게이션 대비: 인라인 스크립트가 재실행되지 않으므로 여기서도 캐시 하이드레이션
+    try {
+      const cached = JSON.parse(localStorage.getItem("jb:today") || "null");
+      if (cached && cached.date === todayKst && typeof cached.value === "number") {
+        if (el.textContent !== String(cached.value)) {
+          el.textContent = String(cached.value);
+        }
+      }
+    } catch { /* ignore */ }
+
     const now = new Date();
     const kstOffset = 9 * 60 * 60 * 1000;
     const kstNow = new Date(now.getTime() + kstOffset);
@@ -340,11 +352,15 @@ const postUrl = (post: (typeof allPosts)[number]) => {
       if (error || !data) return;
       const unique = new Set((data as { visitor_id: string | null }[]).map(r => r.visitor_id).filter(Boolean));
       const count = unique.size;
+
       const from = Number.parseInt(el.textContent || "", 10);
-      const start = Number.isFinite(from) ? from : 0;
-      if (start === count) {
+      const hadNumber = Number.isFinite(from);
+
+      if (!hadNumber) {
+        // 첫 방문 (캐시 없음): 카운트업 없이 바로 값 세팅
         el.textContent = String(count);
-      } else {
+      } else if (from !== count) {
+        const start = from;
         const duration = 400;
         const t0 = performance.now();
         const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -355,7 +371,7 @@ const postUrl = (post: (typeof allPosts)[number]) => {
         };
         requestAnimationFrame(step);
       }
-      const todayKst = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+
       localStorage.setItem("jb:today", JSON.stringify({ date: todayKst, value: count }));
     } catch { /* silent */ }
   }
