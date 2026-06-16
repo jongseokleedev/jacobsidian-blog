@@ -33,9 +33,16 @@ export function pickSlug(
 
 function toIsoDate(value: unknown): string | undefined {
   if (value == null) return undefined;
-  if (value instanceof Date) return value.toISOString();
+  // YAML parses bare dates (YYYY-MM-DD) as Date at UTC midnight. Treat those as KST midnight
+  // so scheduled posts surface from KST 00:00, not KST 09:00.
+  if (value instanceof Date) {
+    const iso = value.toISOString();
+    if (iso.endsWith("T00:00:00.000Z")) {
+      return new Date(`${iso.slice(0, 10)}T00:00:00+09:00`).toISOString();
+    }
+    return iso;
+  }
   const s = String(value).trim();
-  // Bare date (YYYY-MM-DD) → interpret as KST midnight (UTC-9h = UTC+9 → T15:00:00Z prev day)
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
     const date = new Date(`${s}T00:00:00+09:00`);
     if (Number.isNaN(date.getTime())) return undefined;
