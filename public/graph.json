@@ -794,6 +794,19 @@
       "pubDatetime": "2026-06-15T15:00:00.000Z"
     },
     {
+      "id": "20260617-1826",
+      "title": "code - 눈치 없는 상대와 나누는 대화",
+      "url": "/essay/thought/20260617-1826",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-16T15:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -3234,6 +3247,21 @@
     },
     {
       "source": "20260616-1613",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260617-1826",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260617-1826",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260617-1826",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     }
