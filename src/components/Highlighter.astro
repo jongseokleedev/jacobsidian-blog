@@ -39,17 +39,22 @@ const { postId } = Astro.props;
     color: inherit;
     cursor: pointer;
     /* 베이스: 균일한 노란 형광펜 색 */
-    background-color: rgba(253, 224, 71, 0.5);
-    /* 결: feTurbulence로 만든 거친 점 패턴 (구아슈 붓 자국) — RGB 노이즈를 alpha로 끌어와 점박이 생성 */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='32'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0 0 1 0 0 0 -0.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-    background-size: 120px 1.4em;
+    background-color: rgba(253, 224, 71, 0.55);
+    /* 구아슈 붓 자국: 두 겹 — 큰 얼룩 + 미세한 결 */
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='40'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.8' numOctaves='1' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.22 0 0 0 0 0 1 0 0 0 -0.4'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='44'><filter id='b'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.6 0 0 0 0 0 1 0 0 0 -0.55'/></filter><rect width='100%' height='100%' filter='url(%23b)'/></svg>");
+    background-size: 160px 1.5em, 220px 1.6em;
     background-repeat: repeat;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }
   :root[data-theme="dark"] mark.jb-hl {
-    background-color: rgba(253, 224, 71, 0.3);
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='32'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -0.4'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-color: rgba(253, 224, 71, 0.38);
+    /* 다크 모드: 어두운 배경에 묻히지 않도록 밝은 오렌지/노랑 톤의 점 */
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='40'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.8' numOctaves='1' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 0.78 0 0 0 0 0.3 1 0 0 0 -0.5'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='44'><filter id='b'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 0.92 0 0 0 0 0.4 1 0 0 0 -0.65'/></filter><rect width='100%' height='100%' filter='url(%23b)'/></svg>");
   }
 </style>
 
@@ -248,66 +253,81 @@ const { postId } = Astro.props;
       }
     });
 
-    // 선택이 비워지면 팝업 숨김 (드래그 중에는 절대 보이지 않음)
-    document.addEventListener("selectionchange", () => {
-      const sel = window.getSelection();
-      if (!sel || sel.toString().trim().length < 2) hide(addPopup);
-    }, { signal });
-
-    // 드래그/탭이 끝났을 때만 팝업 표시
     const articleEl = article;
     const addPopupEl = addPopup;
+    let isPointerDown = false;
+    let stableTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // popup 표시 시점에 selection을 캡처 — 이후 selection이 풀려도 highlight 생성 가능
+    let pendingHl: { text: string; start: number; end: number } | null = null;
+
     function tryShowFromSelection() {
       const sel = window.getSelection();
-      if (!sel || sel.rangeCount === 0) return;
+      if (!sel || sel.rangeCount === 0) { hide(addPopupEl); pendingHl = null; return; }
       const text = sel.toString();
-      if (text.trim().length < 2) return;
+      if (text.trim().length < 2) { hide(addPopupEl); pendingHl = null; return; }
       const range = sel.getRangeAt(0);
-      if (!articleEl.contains(range.startContainer) || !articleEl.contains(range.endContainer)) return;
+      if (!articleEl.contains(range.startContainer) || !articleEl.contains(range.endContainer)) {
+        hide(addPopupEl);
+        pendingHl = null;
+        return;
+      }
+      const offsets = rangeToOffsets(articleEl, range);
+      if (!offsets) { hide(addPopupEl); pendingHl = null; return; }
       const rect = range.getBoundingClientRect();
       if (rect.width === 0 && rect.height === 0) return;
+      pendingHl = { text, start: offsets.start, end: offsets.end };
       showPopup(addPopupEl, rect);
     }
-    function handleSelectionEnd() {
-      // iOS는 touchend 직후에도 selection이 조금 늦게 확정됨 → 살짝 지연
-      setTimeout(tryShowFromSelection, 10);
-      setTimeout(tryShowFromSelection, 120);
-    }
-    document.addEventListener("mouseup", handleSelectionEnd, { signal });
-    document.addEventListener("touchend", handleSelectionEnd, { signal });
-    // 모바일에서 사용자가 selection handle을 놓는 순간을 잡기 위해
-    document.addEventListener("pointerup", handleSelectionEnd, { signal });
 
-    // 팝업 터치 시 selection이 사라지지 않도록 보호
-    addPopup.addEventListener("touchstart", (e) => e.preventDefault(), { signal, passive: false });
-    removePopup.addEventListener("touchstart", (e) => e.preventDefault(), { signal, passive: false });
+    // 데스크톱 드래그/모바일 selection handle 추적
+    document.addEventListener("pointerdown", () => {
+      isPointerDown = true;
+      hide(addPopupEl);
+    }, { signal });
+    document.addEventListener("pointerup", () => {
+      isPointerDown = false;
+      // selection 확정될 시간 약간 줌
+      setTimeout(tryShowFromSelection, 30);
+    }, { signal });
 
-    addPopup.addEventListener("mousedown", (e) => e.preventDefault(), { signal });
-
-    addPopup.addEventListener("click", async () => {
+    // selectionchange는 모바일 selection handle 조정 시 신뢰할 수 있는 시그널
+    document.addEventListener("selectionchange", () => {
+      if (stableTimer) clearTimeout(stableTimer);
       const sel = window.getSelection();
-      if (!sel || sel.rangeCount === 0) return;
-      const range = sel.getRangeAt(0);
-      const text = sel.toString();
-      const offsets = rangeToOffsets(article, range);
-      if (!offsets) { hide(addPopup); return; }
+      const text = sel?.toString() ?? "";
+      if (text.trim().length < 2) { hide(addPopupEl); return; }
+      // 드래그 중에는 표시하지 않음 — 손 뗄 때까지 기다림
+      if (isPointerDown) return;
+      // selection이 멈춘 뒤(=사용자 조정 끝)에만 표시
+      stableTimer = setTimeout(tryShowFromSelection, 250);
+    }, { signal });
 
+    async function commitAddHighlight() {
+      if (!pendingHl) return;
       const hl: Highlight = {
         id: crypto.randomUUID(),
         post_id: postId,
-        start_offset: offsets.start,
-        end_offset: offsets.end,
-        text,
+        start_offset: pendingHl.start,
+        end_offset: pendingHl.end,
+        text: pendingHl.text,
       };
+      pendingHl = null;
       list.push(hl);
       saveLocal(postId, list);
-      sel.removeAllRanges();
+      window.getSelection()?.removeAllRanges();
       renderAll(article, list);
       hide(addPopup);
 
       const { getFingerprint } = await import("@/components/comments/lib");
       const fp = (await getFingerprint()) || null;
       pushRemote(hl, visitorId, fp);
+    }
+    // pointerdown 사용: 클릭/탭보다 먼저 발화되어 selection 해제 전에 캡처된 데이터로 commit 가능
+    addPopup.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      commitAddHighlight();
     }, { signal });
 
     // 기존 하이라이트 클릭 → 삭제 팝업
@@ -320,16 +340,20 @@ const { postId } = Astro.props;
       showPopup(removePopup, rect);
     }, { signal });
 
-    removePopup.addEventListener("mousedown", (e) => e.preventDefault(), { signal });
-    removePopup.addEventListener("click", () => {
+    function commitRemove() {
       if (!activeId) return;
       const id = activeId;
+      activeId = null;
       list = list.filter(h => h.id !== id);
       saveLocal(postId, list);
       renderAll(article, list);
       hide(removePopup);
-      activeId = null;
       deleteRemote(id);
+    }
+    removePopup.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      commitRemove();
     }, { signal });
 
     document.addEventListener("click", (e) => {
