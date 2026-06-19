@@ -235,6 +235,9 @@ const { postId } = Astro.props;
     const removePopup = document.getElementById("hl-remove-popup") as HTMLElement | null;
     if (!idEl || !article || !addPopup || !removePopup) return;
 
+    const articleEl = article;
+    const addPopupEl = addPopup;
+
     const postId = idEl.dataset.postId!;
     const visitorId = getVisitorId();
 
@@ -255,8 +258,6 @@ const { postId } = Astro.props;
       }
     });
 
-    const articleEl = article;
-    const addPopupEl = addPopup;
     let isPointerDown = false;
     let stableTimer: ReturnType<typeof setTimeout> | null = null;
 
