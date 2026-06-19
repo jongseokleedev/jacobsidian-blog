@@ -8,26 +8,28 @@ const { postId } = Astro.props;
 <span id="hl-post-id" data-post-id={postId} style="display:none" aria-hidden="true"></span>
 
 <!-- 형광펜 팝업 (선택 시) -->
-<div
+<button
+  type="button"
   id="hl-add-popup"
-  class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg cursor-pointer"
-  style="pointer-events:auto; transform: translateX(-50%);"
+  class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg"
+  style="pointer-events:auto; transform: translateX(-50%); touch-action: manipulation; -webkit-tap-highlight-color: transparent;"
 >
   <span class="inline-block size-3 rounded-sm" style="background:#fde047;"></span>
   <span class="text-xs text-foreground/70 whitespace-nowrap">형광펜</span>
-</div>
+</button>
 
 <!-- 기존 하이라이트 클릭 시 삭제 팝업 -->
-<div
+<button
+  type="button"
   id="hl-remove-popup"
-  class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg cursor-pointer"
-  style="pointer-events:auto; transform: translateX(-50%);"
+  class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg"
+  style="pointer-events:auto; transform: translateX(-50%); touch-action: manipulation; -webkit-tap-highlight-color: transparent;"
 >
   <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
   </svg>
   <span class="text-xs text-foreground/70 whitespace-nowrap">하이라이트 삭제</span>
-</div>
+</button>
 
 <style is:global>
   mark.jb-hl {
@@ -281,25 +283,29 @@ const { postId } = Astro.props;
     }
 
     // 데스크톱 드래그/모바일 selection handle 추적
-    document.addEventListener("pointerdown", () => {
+    document.addEventListener("pointerdown", (e) => {
+      const t = e.target as HTMLElement;
+      // 팝업 자체를 누른 경우는 isPointerDown 토글하지 않음 (선택 보존)
+      if (t.closest("#hl-add-popup") || t.closest("#hl-remove-popup")) return;
       isPointerDown = true;
       hide(addPopupEl);
+      // 기존 하이라이트(mark) 외부를 눌렀을 때만 삭제 팝업 닫음
+      if (!t.closest("mark.jb-hl")) hide(removePopup);
     }, { signal });
-    document.addEventListener("pointerup", () => {
+    document.addEventListener("pointerup", (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest("#hl-add-popup") || t.closest("#hl-remove-popup")) return;
       isPointerDown = false;
-      // selection 확정될 시간 약간 줌
       setTimeout(tryShowFromSelection, 30);
     }, { signal });
 
-    // selectionchange는 모바일 selection handle 조정 시 신뢰할 수 있는 시그널
+    // selectionchange: 표시 스케줄만 담당, 숨기기는 pointerdown이 담당
     document.addEventListener("selectionchange", () => {
       if (stableTimer) clearTimeout(stableTimer);
       const sel = window.getSelection();
       const text = sel?.toString() ?? "";
-      if (text.trim().length < 2) { hide(addPopupEl); return; }
-      // 드래그 중에는 표시하지 않음 — 손 뗄 때까지 기다림
+      if (text.trim().length < 2) return;
       if (isPointerDown) return;
-      // selection이 멈춘 뒤(=사용자 조정 끝)에만 표시
       stableTimer = setTimeout(tryShowFromSelection, 250);
     }, { signal });
 
@@ -323,8 +329,8 @@ const { postId } = Astro.props;
       const fp = (await getFingerprint()) || null;
       pushRemote(hl, visitorId, fp);
     }
-    // pointerdown 사용: 클릭/탭보다 먼저 발화되어 selection 해제 전에 캡처된 데이터로 commit 가능
-    addPopup.addEventListener("pointerdown", (e) => {
+    // <button>에 대한 표준 click 이벤트 — 데스크톱/iOS/Android 모두 안정적
+    addPopup.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       commitAddHighlight();
@@ -334,7 +340,7 @@ const { postId } = Astro.props;
     let activeId: string | null = null;
     article.addEventListener("click", (e) => {
       const target = (e.target as HTMLElement).closest("mark.jb-hl") as HTMLElement | null;
-      if (!target) { hide(removePopup); activeId = null; return; }
+      if (!target) return;
       activeId = target.dataset.hlId ?? null;
       const rect = target.getBoundingClientRect();
       showPopup(removePopup, rect);
@@ -350,15 +356,10 @@ const { postId } = Astro.props;
       hide(removePopup);
       deleteRemote(id);
     }
-    removePopup.addEventListener("pointerdown", (e) => {
+    removePopup.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       commitRemove();
-    }, { signal });
-
-    document.addEventListener("click", (e) => {
-      const t = e.target as HTMLElement;
-      if (!t.closest("mark.jb-hl") && !t.closest("#hl-remove-popup")) hide(removePopup);
     }, { signal });
   }
 
