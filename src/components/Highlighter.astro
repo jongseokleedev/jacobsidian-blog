@@ -239,7 +239,7 @@ const { postId } = Astro.props;
     const visitorId = getVisitorId();
 
     let list = loadLocal(postId);
-    renderAll(article, list);
+    renderAll(articleEl, list);
 
     // remote sync (병합 — id 기준)
     syncFromRemote(postId, visitorId).then(remote => {
@@ -251,7 +251,7 @@ const { postId } = Astro.props;
       if (merged.length !== list.length) {
         list = merged;
         saveLocal(postId, list);
-        renderAll(article, list);
+        renderAll(articleEl, list);
       }
     });
 
@@ -322,7 +322,7 @@ const { postId } = Astro.props;
       list.push(hl);
       saveLocal(postId, list);
       window.getSelection()?.removeAllRanges();
-      renderAll(article, list);
+      renderAll(articleEl, list);
       hide(addPopup);
 
       const { getFingerprint } = await import("@/components/comments/lib");
@@ -352,7 +352,7 @@ const { postId } = Astro.props;
       activeId = null;
       list = list.filter(h => h.id !== id);
       saveLocal(postId, list);
-      renderAll(article, list);
+      renderAll(articleEl, list);
       hide(removePopup);
       deleteRemote(id);
     }
