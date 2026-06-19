@@ -39,7 +39,7 @@ const tocHeadings = headings.filter(h => h.depth <= 3);
 
 {tocHeadings.length > 0 && (
   <div id="toc-drawer" class="lg:hidden fixed inset-0 z-[60] pointer-events-none">
-    <div id="toc-backdrop" class="toc-backdrop absolute inset-0" style="background: var(--overlay-bg); backdrop-filter: blur(var(--overlay-blur));"></div>
+    <div id="toc-backdrop" class="toc-backdrop absolute left-0 right-0 bottom-0" style="top: 56px; background: var(--overlay-bg); backdrop-filter: blur(var(--overlay-blur));"></div>
     <nav id="toc-panel" class="toc-panel absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-xl max-h-[50vh] overflow-y-auto">
       <div class="flex items-center justify-between px-5 py-2.5 border-b border-border sticky top-0 bg-background">
         <span class="bd-overline">On This Page</span>
@@ -144,6 +144,13 @@ const tocHeadings = headings.filter(h => h.depth <= 3);
     const panel = document.getElementById("toc-panel");
     const closeBtn = document.getElementById("toc-close-btn");
     if (!openBtn || !drawer || !backdrop || !panel || !closeBtn) return;
+
+    // <main>에 view-transition-name이 걸려있어 자체 paint layer가 생기고,
+    // 그 안에 있는 backdrop-filter는 main 안쪽 컨텐츠를 blur하지 못함.
+    // drawer를 body 직속으로 이동해 main 밖에서 합성되도록 한다.
+    if (drawer.parentElement !== document.body) {
+      document.body.appendChild(drawer);
+    }
 
     function open() {
       drawer.classList.add("toc-is-open");

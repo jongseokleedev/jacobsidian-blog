@@ -1,0 +1,343 @@
+---
+interface Props {
+  postId: string;
+}
+const { postId } = Astro.props;
+---
+
+<span id="hl-post-id" data-post-id={postId} style="display:none" aria-hidden="true"></span>
+
+<!-- 형광펜 팝업 (선택 시) -->
+<div
+  id="hl-add-popup"
+  class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg cursor-pointer"
+  style="pointer-events:auto; transform: translateX(-50%);"
+>
+  <span class="inline-block size-3 rounded-sm" style="background:#fde047;"></span>
+  <span class="text-xs text-foreground/70 whitespace-nowrap">형광펜</span>
+</div>
+
+<!-- 기존 하이라이트 클릭 시 삭제 팝업 -->
+<div
+  id="hl-remove-popup"
+  class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg cursor-pointer"
+  style="pointer-events:auto; transform: translateX(-50%);"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+  </svg>
+  <span class="text-xs text-foreground/70 whitespace-nowrap">하이라이트 삭제</span>
+</div>
+
+<style is:global>
+  mark.jb-hl {
+    /* 레이아웃 변화 0: padding/margin/border 모두 없음 */
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    color: inherit;
+    cursor: pointer;
+    /* 베이스: 균일한 노란 형광펜 색 */
+    background-color: rgba(253, 224, 71, 0.5);
+    /* 결: feTurbulence로 만든 거친 점 패턴 (구아슈 붓 자국) — RGB 노이즈를 alpha로 끌어와 점박이 생성 */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='32'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0 0 1 0 0 0 -0.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 120px 1.4em;
+    background-repeat: repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  :root[data-theme="dark"] mark.jb-hl {
+    background-color: rgba(253, 224, 71, 0.3);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='32'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -0.4'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+</style>
+
+<script>
+  type Highlight = {
+    id: string;
+    post_id: string;
+    start_offset: number;
+    end_offset: number;
+    text: string;
+  };
+
+  let abortCtrl: AbortController | null = null;
+
+  function getVisitorId(): string {
+    let v = localStorage.getItem("visitor_id");
+    if (!v) {
+      v = crypto.randomUUID();
+      localStorage.setItem("visitor_id", v);
+    }
+    return v;
+  }
+
+  function lsKey(postId: string) {
+    return `jb:highlights:${postId}`;
+  }
+  function loadLocal(postId: string): Highlight[] {
+    try { return JSON.parse(localStorage.getItem(lsKey(postId)) ?? "[]"); }
+    catch { return []; }
+  }
+  function saveLocal(postId: string, list: Highlight[]) {
+    localStorage.setItem(lsKey(postId), JSON.stringify(list));
+  }
+
+  // 텍스트 노드 워커: <mark.jb-hl> 안쪽도 포함해서 article 전체 텍스트 기준 오프셋 사용.
+  function walkTextNodes(root: HTMLElement): Text[] {
+    const out: Text[] = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let n: Node | null;
+    while ((n = walker.nextNode())) out.push(n as Text);
+    return out;
+  }
+
+  function rangeToOffsets(article: HTMLElement, range: Range): { start: number; end: number } | null {
+    const nodes = walkTextNodes(article);
+    let start = -1, end = -1, cursor = 0;
+    for (const node of nodes) {
+      const len = node.data.length;
+      if (node === range.startContainer) start = cursor + range.startOffset;
+      if (node === range.endContainer) { end = cursor + range.endOffset; break; }
+      cursor += len;
+    }
+    if (start < 0 || end < 0 || end <= start) return null;
+    return { start, end };
+  }
+
+  function applyHighlight(article: HTMLElement, hl: Highlight) {
+    const nodes = walkTextNodes(article);
+    let cursor = 0;
+    for (const node of nodes) {
+      const len = node.data.length;
+      const nodeStart = cursor;
+      const nodeEnd = cursor + len;
+      cursor = nodeEnd;
+      if (nodeEnd <= hl.start_offset) continue;
+      if (nodeStart >= hl.end_offset) break;
+      // skip if 이미 jb-hl 내부
+      if ((node.parentElement as HTMLElement | null)?.closest("mark.jb-hl")) continue;
+
+      const localStart = Math.max(0, hl.start_offset - nodeStart);
+      const localEnd = Math.min(len, hl.end_offset - nodeStart);
+      if (localStart >= localEnd) continue;
+
+      const before = node.data.slice(0, localStart);
+      const mid = node.data.slice(localStart, localEnd);
+      const after = node.data.slice(localEnd);
+
+      const mark = document.createElement("mark");
+      mark.className = "jb-hl";
+      mark.dataset.hlId = hl.id;
+      mark.textContent = mid;
+
+      const parent = node.parentNode!;
+      if (before) parent.insertBefore(document.createTextNode(before), node);
+      parent.insertBefore(mark, node);
+      if (after) {
+        node.data = after;
+      } else {
+        parent.removeChild(node);
+      }
+    }
+  }
+
+  function clearHighlights(article: HTMLElement) {
+    const marks = article.querySelectorAll("mark.jb-hl");
+    marks.forEach(m => {
+      const parent = m.parentNode!;
+      while (m.firstChild) parent.insertBefore(m.firstChild, m);
+      parent.removeChild(m);
+      parent.normalize();
+    });
+  }
+
+  function renderAll(article: HTMLElement, list: Highlight[]) {
+    clearHighlights(article);
+    // 시작 오프셋 순서로 적용
+    [...list].sort((a, b) => a.start_offset - b.start_offset).forEach(hl => applyHighlight(article, hl));
+  }
+
+  async function syncFromRemote(postId: string, visitorId: string): Promise<Highlight[] | null> {
+    try {
+      const { getSupabase } = await import("@/components/comments/lib");
+      const db = getSupabase();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (db as any)
+        .from("highlights")
+        .select("id, post_id, start_offset, end_offset, text")
+        .eq("post_id", postId)
+        .eq("visitor_id", visitorId);
+      if (error || !data) return null;
+      return data as Highlight[];
+    } catch { return null; }
+  }
+
+  async function pushRemote(hl: Highlight, visitorId: string, fingerprintId: string | null) {
+    try {
+      const { getSupabase } = await import("@/components/comments/lib");
+      const db = getSupabase();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (db as any).from("highlights").insert({
+        id: hl.id,
+        post_id: hl.post_id,
+        start_offset: hl.start_offset,
+        end_offset: hl.end_offset,
+        text: hl.text,
+        visitor_id: visitorId,
+        fingerprint_id: fingerprintId,
+      });
+    } catch { /* fire-and-forget */ }
+  }
+
+  async function deleteRemote(id: string) {
+    try {
+      const { getSupabase } = await import("@/components/comments/lib");
+      const db = getSupabase();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (db as any).from("highlights").delete().eq("id", id);
+    } catch { /* fire-and-forget */ }
+  }
+
+  function showPopup(el: HTMLElement, rect: DOMRect) {
+    // 뷰포트 경계 안으로 클램프 (모바일 좁은 화면 대응)
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const pad = 12;
+    const popupW = el.offsetWidth || 140;
+    let left = rect.left + rect.width / 2;
+    left = Math.max(popupW / 2 + pad, Math.min(vw - popupW / 2 - pad, left));
+    let top = rect.bottom + 10;
+    // 화면 아래로 벗어나면 selection 위쪽에 표시
+    if (top + 40 > vh) top = Math.max(pad, rect.top - 44);
+    el.style.top = `${top}px`;
+    el.style.left = `${left}px`;
+    el.classList.remove("hidden");
+  }
+  function hide(el: HTMLElement | null) { el?.classList.add("hidden"); }
+
+  async function init() {
+    abortCtrl?.abort();
+    abortCtrl = new AbortController();
+    const signal = abortCtrl.signal;
+
+    const idEl = document.getElementById("hl-post-id") as HTMLElement | null;
+    const article = document.getElementById("article");
+    const addPopup = document.getElementById("hl-add-popup") as HTMLElement | null;
+    const removePopup = document.getElementById("hl-remove-popup") as HTMLElement | null;
+    if (!idEl || !article || !addPopup || !removePopup) return;
+
+    const postId = idEl.dataset.postId!;
+    const visitorId = getVisitorId();
+
+    let list = loadLocal(postId);
+    renderAll(article, list);
+
+    // remote sync (병합 — id 기준)
+    syncFromRemote(postId, visitorId).then(remote => {
+      if (!remote) return;
+      const byId = new Map<string, Highlight>();
+      for (const h of list) byId.set(h.id, h);
+      for (const h of remote) byId.set(h.id, h);
+      const merged = [...byId.values()];
+      if (merged.length !== list.length) {
+        list = merged;
+        saveLocal(postId, list);
+        renderAll(article, list);
+      }
+    });
+
+    // 선택이 비워지면 팝업 숨김 (드래그 중에는 절대 보이지 않음)
+    document.addEventListener("selectionchange", () => {
+      const sel = window.getSelection();
+      if (!sel || sel.toString().trim().length < 2) hide(addPopup);
+    }, { signal });
+
+    // 드래그/탭이 끝났을 때만 팝업 표시
+    const articleEl = article;
+    const addPopupEl = addPopup;
+    function tryShowFromSelection() {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      const text = sel.toString();
+      if (text.trim().length < 2) return;
+      const range = sel.getRangeAt(0);
+      if (!articleEl.contains(range.startContainer) || !articleEl.contains(range.endContainer)) return;
+      const rect = range.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
+      showPopup(addPopupEl, rect);
+    }
+    function handleSelectionEnd() {
+      // iOS는 touchend 직후에도 selection이 조금 늦게 확정됨 → 살짝 지연
+      setTimeout(tryShowFromSelection, 10);
+      setTimeout(tryShowFromSelection, 120);
+    }
+    document.addEventListener("mouseup", handleSelectionEnd, { signal });
+    document.addEventListener("touchend", handleSelectionEnd, { signal });
+    // 모바일에서 사용자가 selection handle을 놓는 순간을 잡기 위해
+    document.addEventListener("pointerup", handleSelectionEnd, { signal });
+
+    // 팝업 터치 시 selection이 사라지지 않도록 보호
+    addPopup.addEventListener("touchstart", (e) => e.preventDefault(), { signal, passive: false });
+    removePopup.addEventListener("touchstart", (e) => e.preventDefault(), { signal, passive: false });
+
+    addPopup.addEventListener("mousedown", (e) => e.preventDefault(), { signal });
+
+    addPopup.addEventListener("click", async () => {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      const range = sel.getRangeAt(0);
+      const text = sel.toString();
+      const offsets = rangeToOffsets(article, range);
+      if (!offsets) { hide(addPopup); return; }
+
+      const hl: Highlight = {
+        id: crypto.randomUUID(),
+        post_id: postId,
+        start_offset: offsets.start,
+        end_offset: offsets.end,
+        text,
+      };
+      list.push(hl);
+      saveLocal(postId, list);
+      sel.removeAllRanges();
+      renderAll(article, list);
+      hide(addPopup);
+
+      const { getFingerprint } = await import("@/components/comments/lib");
+      const fp = (await getFingerprint()) || null;
+      pushRemote(hl, visitorId, fp);
+    }, { signal });
+
+    // 기존 하이라이트 클릭 → 삭제 팝업
+    let activeId: string | null = null;
+    article.addEventListener("click", (e) => {
+      const target = (e.target as HTMLElement).closest("mark.jb-hl") as HTMLElement | null;
+      if (!target) { hide(removePopup); activeId = null; return; }
+      activeId = target.dataset.hlId ?? null;
+      const rect = target.getBoundingClientRect();
+      showPopup(removePopup, rect);
+    }, { signal });
+
+    removePopup.addEventListener("mousedown", (e) => e.preventDefault(), { signal });
+    removePopup.addEventListener("click", () => {
+      if (!activeId) return;
+      const id = activeId;
+      list = list.filter(h => h.id !== id);
+      saveLocal(postId, list);
+      renderAll(article, list);
+      hide(removePopup);
+      activeId = null;
+      deleteRemote(id);
+    }, { signal });
+
+    document.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement;
+      if (!t.closest("mark.jb-hl") && !t.closest("#hl-remove-popup")) hide(removePopup);
+    }, { signal });
+  }
+
+  init();
+  document.addEventListener("astro:after-swap", init);
+</script>

@@ -19,6 +19,7 @@ import RelatedPosts from "@/components/RelatedPosts.astro";
 import Comments from "@/components/comments/Comments.astro";
 import PostReactions from "@/components/reactions/PostReactions.astro";
 import PageViewTracker from "@/components/analytics/PageViewTracker.astro";
+import Highlighter from "@/components/Highlighter.astro";
 import ViewCount from "@/components/ViewCount.astro";
 
 type Entry = CollectionEntry<"posts">;
@@ -265,17 +266,7 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
   >
     <Content />
   </article>
-  <!-- 텍스트 인용 공유 팝업 -->
-  <div
-    id="quote-share-popup"
-    class="hidden fixed z-[100] flex items-center gap-1 rounded-full border border-(--border) bg-(--background) px-3 py-1.5 shadow-lg cursor-pointer"
-    style="pointer-events:auto; transform: translateX(-50%);"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="size-3.5 text-foreground/50 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-    <span class="text-xs text-foreground/70 whitespace-nowrap">인용 공유</span>
-  </div>
+  <Highlighter postId={post.id} />
   <RelatedPosts currentPost={post} allPosts={posts} />
   <BackToTopButton headings={headings} />
 
@@ -581,57 +572,8 @@ const seriesSlug = seriesName ? await getSeriesSlug(seriesName) : null;
       if (e.key === "Escape") closeDropdown();
     }, { signal });
   }
-  let quoteHideTimer: ReturnType<typeof setTimeout> | null = null;
-  let quoteAbortCtrl: AbortController | null = null;
-
-  function initQuoteShare() {
-    quoteAbortCtrl?.abort();
-    if (quoteHideTimer) { clearTimeout(quoteHideTimer); quoteHideTimer = null; }
-    quoteAbortCtrl = new AbortController();
-    const signal = quoteAbortCtrl.signal;
-
-    const article = document.getElementById("article");
-    const popup = document.getElementById("quote-share-popup") as HTMLElement | null;
-    if (!article || !popup) return;
-
-    function hidePopup() {
-      popup!.classList.add("hidden");
-    }
-
-    document.addEventListener("selectionchange", () => {
-      if (quoteHideTimer) clearTimeout(quoteHideTimer);
-      const selection = window.getSelection();
-      const text = selection?.toString().trim() ?? "";
-
-      if (text.length < 10 || !article.contains(selection?.anchorNode ?? null)) {
-        quoteHideTimer = setTimeout(hidePopup, 300);
-        return;
-      }
-
-      const range = selection!.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      const top = rect.bottom + 8;
-      const left = rect.left + rect.width / 2;
-      popup.style.top = `${top}px`;
-      popup.style.left = `${left}px`;
-      popup.classList.remove("hidden");
-
-      popup.onclick = () => {
-        const url = buildShareUrl("quote");
-        const tweet = `"${text}"\n\n— ${document.title}\n${url}`;
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-        window.open(twitterUrl, "_blank", "noopener,noreferrer");
-        hidePopup();
-      };
-    }, { signal });
-
-    popup.addEventListener("mousedown", (e) => e.preventDefault(), { signal });
-  }
-
   initShareButton();
   document.addEventListener("astro:after-swap", initShareButton);
-  initQuoteShare();
-  document.addEventListener("astro:after-swap", initQuoteShare);
 </script>
 
 <script>
