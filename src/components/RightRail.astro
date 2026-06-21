@@ -492,4 +492,24 @@ const postUrl = (post: (typeof allPosts)[number]) => {
     setup();
     loadTodayStat();
   });
+
+  // 탭을 열어둔 채 KST 자정을 넘기는 경우를 대비해 다음 자정에 재계산을 예약
+  function scheduleMidnightRefresh() {
+    const now = new Date();
+    const kstOffset = 9 * 60 * 60 * 1000;
+    const kstNow = new Date(now.getTime() + kstOffset);
+    const nextKstMidnight = new Date(Date.UTC(
+      kstNow.getUTCFullYear(),
+      kstNow.getUTCMonth(),
+      kstNow.getUTCDate() + 1
+    ));
+    const msUntil = (nextKstMidnight.getTime() - kstOffset) - now.getTime() + 5_000; // 5초 버퍼
+    setTimeout(() => {
+      // localStorage 캐시도 무효화해서 이전 날짜로 잘못 표시되지 않도록
+      try { localStorage.removeItem("jb:today"); } catch { /* ignore */ }
+      loadTodayStat();
+      scheduleMidnightRefresh();
+    }, msUntil);
+  }
+  scheduleMidnightRefresh();
 </script>
