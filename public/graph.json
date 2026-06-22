@@ -820,6 +820,30 @@
       "pubDatetime": "2026-06-20T15:00:00.000Z"
     },
     {
+      "id": "20260622-1507",
+      "title": "함께 자라기 (애자일로 가는 길)",
+      "url": "/review/book/20260622-1507",
+      "type": "post",
+      "category": "review-book",
+      "tags": [
+        "[book]"
+      ],
+      "pubDatetime": "2026-06-21T15:00:00.000Z"
+    },
+    {
+      "id": "20261622-0115",
+      "title": "debugging - 벌레는 박멸보다 발견이 어렵다",
+      "url": "/essay/thought/20261622-0115",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "dev",
+        "essay",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-06-21T15:00:00.000Z"
+    },
+    {
       "id": "tag:독서",
       "title": "독서",
       "url": "/tags/독서",
@@ -1604,6 +1628,13 @@
       "tags": []
     },
     {
+      "id": "tag:[book]",
+      "title": "[book]",
+      "url": "/tags/[book]",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "series:어느 개발자의 인문학",
       "title": "어느 개발자의 인문학",
       "url": "/series/어느-개발자의-인문학",
@@ -1946,6 +1977,21 @@
     {
       "source": "20260531-1812",
       "target": "20260514-2112-2",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260622-1507",
+      "target": "20260516-1250",
+      "type": "wikilink"
+    },
+    {
+      "source": "20260622-1507",
+      "target": "20260515-1017",
+      "type": "wikilink"
+    },
+    {
+      "source": "20261622-0115",
+      "target": "20250915-1014",
       "type": "wikilink"
     },
     {
@@ -3290,6 +3336,26 @@
     },
     {
       "source": "20260621-1443",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260622-1507",
+      "target": "tag:[book]",
+      "type": "tag"
+    },
+    {
+      "source": "20261622-0115",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20261622-0115",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20261622-0115",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     }
