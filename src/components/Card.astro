@@ -27,20 +27,22 @@ const seriesSlug = series ? await getSeriesSlug(series) : null;
       <span>{series}</span>
     </a>
   )}
-  <a
-    href={getPath(entry as CollectionEntry<"posts">)}
-    class:list={[
-      "inline-block text-lg font-medium hover:text-accent transition-colors",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
-    ]}
-  >
-    <Heading>{title}</Heading>
-  </a>
+  <div class="flex items-baseline gap-2 flex-wrap">
+    <a
+      href={getPath(entry as CollectionEntry<"posts">)}
+      class:list={[
+        "inline-block text-lg font-medium hover:text-accent transition-colors",
+        "decoration-dashed underline-offset-4 hover:underline",
+        "focus-visible:no-underline focus-visible:underline-offset-0",
+      ]}
+    >
+      <Heading>{title}</Heading>
+    </a>
+    <CommentCount postId={entry.id} />
+  </div>
   <div class="flex items-center gap-2">
     <Datetime {pubDatetime} {modDatetime} {timezone} />
     <ViewCount postId={entry.id} />
-    <CommentCount postId={entry.id} />
   </div>
   <p>{description}</p>
 </li>
