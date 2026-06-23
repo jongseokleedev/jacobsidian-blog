@@ -39,3 +39,6 @@ candidates/
 .worktrees/
 docs/plans/
 docs/examples/
+
+# local mcp config (contains personal vault path)
+.mcp.json
