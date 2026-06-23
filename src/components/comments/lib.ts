@@ -251,7 +251,7 @@ export async function toggleLike(id: string): Promise<{ liked: boolean; count: n
     comment_id: id,
     delta,
     fingerprint_id: fingerprint_id || null,
-  }).then((r: any) => { if (r?.error) console.error("comment_like_events insert", r.error); });
+  });
   const { data } = await sb.from("comments").select("like_count").eq("id", id).single();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return { liked: nowLiked, count: (data as any)?.like_count ?? 0 };
@@ -325,6 +325,6 @@ export async function toggleReaction(
     emoji,
     delta,
     fingerprint_id: fingerprint_id || null,
-  }).then((r: any) => { if (r?.error) console.error("reaction_events insert", r.error); });
+  });
   return { reacted };
 }
