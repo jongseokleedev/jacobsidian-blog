@@ -16,12 +16,14 @@ html[data-theme="light"] {
   --accent: #3d5a99;
   --muted: #e8e6e3;
   --border: #d4d0cb;
+  --star: #f59e0b;
 }
 
 html[data-theme="dark"] {
   --background: #141414;
   --foreground: #e8e6e3;
   --accent: #7aa2d4;
+  --star: #fbbf24;
   --muted: #242424;
   --border: #2e2e2e;
 }
