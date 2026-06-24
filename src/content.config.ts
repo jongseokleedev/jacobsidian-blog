@@ -49,6 +49,8 @@ const posts = defineCollection({
       lang: z.enum(["ko", "en"]).optional().default("ko"),
       series: z.string().optional(),
       seriesOrder: z.number().optional(),
+      rating: z.number().min(0).max(5).multipleOf(0.5).optional(),
+      tagline: z.string().max(120).optional(),
     }),
 });
 

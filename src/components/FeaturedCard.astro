@@ -1,4 +1,6 @@
 ---
+import Rating from "@/components/Rating.astro";
+
 interface Props {
   item: {
     href: string;
@@ -10,6 +12,7 @@ interface Props {
     color: string;
     series?: string;
     seriesOrder?: number;
+    rating?: number;
   };
   index?: number;
   carousel?: boolean;
@@ -76,6 +79,9 @@ const dateStr = item.date.toLocaleDateString("ko-KR", { year: "numeric", month: 
       )}
     </div>
     <p class:list={["font-semibold text-[14px] leading-snug group-hover:text-accent transition-colors", item.series ? "line-clamp-2" : "line-clamp-3"]}>{item.title}</p>
+    {item.rating != null && (
+      <Rating value={item.rating} size="sm" />
+    )}
     {item.series && (
       <span
         class="mt-auto inline-flex max-w-full items-center gap-1 self-start rounded-full px-2 py-0.5 text-[10.5px] sm:text-[11px] leading-tight"

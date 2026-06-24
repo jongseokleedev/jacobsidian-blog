@@ -77,6 +77,8 @@ export interface NormalizedPost {
   links?: string[];
   series?: string;
   seriesOrder?: number;
+  rating?: number;
+  tagline?: string;
 }
 
 export function normalizePostFrontmatter(
@@ -108,6 +110,13 @@ export function normalizePostFrontmatter(
 
   if (typeof fm.series === "string" && fm.series.trim()) out.series = fm.series.trim();
   if (typeof fm.series_order === "number") out.seriesOrder = fm.series_order;
+
+  if (typeof fm.rating === "number" && fm.rating >= 0 && fm.rating <= 5) {
+    out.rating = Math.round(fm.rating * 2) / 2;
+  }
+  if (typeof fm.tagline === "string" && fm.tagline.trim()) {
+    out.tagline = stripControlChars(fm.tagline.trim());
+  }
 
   return out;
 }

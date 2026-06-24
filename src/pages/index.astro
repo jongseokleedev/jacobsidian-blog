@@ -76,6 +76,7 @@ const topPosts = scoredPosts.slice(0, 10).map(({ post }) => ({
   category: post.data.category,
   label: getCategoryMeta(post.data.category)?.label ?? post.data.category,
   color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
+  rating: post.data.rating,
 }));
 
 // Featured: latest posts (시리즈 글 포함)
@@ -93,6 +94,7 @@ const latestPosts = posts
     color: getCategoryMeta(post.data.category)?.color ?? "var(--fg-faint)",
     series: post.data.series as string | undefined,
     seriesOrder: post.data.seriesOrder as number | undefined,
+    rating: post.data.rating,
   }));
 ---
 
