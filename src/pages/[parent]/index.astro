@@ -4,6 +4,7 @@ import BlogShell from "@/layouts/BlogShell.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { PARENTS } from "@/utils/getCategories";
 import { slugifyStr } from "@/utils/slugify";
+import Rating from "@/components/Rating.astro";
 
 export async function getStaticPaths() {
   return Object.keys(PARENTS).map(parent => ({ params: { parent } }));
@@ -92,8 +93,9 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
                     </span>
                   )}
                 </span>
-                <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
-                  {subMeta?.label}
+                <span class="hidden sm:flex font-mono text-[11px] self-center justify-end items-center gap-2" style="color: var(--fg-faint);">
+                  {data.rating != null && <Rating value={data.rating} size="sm" />}
+                  <span>{subMeta?.label}</span>
                 </span>
               </a>
             </li>

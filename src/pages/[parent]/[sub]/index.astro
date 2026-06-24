@@ -5,6 +5,7 @@ import getSortedPosts from "@/utils/getSortedPosts";
 import { getCategoryMeta, PARENTS } from "@/utils/getCategories";
 import { getSeriesSlug } from "@/utils/getSeriesSlug";
 import SeriesCard from "@/components/SeriesCard.astro";
+import Rating from "@/components/Rating.astro";
 
 export async function getStaticPaths() {
   return Object.entries(PARENTS).flatMap(([parent, pm]) =>
@@ -160,7 +161,9 @@ for (const post of posts) {
                       </span>
                     )}
                   </span>
-                  <span class="hidden sm:block" />
+                  <span class="hidden sm:flex self-center justify-end items-center">
+                    {item.post.data.rating != null && <Rating value={item.post.data.rating} size="sm" />}
+                  </span>
                 </a>
               </li>
             ))}
