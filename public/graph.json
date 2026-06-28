@@ -755,6 +755,19 @@
       "pubDatetime": "2026-06-04T15:00:00.000Z"
     },
     {
+      "id": "20260603-1329",
+      "title": "정원철",
+      "url": "/fiction/novel/20260603-1329",
+      "type": "post",
+      "category": "fiction-novel",
+      "tags": [
+        "novel",
+        "fiction",
+        "9 to 6"
+      ],
+      "pubDatetime": "2026-06-25T15:00:00.000Z"
+    },
+    {
       "id": "20260612-1723",
       "title": "open source - 잠그는 대신, 오히려 활짝 열어두는 것",
       "url": "/essay/thought/20260612-1723",
@@ -829,6 +842,15 @@
         "[book]"
       ],
       "pubDatetime": "2026-06-21T15:00:00.000Z"
+    },
+    {
+      "id": "20260625-1147",
+      "title": "토이 스토리 5",
+      "url": "/review/cinema/20260625-1147",
+      "type": "post",
+      "category": "review-cinema",
+      "tags": [],
+      "pubDatetime": "2026-06-24T15:00:00.000Z"
     },
     {
       "id": "20261622-0115",
@@ -1628,6 +1650,20 @@
       "tags": []
     },
     {
+      "id": "tag:novel",
+      "title": "novel",
+      "url": "/tags/novel",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:fiction",
+      "title": "fiction",
+      "url": "/tags/fiction",
+      "type": "tag",
+      "tags": []
+    },
+    {
       "id": "tag:[book]",
       "title": "[book]",
       "url": "/tags/[book]",
@@ -1640,6 +1676,14 @@
       "url": "/series/어느-개발자의-인문학",
       "type": "series",
       "category": "essay-thought",
+      "tags": []
+    },
+    {
+      "id": "series:9 to 6",
+      "title": "9 to 6",
+      "url": "/series/9-to-6",
+      "type": "series",
+      "category": "fiction-novel",
       "tags": []
     }
   ],
@@ -3257,6 +3301,21 @@
     {
       "source": "20260531-2309",
       "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260603-1329",
+      "target": "tag:novel",
+      "type": "tag"
+    },
+    {
+      "source": "20260603-1329",
+      "target": "tag:fiction",
+      "type": "tag"
+    },
+    {
+      "source": "20260603-1329",
+      "target": "series:9 to 6",
       "type": "series"
     },
     {
