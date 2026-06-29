@@ -15,8 +15,8 @@ const { name, subtitle, description, href, chapterCount, color, ongoing } = Astr
 
 <a
   href={href}
-  class="group flex flex-col rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
-  style="max-width: 176px; width: 100%;"
+  class="group flex flex-col shrink-0 rounded-lg border border-border hover:border-accent transition-colors overflow-hidden outline-none focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent focus-visible:outline-offset-2"
+  style="width: 176px; min-height: 320px; scroll-snap-align: start;"
 >
   <!-- 커버 -->
   <div
@@ -54,13 +54,13 @@ const { name, subtitle, description, href, chapterCount, color, ongoing } = Astr
   </div>
 
   <!-- 내지 -->
-  <div class="flex flex-col px-5 py-4 gap-2 border-t border-border">
+  <div class="flex flex-col flex-1 px-5 py-4 gap-2 border-t border-border">
     {description && (
       <p class="text-[11.5px] leading-relaxed line-clamp-3" style="color: var(--fg-mute);">
         {description}
       </p>
     )}
-    <div class="flex items-center justify-between mt-1">
+    <div class="flex items-center justify-between mt-auto pt-1">
       <span class="text-[10.5px] font-mono" style="color: var(--fg-faint);">{chapterCount}편</span>
       <span class="text-[10.5px]" style="color: var(--fg-faint);">읽기 →</span>
     </div>

@@ -269,6 +269,25 @@ html[data-theme="dark"] {
   }
 }
 
+/* ── Series carousel: mobile horizontal scroll, desktop wrap ── */
+.series-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.series-carousel::-webkit-scrollbar { display: none; }
+@media (min-width: 640px) {
+  .series-carousel {
+    flex-wrap: wrap;
+    gap: 16px;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+}
+
 .active-nav {
   @apply underline decoration-2 underline-offset-4;
   text-decoration-color: var(--accent);

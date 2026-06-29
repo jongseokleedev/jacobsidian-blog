@@ -40,7 +40,10 @@ async function exists(p: string): Promise<boolean> {
 // Parse all of them and merge (later blocks win on conflict).
 async function readMarkdown(absolutePath: string) {
   const raw = await fs.readFile(absolutePath, "utf8");
-  let rest = raw.trimStart();
+  // Strip non-printable control chars (except \t \n \r) that occasionally get
+  // injected by Obsidian/IME and break YAML frontmatter parsing.
+  const sanitized = raw.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+  let rest = sanitized.trimStart();
 
   const fmRe = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/;
   let merged: Record<string, unknown> = {};
