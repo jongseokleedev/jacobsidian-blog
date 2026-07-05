@@ -850,7 +850,12 @@
       "type": "post",
       "category": "review-book",
       "tags": [
-        "[독서, 철학, 삶, 죽음, 존재]"
+        "[독서, 철학, 삶, 죽음, 존재]",
+        "독서",
+        "철학",
+        "삶",
+        "죽음",
+        "존재"
       ],
       "pubDatetime": "2026-07-05T15:00:00.000Z"
     },
@@ -3410,6 +3415,31 @@
     {
       "source": "20260706-0040",
       "target": "tag:[독서, 철학, 삶, 죽음, 존재]",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:철학",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:죽음",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:존재",
       "type": "tag"
     },
     {
