@@ -769,7 +769,7 @@
     },
     {
       "id": "20260612-1723",
-      "title": "open source - 잠그는 대신, 오히려 활짝 열어두는 것",
+      "title": "open source - 코드는 열린 문",
       "url": "/essay/thought/20260612-1723",
       "type": "post",
       "category": "essay-thought",
@@ -842,6 +842,21 @@
         "[book]"
       ],
       "pubDatetime": "2026-06-21T15:00:00.000Z"
+    },
+    {
+      "id": "20260706-0040",
+      "title": "당신은 결코 특별하지 않다",
+      "url": "/review/book/20260706-0040",
+      "type": "post",
+      "category": "review-book",
+      "tags": [
+        "독서",
+        "철학",
+        "삶",
+        "죽음",
+        "존재"
+      ],
+      "pubDatetime": "2026-07-05T15:00:00.000Z"
     },
     {
       "id": "20261622-0115",
@@ -3387,6 +3402,31 @@
     {
       "source": "20260622-1507",
       "target": "tag:[book]",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:독서",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:철학",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:삶",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:죽음",
+      "type": "tag"
+    },
+    {
+      "source": "20260706-0040",
+      "target": "tag:존재",
       "type": "tag"
     },
     {
