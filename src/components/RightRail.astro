@@ -471,7 +471,6 @@ const postUrl = (post: (typeof allPosts)[number]) => {
         const target = slug ? document.getElementById(slug) : null;
         if (!target) return;
         const targetY = target.getBoundingClientRect().top + window.scrollY - 72;
-        console.log("[TOC] click", slug, "targetY:", targetY);
         smoothScrollTo(targetY, 600, () => pulseHeading(target));
       });
     });

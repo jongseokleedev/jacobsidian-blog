@@ -19,5 +19,4 @@ const pngBuffers = sizes.map(size => {
 const ico = await toIco(pngBuffers);
 fs.writeFileSync(icoPath, ico);
 
-// eslint-disable-next-line no-console
 console.log(`favicon.ico generated (${sizes.join(", ")}px)`);

@@ -2,6 +2,8 @@
 interface Props {
   currentLang: "ko" | "en";
 }
+// 자동 언어 감지/리다이렉트가 비활성화된 동안 미사용(아래 주석 처리된 스크립트에서 사용) — 복원 시 함께 되살림
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { currentLang } = Astro.props;
 ---
 

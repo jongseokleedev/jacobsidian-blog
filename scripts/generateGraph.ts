@@ -46,7 +46,6 @@ async function main() {
   const graph = buildGraphData(posts);
   const outPath = path.resolve(PROJECT_ROOT, "public/graph.json");
   await fs.writeFile(outPath, JSON.stringify(graph, null, 2));
-  // eslint-disable-next-line no-console
   console.log(`[graph] ${graph.nodes.length} nodes, ${graph.edges.length} edges → public/graph.json`);
 }
 

@@ -679,10 +679,10 @@ const latestPosts = posts
         const carousel = document.querySelector<HTMLElement>(".featured-panel:not(.hidden) .featured-carousel");
         if (prev && next && carousel) {
           const { scrollLeft, scrollWidth, clientWidth } = carousel;
-          scrollLeft < 8 ? prev.setAttribute("data-hidden", "") : prev.removeAttribute("data-hidden");
-          scrollLeft > scrollWidth - clientWidth - 8
-            ? next.setAttribute("data-hidden", "")
-            : next.removeAttribute("data-hidden");
+          if (scrollLeft < 8) prev.setAttribute("data-hidden", "");
+          else prev.removeAttribute("data-hidden");
+          if (scrollLeft > scrollWidth - clientWidth - 8) next.setAttribute("data-hidden", "");
+          else next.removeAttribute("data-hidden");
         }
       });
     });
@@ -709,10 +709,18 @@ const latestPosts = posts
       const { scrollLeft, scrollWidth, clientWidth } = carousel;
       const atStart = scrollLeft < 8;
       const atEnd = scrollLeft > scrollWidth - clientWidth - 8;
-      atStart ? prev.setAttribute("data-hidden", "") : prev.removeAttribute("data-hidden");
-      atEnd ? next.setAttribute("data-hidden", "") : next.removeAttribute("data-hidden");
-      prevMobile && (atStart ? prevMobile.setAttribute("data-hidden", "") : prevMobile.removeAttribute("data-hidden"));
-      nextMobile && (atEnd ? nextMobile.setAttribute("data-hidden", "") : nextMobile.removeAttribute("data-hidden"));
+      if (atStart) prev.setAttribute("data-hidden", "");
+      else prev.removeAttribute("data-hidden");
+      if (atEnd) next.setAttribute("data-hidden", "");
+      else next.removeAttribute("data-hidden");
+      if (prevMobile) {
+        if (atStart) prevMobile.setAttribute("data-hidden", "");
+        else prevMobile.removeAttribute("data-hidden");
+      }
+      if (nextMobile) {
+        if (atEnd) nextMobile.setAttribute("data-hidden", "");
+        else nextMobile.removeAttribute("data-hidden");
+      }
     };
 
     prev.addEventListener("click", () => {

@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BlogShell from "@/layouts/BlogShell.astro";
 import { getPath } from "@/utils/getPath";
-import { getCategoryMeta, parseCategory } from "@/utils/getCategories";
+import { getCategoryMeta } from "@/utils/getCategories";
 import { SITE } from "@/config";
 
 export async function getStaticPaths() {
@@ -28,7 +28,6 @@ const seriesMeta = allSeries.find(s => s.id === slug) ?? null;
 const { Content: SeriesIntro } = seriesMeta ? await render(seriesMeta) : { Content: null };
 
 const catMeta = seriesMeta?.data.category ? getCategoryMeta(seriesMeta.data.category) : null;
-const { parent } = seriesMeta?.data.category ? parseCategory(seriesMeta.data.category) : { parent: null };
 const color = catMeta?.color ?? "var(--accent)";
 ---
 

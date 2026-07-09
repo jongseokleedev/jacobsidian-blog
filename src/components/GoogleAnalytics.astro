@@ -11,7 +11,7 @@ import { PUBLIC_GA_MEASUREMENT_ID } from "astro:env/client";
     ></script>
     <script is:inline define:vars={{ measurementId: PUBLIC_GA_MEASUREMENT_ID }}>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
+      function gtag(...args) { dataLayer.push(args); }
       gtag('js', new Date());
       gtag('config', measurementId, { send_page_view: false });
 

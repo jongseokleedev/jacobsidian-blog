@@ -87,7 +87,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
 </div>
 
 <script is:inline define:vars={{ containerId }}>
-  // @ts-nocheck
   async function initGraph(containerEl) {
     if (!containerEl) return;
 
@@ -185,7 +184,7 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
     }
 
     let hoveredNode = null;
-    let pinnedNodes = new Set();
+    const pinnedNodes = new Set();
     let currentTransform = d3.zoomIdentity;
     let categoryFilter = initCategoryFilter;
 
@@ -967,7 +966,6 @@ const containerId = `graph-container-${Math.random().toString(36).slice(2)}`;
   }
 
   function setup() {
-    // @ts-ignore -- containerId injected by define:vars
     const container = document.getElementById(containerId);
     if (!container) return;
     if (container.offsetWidth === 0) {
