@@ -7,6 +7,7 @@ import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
 import { getPath } from "@/utils/getPath";
 import { getCategoryMeta } from "@/utils/getCategories";
+import CommentCount from "@/components/CommentCount.astro";
 import { SITE } from "@/config";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -60,9 +61,10 @@ const { page, tagName } = Astro.props;
                   {label}
                 </span>
               </div>
-              <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 transition-transform duration-150 group-hover:translate-x-[3px]">
+              <span class="font-medium text-[14px] sm:truncate self-center inline-flex items-center gap-2 min-w-0 transition-transform duration-150 group-hover:translate-x-[3px]">
                 <span class="cat-dot shrink-0" style={`background: ${color}`} />
-                {post.data.title}
+                <span class="truncate">{post.data.title}</span>
+                <CommentCount postId={post.id} />
               </span>
               <span class="hidden sm:block font-mono text-[11px] self-center text-right" style="color: var(--fg-faint);">
                 {label}

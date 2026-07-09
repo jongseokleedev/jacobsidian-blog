@@ -5,6 +5,7 @@ import getSortedPosts from "@/utils/getSortedPosts";
 import { PARENTS } from "@/utils/getCategories";
 import { slugifyStr } from "@/utils/slugify";
 import Rating from "@/components/Rating.astro";
+import CommentCount from "@/components/CommentCount.astro";
 
 export async function getStaticPaths() {
   return Object.keys(PARENTS).map(parent => ({ params: { parent } }));
@@ -81,6 +82,7 @@ const subCounts = posts.reduce<Record<string, number>>((acc, p) => {
                 <span class="font-medium text-[14px] sm:truncate self-center flex items-center gap-2 min-w-0 transition-transform duration-150 group-hover:translate-x-[3px]">
                   <span class="cat-dot shrink-0" style={`background: ${parentMeta.color}`} />
                   <span class="truncate">{data.title}</span>
+                  <CommentCount postId={id} />
                   {data.series && (
                     <span
                       class="inline-flex shrink-0 items-center gap-1 rounded-full px-1.5 py-px font-mono text-[10px] leading-tight"

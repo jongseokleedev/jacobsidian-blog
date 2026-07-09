@@ -8,6 +8,7 @@ import { getPath } from "@/utils/getPath";
 import { PARENTS, getCategoryMeta, parseCategory } from "@/utils/getCategories";
 import { SITE } from "@/config";
 import Rating from "@/components/Rating.astro";
+import CommentCount from "@/components/CommentCount.astro";
 
 if (!SITE.showArchives) {
   return Astro.redirect("/404");
@@ -69,8 +70,9 @@ const filters = [
                   day: "2-digit",
                 })}
               </span>
-              <span class="font-medium truncate self-center transition-transform duration-150 group-hover:translate-x-1">
-                {post.data.title}
+              <span class="font-medium self-center flex items-center gap-2 min-w-0 transition-transform duration-150 group-hover:translate-x-1">
+                <span class="truncate">{post.data.title}</span>
+                <CommentCount postId={post.id} />
               </span>
               <span class="text-xs text-foreground/40 self-center flex items-center justify-end gap-2">
                 {post.data.rating != null && <Rating value={post.data.rating} size="sm" class="hidden sm:inline-flex" />}

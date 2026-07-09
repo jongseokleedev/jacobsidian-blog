@@ -8,6 +8,7 @@ import { getPostImage } from "@/utils/getPostImage";
 import GraphCanvas from "@/components/GraphCanvas.astro";
 import FeaturedCard from "@/components/FeaturedCard.astro";
 import SeriesCard from "@/components/SeriesCard.astro";
+import CommentCount from "@/components/CommentCount.astro";
 import { getSeriesSlug } from "@/utils/getSeriesSlug";
 
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
@@ -36,6 +37,7 @@ const seriesItems = await Promise.all(
 );
 
 const allItems = posts.map(p => ({
+  id: p.id,
   href: getPath(p),
   date: new Date(p.data.pubDatetime),
   title: p.data.title,
@@ -292,6 +294,7 @@ const latestPosts = posts
               <span class="font-medium text-[14px] sm:truncate self-center flex items-center gap-2 min-w-0 transition-transform duration-150 group-hover:translate-x-[3px]">
                 <span class="cat-dot shrink-0" style={`background: ${item.color}`} />
                 <span class="truncate">{item.title}</span>
+                <CommentCount postId={item.id} />
                 {item.series && (
                   <span
                     class="hidden sm:inline-flex shrink-0 items-center gap-1 rounded-full px-1.5 py-px font-mono text-[10px] leading-tight"

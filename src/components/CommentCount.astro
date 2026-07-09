@@ -2,7 +2,7 @@
 interface Props { postId: string; }
 const { postId } = Astro.props;
 ---
-<span class="comment-count-mount" data-post-id={postId}></span>
+<span class="comment-count-mount shrink-0" data-post-id={postId}></span>
 
 <script>
   import { getSupabase } from "@/components/comments/lib";
@@ -32,7 +32,7 @@ const { postId } = Astro.props;
       if (count === 0) continue;
       document.querySelectorAll<HTMLElement>(`.comment-count-mount[data-post-id="${postId}"]`).forEach(el => {
         el.textContent = `💬 ${count}`;
-        el.className = "text-xs";
+        el.className = "text-xs shrink-0";
         el.style.color = "var(--fg-mute)";
       });
     }
