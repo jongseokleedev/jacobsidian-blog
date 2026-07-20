@@ -755,6 +755,19 @@
       "pubDatetime": "2026-06-04T15:00:00.000Z"
     },
     {
+      "id": "20260601-0145",
+      "title": "에러 메시지 - 코드의 다잉 메시지",
+      "url": "/essay/thought/20260601-0145",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "#essay",
+        "#dev",
+        "#어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-07-19T15:00:00.000Z"
+    },
+    {
       "id": "20260603-1329",
       "title": "정원철",
       "url": "/fiction/novel/20260603-1329",
@@ -1652,6 +1665,27 @@
       "id": "tag:IT",
       "title": "IT",
       "url": "/tags/IT",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:#essay",
+      "title": "#essay",
+      "url": "/tags/#essay",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:#dev",
+      "title": "#dev",
+      "url": "/tags/#dev",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:#어느 개발자의 인문학",
+      "title": "#어느 개발자의 인문학",
+      "url": "/tags/#어느 개발자의 인문학",
       "type": "tag",
       "tags": []
     },
@@ -3306,6 +3340,26 @@
     },
     {
       "source": "20260531-2309",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
+      "source": "20260601-0145",
+      "target": "tag:#essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260601-0145",
+      "target": "tag:#dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260601-0145",
+      "target": "tag:#어느 개발자의 인문학",
+      "type": "tag"
+    },
+    {
+      "source": "20260601-0145",
       "target": "series:어느 개발자의 인문학",
       "type": "series"
     },
