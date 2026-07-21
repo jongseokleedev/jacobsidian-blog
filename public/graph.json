@@ -872,6 +872,32 @@
       "pubDatetime": "2026-07-05T15:00:00.000Z"
     },
     {
+      "id": "20260720-2203",
+      "title": "이현우 - 1",
+      "url": "/fiction/novel/20260720-2203",
+      "type": "post",
+      "category": "fiction-novel",
+      "tags": [
+        "novel",
+        "fiction",
+        "9 to 6"
+      ],
+      "pubDatetime": "2026-07-21T15:00:00.000Z"
+    },
+    {
+      "id": "20260722-0116",
+      "title": "이현우 - 2",
+      "url": "/fiction/novel/20260722-0116",
+      "type": "post",
+      "category": "fiction-novel",
+      "tags": [
+        "novel",
+        "fiction",
+        "9 to 6"
+      ],
+      "pubDatetime": "2026-07-21T15:00:00.000Z"
+    },
+    {
       "id": "20261622-0115",
       "title": "debugging - 벌레는 박멸보다 발견이 어렵다",
       "url": "/essay/thought/20261622-0115",
@@ -3482,6 +3508,36 @@
       "source": "20260706-0040",
       "target": "tag:존재",
       "type": "tag"
+    },
+    {
+      "source": "20260720-2203",
+      "target": "tag:novel",
+      "type": "tag"
+    },
+    {
+      "source": "20260720-2203",
+      "target": "tag:fiction",
+      "type": "tag"
+    },
+    {
+      "source": "20260720-2203",
+      "target": "series:9 to 6",
+      "type": "series"
+    },
+    {
+      "source": "20260722-0116",
+      "target": "tag:novel",
+      "type": "tag"
+    },
+    {
+      "source": "20260722-0116",
+      "target": "tag:fiction",
+      "type": "tag"
+    },
+    {
+      "source": "20260722-0116",
+      "target": "series:9 to 6",
+      "type": "series"
     },
     {
       "source": "20261622-0115",
