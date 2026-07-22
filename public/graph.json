@@ -898,6 +898,19 @@
       "pubDatetime": "2026-07-21T15:00:00.000Z"
     },
     {
+      "id": "20260722-1553",
+      "title": "이현우 - 3",
+      "url": "/fiction/novel/20260722-1553",
+      "type": "post",
+      "category": "fiction-novel",
+      "tags": [
+        "novel",
+        "fiction",
+        "9 to 6"
+      ],
+      "pubDatetime": "2026-07-21T15:00:00.000Z"
+    },
+    {
       "id": "20261622-0115",
       "title": "debugging - 벌레는 박멸보다 발견이 어렵다",
       "url": "/essay/thought/20261622-0115",
@@ -3536,6 +3549,21 @@
     },
     {
       "source": "20260722-0116",
+      "target": "series:9 to 6",
+      "type": "series"
+    },
+    {
+      "source": "20260722-1553",
+      "target": "tag:novel",
+      "type": "tag"
+    },
+    {
+      "source": "20260722-1553",
+      "target": "tag:fiction",
+      "type": "tag"
+    },
+    {
+      "source": "20260722-1553",
       "target": "series:9 to 6",
       "type": "series"
     },
