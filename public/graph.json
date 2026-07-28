@@ -768,6 +768,19 @@
       "pubDatetime": "2026-07-19T15:00:00.000Z"
     },
     {
+      "id": "20260601-0158",
+      "title": "포스트모템 - 개발자의 범인 찾기",
+      "url": "/essay/thought/20260601-0158",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-07-25T15:00:00.000Z"
+    },
+    {
       "id": "20260603-1329",
       "title": "정원철",
       "url": "/fiction/novel/20260603-1329",
@@ -855,6 +868,19 @@
         "[book]"
       ],
       "pubDatetime": "2026-06-21T15:00:00.000Z"
+    },
+    {
+      "id": "20260622-1718",
+      "title": "기술부채 - 개발자도 빚을 진다",
+      "url": "/essay/thought/20260622-1718",
+      "type": "post",
+      "category": "essay-thought",
+      "tags": [
+        "essay",
+        "dev",
+        "어느 개발자의 인문학"
+      ],
+      "pubDatetime": "2026-07-27T15:00:00.000Z"
     },
     {
       "id": "20260706-0040",
@@ -3403,6 +3429,21 @@
       "type": "series"
     },
     {
+      "source": "20260601-0158",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260601-0158",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260601-0158",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
+    },
+    {
       "source": "20260603-1329",
       "target": "tag:novel",
       "type": "tag"
@@ -3496,6 +3537,21 @@
       "source": "20260622-1507",
       "target": "tag:[book]",
       "type": "tag"
+    },
+    {
+      "source": "20260622-1718",
+      "target": "tag:essay",
+      "type": "tag"
+    },
+    {
+      "source": "20260622-1718",
+      "target": "tag:dev",
+      "type": "tag"
+    },
+    {
+      "source": "20260622-1718",
+      "target": "series:어느 개발자의 인문학",
+      "type": "series"
     },
     {
       "source": "20260706-0040",
