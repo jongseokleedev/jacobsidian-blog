@@ -937,6 +937,28 @@
       "pubDatetime": "2026-07-22T15:00:00.000Z"
     },
     {
+      "id": "20260807-2144",
+      "title": "다음, 소희 1",
+      "url": "/fiction/tales/20260807-2144",
+      "type": "post",
+      "category": "fiction-tales",
+      "tags": [
+        "#post"
+      ],
+      "pubDatetime": "2026-09-03T15:00:00.000Z"
+    },
+    {
+      "id": "20260915-2110",
+      "title": "멘탈 스포츠",
+      "url": "/essay/journal/20260915-2110",
+      "type": "post",
+      "category": "essay-journal",
+      "tags": [
+        "post"
+      ],
+      "pubDatetime": "2026-09-15T15:00:00.000Z"
+    },
+    {
       "id": "20261622-0115",
       "title": "debugging - 벌레는 박멸보다 발견이 어렵다",
       "url": "/essay/thought/20261622-0115",
@@ -1772,6 +1794,13 @@
       "id": "tag:[book]",
       "title": "[book]",
       "url": "/tags/[book]",
+      "type": "tag",
+      "tags": []
+    },
+    {
+      "id": "tag:#post",
+      "title": "#post",
+      "url": "/tags/#post",
       "type": "tag",
       "tags": []
     },
@@ -3622,6 +3651,16 @@
       "source": "20260722-1553",
       "target": "series:9 to 6",
       "type": "series"
+    },
+    {
+      "source": "20260807-2144",
+      "target": "tag:#post",
+      "type": "tag"
+    },
+    {
+      "source": "20260915-2110",
+      "target": "tag:post",
+      "type": "tag"
     },
     {
       "source": "20261622-0115",
