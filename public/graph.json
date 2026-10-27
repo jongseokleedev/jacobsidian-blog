@@ -768,19 +768,6 @@
       "pubDatetime": "2026-07-19T15:00:00.000Z"
     },
     {
-      "id": "20260601-0158",
-      "title": "포스트모템 - 개발자의 범인 찾기",
-      "url": "/essay/thought/20260601-0158",
-      "type": "post",
-      "category": "essay-thought",
-      "tags": [
-        "essay",
-        "dev",
-        "어느 개발자의 인문학"
-      ],
-      "pubDatetime": "2026-07-25T15:00:00.000Z"
-    },
-    {
       "id": "20260603-1329",
       "title": "정원철",
       "url": "/fiction/novel/20260603-1329",
@@ -935,6 +922,28 @@
         "9 to 6"
       ],
       "pubDatetime": "2026-07-22T15:00:00.000Z"
+    },
+    {
+      "id": "20260915-2110",
+      "title": "멘탈 스포츠",
+      "url": "/essay/journal/20260915-2110",
+      "type": "post",
+      "category": "essay-journal",
+      "tags": [
+        "post"
+      ],
+      "pubDatetime": "2026-09-15T15:00:00.000Z"
+    },
+    {
+      "id": "20261026-1910",
+      "title": "아날로그 시계공과 개발자",
+      "url": "/essay/journal/20261026-1910",
+      "type": "post",
+      "category": "essay-journal",
+      "tags": [
+        "post"
+      ],
+      "pubDatetime": "2026-10-26T15:00:00.000Z"
     },
     {
       "id": "20261622-0115",
@@ -3429,21 +3438,6 @@
       "type": "series"
     },
     {
-      "source": "20260601-0158",
-      "target": "tag:essay",
-      "type": "tag"
-    },
-    {
-      "source": "20260601-0158",
-      "target": "tag:dev",
-      "type": "tag"
-    },
-    {
-      "source": "20260601-0158",
-      "target": "series:어느 개발자의 인문학",
-      "type": "series"
-    },
-    {
       "source": "20260603-1329",
       "target": "tag:novel",
       "type": "tag"
@@ -3622,6 +3616,16 @@
       "source": "20260722-1553",
       "target": "series:9 to 6",
       "type": "series"
+    },
+    {
+      "source": "20260915-2110",
+      "target": "tag:post",
+      "type": "tag"
+    },
+    {
+      "source": "20261026-1910",
+      "target": "tag:post",
+      "type": "tag"
     },
     {
       "source": "20261622-0115",
